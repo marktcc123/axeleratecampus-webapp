@@ -3,8 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import NotFoundPage from '../../pages/NotFoundPage.jsx';
 import DetailTopBar from '../parts/DetailTopBar.jsx';
 import OfferCard from '../parts/OfferCard.jsx';
-import { formatBudget, formatMoney, READINESS } from '../../lib/demand.js';
-import { OFFERS_VISIBLE_STATES } from '../../lib/marketplace.js';
+import { formatBudget, formatMoney, READINESS, TIMEFRAMES } from '../../lib/demand.js';
+import { OFFERS_VISIBLE_STATES, READY_TO_BUY } from '../../lib/marketplace.js';
 import { track, trackedUrl } from '../../lib/analytics.js';
 import { useDemand } from '../demand.jsx';
 import { useRequireAccount } from '../require-account.js';
@@ -34,6 +34,10 @@ export default function DemandDetail() {
   const [open, setOpen] = useState(null);
   const [notice, setNotice] = useState(null);
   const [outcomeFor, setOutcomeFor] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(null);
+  const [confirmDrop, setConfirmDrop] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
 
   const c = cluster(id);
   if (!c) return <NotFoundPage bare />;
@@ -71,9 +75,39 @@ export default function DemandDetail() {
   }, { intent: 'Create an account so we can confirm your purchase and improve your matches.' });
 
   const openMatch = ranked.find((r) => r.offer.id === open?.id)?.match ?? null;
+  const readinessLabel = READINESS.find((r) => r.id === mine?.readiness)?.label ?? 'Interested';
+  const timeframeLabel = TIMEFRAMES.find((t) => t.id === mine?.timeframeId)?.label ?? 'Not set';
+  const STEPS = ['Forming', 'Qualified', 'Matching', 'Brands responded'];
+
+  const openEdit = () => {
+    setDraft({
+      readiness: mine.readiness ?? 'interested',
+      budget: mine.budget ?? '',
+      timeframeId: mine.timeframeId ?? '2weeks',
+    });
+    setConfirmDrop(false);
+    setEditing(true);
+  };
+
+  const saveEdit = () => {
+    const next = draft.readiness;
+    const dropping = READY_TO_BUY.has(mine.readiness) && !READY_TO_BUY.has(next);
+    if (dropping && !confirmDrop) {
+      setConfirmDrop(true);
+      return;
+    }
+    const budget = draft.budget === '' || draft.budget == null ? null : Number(draft.budget);
+    refine(c.id, {
+      readiness: next,
+      budget: Number.isFinite(budget) ? budget : null,
+      timeframeId: draft.timeframeId,
+    });
+    setEditing(false);
+    setConfirmDrop(false);
+  };
 
   return (
-    <div className="dd" data-testid="demand-detail">
+    <div className={inDemand ? 'dd dd--in' : 'dd'} data-testid="demand-detail">
       <DetailTopBar backTo="/app/discover" shareTitle={c.normalizedNeed} />
 
       <header className="dd__head">
@@ -82,11 +116,20 @@ export default function DemandDetail() {
         {c.scout && <p className="dd__scout">{c.scout.label}</p>}
 
         <p className="dd__stage" data-testid="demand-stage">{stage.line}</p>
-        <ol className="dd__steps" aria-label="Demand progress">
-          {['Forming', 'Qualified', 'Matching', 'Brands responded'].map((label, i) => (
-            <li key={label} className="dd__step" data-on={i < stage.step ? '' : undefined}>{label}</li>
+        <div className="dd__progress" role="list" aria-label="Demand progress">
+          {STEPS.map((label, i) => (
+            <div
+              key={label}
+              className="dd__progress-step"
+              role="listitem"
+              data-on={i < stage.step ? '' : undefined}
+              data-current={i + 1 === stage.step ? '' : undefined}
+            >
+              <span className="dd__progress-bar" />
+              <span className="dd__progress-label">{label}</span>
+            </div>
           ))}
-        </ol>
+        </div>
 
         <dl className="dd__stats">
           <div><dd>{c.counts.joined}</dd><dt>active demand</dt></div>
@@ -108,19 +151,19 @@ export default function DemandDetail() {
       <section className="dd__sec">
         <h2 className="dd__h2">Most requested</h2>
         {c.commonRequirements?.length > 0 ? (
-          <ul className="dd__reqs">
-            {c.commonRequirements.map((r) => <li key={r}>{r}</li>)}
-          </ul>
+          <div className="dd__chips">
+            {c.commonRequirements.map((r) => <span key={r} className="dd__chip">{r}</span>)}
+          </div>
         ) : (
           <p className="dd__line">No shared requirements yet — they appear as more people describe what they need.</p>
         )}
         <p className="dd__line">Purchase timing · {c.purchaseWindow}</p>
         {c.geographicDistribution?.length > 0 && (
-          <ul className="dd__geo">
+          <div className="dd__geo">
             {c.geographicDistribution.map((g) => (
-              <li key={g.label}>{g.label} · {Math.round(g.share * 100)}%</li>
+              <p key={g.label}>{g.label} · {Math.round(g.share * 100)}%</p>
             ))}
-          </ul>
+          </div>
         )}
       </section>
 
@@ -172,11 +215,21 @@ export default function DemandDetail() {
       )}
 
       {inDemand && (
-        <section className="dd__sec dd__refine" data-testid="my-participation">
-          <h2 className="dd__h2">Your request</h2>
-          <p className="dd__line">
-            Refine your own preferences. This changes what we show <i>you</i> — it does not rewrite the demand.
-          </p>
+        <section className="dd__card" data-testid="my-participation">
+          <div className="dd__card-top">
+            <h2 className="dd__h2">Your request</h2>
+            <button type="button" className="ax-btn ax-btn--secondary ax-btn--sm" onClick={openEdit}>
+              Edit request
+            </button>
+          </div>
+          <div className="dd__facts">
+            <div><span>Readiness</span><b>{readinessLabel}</b></div>
+            <div><span>Budget</span><b>{mine.budget != null ? formatMoney(mine.budget) : 'Not set'}</b></div>
+            <div><span>Timeframe</span><b>{timeframeLabel}</b></div>
+          </div>
+          {mine.readiness === 'ready' && (
+            <p className="dd__note">Ready to buy is what you told us. It is not a deposit, and it is not a verified purchase.</p>
+          )}
           {mine.expiresAt && (
             <p className="dd__line" data-testid="participation-expiry">
               {c.daysLeft !== null && c.daysLeft < 0
@@ -184,45 +237,40 @@ export default function DemandDetail() {
                 : `Live until ${new Date(mine.expiresAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}.`}
             </p>
           )}
-          <ul className="dd__choices">
-            {READINESS.map((r) => (
-              <li key={r.id}>
-                <button
-                  type="button"
-                  className="dn__choice"
-                  aria-pressed={mine.readiness === r.id}
-                  onClick={() => refine(c.id, { readiness: r.id })}
-                >
-                  {r.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-          <div className="dd__row">
+          <div className="dd__card-actions">
             <button
               type="button"
-              className="ax-btn ax-btn--secondary"
+              className="ax-btn ax-btn--secondary ax-btn--sm"
               onClick={() => { renew(c.id, mine.timeframeId ?? '2weeks'); setNotice('Renewed. Your request counts as live demand again.'); }}
             >
               Still looking
             </button>
             <button
               type="button"
-              className="ax-btn ax-btn--ghost"
+              className="ax-btn ax-btn--ghost ax-btn--sm"
               onClick={() => { leave(c.id); setNotice('You’ve left. Your weight has been removed from this demand.'); }}
               data-testid="leave-demand"
             >
               Leave this demand
             </button>
           </div>
-          <details className="dd__fine">
-            <summary>What brands can see</summary>
-            <p>
-              Aggregated demand only: how many people qualify, the typical budget, the
-              most requested features and the purchase window. Never your name, your
-              email or your address.
-            </p>
-          </details>
+          <div className="dd__acc">
+            <button
+              type="button"
+              className="dd__acc-btn"
+              aria-expanded={privacyOpen}
+              onClick={() => setPrivacyOpen((v) => !v)}
+            >
+              What brands can see
+            </button>
+            {privacyOpen && (
+              <p className="dd__acc-body">
+                Aggregated demand only: how many people qualify, the typical budget, the
+                most requested features and the purchase window. Never your name, your
+                email or your address.
+              </p>
+            )}
+          </div>
         </section>
       )}
 
@@ -259,7 +307,7 @@ export default function DemandDetail() {
 
       {open && (
         <aside className="dd__sheet" role="dialog" aria-label={open.product} data-testid="offer-sheet">
-          <button type="button" className="dd__sheet-x" onClick={() => setOpen(null)}>Close</button>
+          <button type="button" className="ax-btn ax-btn--ghost ax-btn--sm dd__sheet-x" onClick={() => setOpen(null)}>Close</button>
           <p className="oc__brand">{open.brand}</p>
           <h3 className="oc__product">{open.product}</h3>
           <p className="oc__price">{formatMoney(open.priceUsd)}</p>
@@ -271,16 +319,16 @@ export default function DemandDetail() {
           {openMatch && (
             <>
               <h4 className="dd__h3">What matches</h4>
-              <ul className="oc__matched">
-                {openMatch.matchedCriteria.map((m) => <li key={m}>{m}</li>)}
-                {openMatch.matchedCriteria.length === 0 && <li>Nothing you listed — read the detail below carefully.</li>}
-              </ul>
+              <div className="dd__chips">
+                {openMatch.matchedCriteria.map((m) => <span key={m} className="dd__chip">{m}</span>)}
+                {openMatch.matchedCriteria.length === 0 && <span className="dd__chip">Nothing you listed — read the detail below carefully.</span>}
+              </div>
               {openMatch.unmatchedCriteria.length > 0 && (
                 <>
                   <h4 className="dd__h3">What doesn&rsquo;t</h4>
-                  <ul className="oc__unmatched">
-                    {openMatch.unmatchedCriteria.map((m) => <li key={m}>{m}</li>)}
-                  </ul>
+                  <div className="dd__chips">
+                    {openMatch.unmatchedCriteria.map((m) => <span key={m} className="dd__chip dd__chip--miss">{m}</span>)}
+                  </div>
                 </>
               )}
             </>
@@ -304,18 +352,85 @@ export default function DemandDetail() {
         </aside>
       )}
 
-      <div className="dd__bar" data-testid="demand-bar">
-        {inDemand ? (
-          <p className="dd__in">You&rsquo;re in</p>
-        ) : c.status === 'expired' ? (
-          <Link to="/app/demand/new" className="ax-btn ax-btn--primary ax-btn--lg ax-btn--full">Open a new request</Link>
-        ) : (
-          <button type="button" className="ax-btn ax-btn--primary ax-btn--lg ax-btn--full" onClick={onJoin}>
-            Join this demand
-          </button>
-        )}
-        <Link to="/brands" className="dd__merchant">Respond as a brand</Link>
-      </div>
+      {!inDemand && (
+        <div className="dd__bar" data-testid="demand-bar">
+          {c.status === 'expired' ? (
+            <Link to="/app/demand/new" className="ax-btn ax-btn--primary ax-btn--lg ax-btn--full">Open a new request</Link>
+          ) : (
+            <button type="button" className="ax-btn ax-btn--primary ax-btn--lg ax-btn--full" onClick={onJoin}>
+              Join this demand
+            </button>
+          )}
+        </div>
+      )}
+
+      {editing && draft && (
+        <div className="dd__layer">
+          <button type="button" className="dd__backdrop" aria-label="Close editor" onClick={() => setEditing(false)} />
+          <aside className="dd__sheet" role="dialog" aria-label="Edit request" data-testid="edit-request">
+            <button type="button" className="ax-btn ax-btn--ghost ax-btn--sm dd__sheet-x" onClick={() => setEditing(false)}>Close</button>
+            <h2 className="dd__h2">Edit request</h2>
+            <p className="dd__line">This updates your own participation. It does not rewrite the shared demand.</p>
+
+            <p className="dd__field-label">Readiness</p>
+            <div className="dd__intent" role="group" aria-label="Readiness">
+              {READINESS.map((r) => (
+                <button
+                  key={r.id}
+                  type="button"
+                  className="dd__intent-opt"
+                  aria-pressed={draft.readiness === r.id}
+                  onClick={() => { setDraft((d) => ({ ...d, readiness: r.id })); setConfirmDrop(false); }}
+                >
+                  <span>{r.label}</span>
+                  {r.id === 'ready' && <small>A stated intention. Not a payment.</small>}
+                </button>
+              ))}
+            </div>
+
+            <label className="dd__field">
+              <span className="dd__field-label">Your budget</span>
+              <input
+                type="number"
+                min="1"
+                inputMode="numeric"
+                value={draft.budget}
+                placeholder="Optional"
+                onChange={(e) => setDraft((d) => ({ ...d, budget: e.target.value }))}
+              />
+            </label>
+
+            <p className="dd__field-label">Timeframe</p>
+            <div className="dd__intent" role="group" aria-label="Timeframe">
+              {TIMEFRAMES.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  className="dd__intent-opt"
+                  aria-pressed={draft.timeframeId === t.id}
+                  onClick={() => setDraft((d) => ({ ...d, timeframeId: t.id }))}
+                >
+                  <span>{t.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <button type="button" className="ax-btn ax-btn--secondary ax-btn--full dd__reserve" disabled>
+              Reserve this demand
+            </button>
+            <p className="dd__note">Coming soon. A refundable deposit would be a separate committed state. Ready to buy stays a statement, not a charge.</p>
+
+            {confirmDrop && (
+              <p className="dd__warn-copy" role="status">
+                You will leave the Ready-to-buy count. Ready to buy was only your stated intention — nothing was charged.
+              </p>
+            )}
+            <button type="button" className="ax-btn ax-btn--primary ax-btn--full" onClick={saveEdit}>
+              {confirmDrop ? 'Update and leave Ready to buy' : 'Save'}
+            </button>
+          </aside>
+        </div>
+      )}
     </div>
   );
 }
