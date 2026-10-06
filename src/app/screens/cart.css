@@ -1,0 +1,202 @@
+/* The cart, from H5.dc.html.
+   Nothing here reaches into a design-system class: the checkout button is the
+   system's Button, used as shipped, and every rule below owns its own class. */
+
+.cart__top { display: flex; align-items: center; gap: 6px; }
+.cart .cart__back {
+  width: 44px; height: 44px; margin: -8px 0 -8px -14px;
+  display: flex; align-items: center; justify-content: center;
+  border: none; background: none; cursor: pointer; color: var(--ink-900);
+  text-decoration: none;
+}
+.cart__chev {
+  display: inline-block; width: 11px; height: 11px;
+  border-left: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor;
+  border-radius: 1px; transform: rotate(45deg); margin-left: 4px;
+}
+
+.cart__head { margin-top: 14px; display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+
+/* The marker note the design writes beside every screen title. */
+.cart__hand {
+  margin: 0 0 2px;
+  font-family: var(--font-hand);
+  font-size: var(--text-sm);
+  line-height: 1;
+  color: var(--violet-600);
+  transform: rotate(-2deg);
+}
+.cart__hand--done { margin: 10px 0 0; font-size: var(--text-lg); }
+
+/* ---- empty ------------------------------------------------------------- */
+
+.cart__empty {
+  margin-top: 24px;
+  /* No dashed frame (owner, 2026-09-09): the glyph and the line stand on the page. */
+  border-radius: var(--radius-hand-lg);
+  padding: 36px 20px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 8px;
+}
+.cart__empty-ico { color: var(--gray-400); }
+.cart__empty-title { margin: 0; font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+
+/* ---- lines ------------------------------------------------------------- */
+
+.cart__lines { margin: 8px 0 0; padding: 0; list-style: none; }
+.cart__line {
+  display: flex; align-items: center; gap: 13px;
+  padding: 15px 0;
+  border-bottom: 1.5px solid var(--gray-100);
+}
+/* 76px, up from 62: as tall as the text beside it, which is the brand, the
+   one-line title and the stepper under them.
+   A fixed square, NOT `align-self: stretch` with `aspect-ratio: 1`. That pair
+   looks like the right answer and is circular: the stretched height comes from
+   the row, the aspect ratio turns it into a width, the width feeds back into
+   the row, and a line carrying a real photo rather than a placeholder resolved
+   it at ~540px — one image filling the screen and 25px of horizontal overflow
+   at 320. Deterministic beats derived here. */
+.cart__photo {
+  width: 76px; height: 76px; flex: none;
+  border-radius: 12px; overflow: hidden;
+  box-shadow: 0 0 0 1.5px var(--gray-100);
+}
+.cart__text { flex: 1; min-width: 0; }
+.cart__brand {
+  margin: 0;
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 600;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.cart__title {
+  margin: 3px 0 0;
+  font-size: var(--text-sm); font-weight: 600; line-height: 1.3;
+  color: var(--text-primary);
+  /* One line: the cart is a list to scan, and the shop is where titles breathe. */
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+}
+/* The figure column, on the right where the stepper used to be. Bigger than
+   it was, because it is now the thing the eye lands on down this side of the
+   list — the same size and face the orders list gives its own price. */
+.cart__price {
+  margin: 0;
+  flex: none;
+  font-family: var(--font-display); font-weight: 800; font-size: var(--text-lg);
+  letter-spacing: -0.01em; font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+/* Under the title now, so it starts at the column's left edge. The negative
+   LEFT margin pulls the first button's 44px box back off that edge, so the
+   glyph lines up with the text above it rather than the box doing it. Left
+   only: a negative right margin let the row overhang the price column and put
+   25px of horizontal overflow on the page at 320px. */
+.cart__step { display: flex; align-items: center; gap: 3px; margin: 2px 0 0 -10px; }
+/* The button is a real 44x44 and the circle is drawn inside it at 34px, which
+   is the same construction .cart-go uses on the shop card. The e2e touch-floor
+   sweep measures the element's own box — a 34px button with a padded
+   pseudo-element would read as 34px and fail it, correctly. */
+.cart .cart__pm {
+  position: relative;
+  width: 44px; height: 44px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: none; background: none; cursor: pointer;
+  font-family: var(--font-display); font-weight: 800; font-size: var(--text-lg);
+  line-height: 1; color: var(--ink-900);
+}
+.cart__pm::before {
+  /* inset 8, not 5: a 28px circle inside the 44px box rather than a 34px one.
+     The box is the hit area and stays 44 — the e2e touch-floor sweep measures
+     the element's own box, so shrinking the button itself would fail it. */
+  content: ''; position: absolute; inset: 8px;
+  border: 1.5px solid var(--gray-300); border-radius: 50%;
+  background: var(--gray-0);
+  transition: transform var(--dur-fast) var(--ease-launch);
+}
+.cart__pm-glyph { position: relative; z-index: 1; }
+.cart__pm:active::before { transform: scale(0.94); }
+.cart__qty {
+  min-width: 16px; text-align: center;
+  font-family: var(--font-label); font-size: var(--text-xs); font-weight: 700;
+  font-variant-numeric: tabular-nums; color: var(--text-primary);
+}
+
+/* ---- summary ----------------------------------------------------------- */
+
+/* The check-out bar. Same geometry as the perk page's buy bar (.pd__bar in
+   perk-detail.css), because it does the same job in the same place: it takes
+   the tab bar's slot, so the shell's existing 112px of bottom clearance is
+   what it sits in and nothing needs extra. */
+.cart__bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  width: calc(100% - var(--shell-pad) * 2);
+  max-width: 520px;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--radius-hand-lg);
+  background: var(--gray-0);
+  box-shadow: var(--sticker-cut), var(--shadow-paper-lg);
+}
+.cart__bar-total { flex: 1; min-width: 0; }
+.cart__bar-lab {
+  display: block;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.cart__bar-fig {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-900);
+}
+.cart .cart__bar-act { flex: none; }
+
+/* ---- the way back, and the confirmation -------------------------------- */
+
+/* A link, not the system's Button: these go somewhere, and Button is not
+   polymorphic. Styled here rather than by borrowing .ax-btn. */
+.cart .cart__cta {
+  margin-top: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: 0 18px;
+  border-radius: var(--radius-btn);
+  background: var(--brand-primary); color: var(--text-on-brand);
+  box-shadow: var(--sticker-cut), var(--shadow-paper);
+  font-family: var(--font-display); font-weight: 700; font-size: var(--text-sm);
+  text-decoration: none; white-space: nowrap;
+  transition: box-shadow var(--dur-med) var(--ease-launch), background var(--dur-fast) var(--ease-launch);
+}
+.cart .cart__cta:hover { background: var(--brand-primary-strong); box-shadow: var(--sticker-cut), var(--shadow-paper-lg); }
+
+.cart--done { min-height: 62vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.cart__mark { position: relative; width: 110px; height: 100px; }
+.cart__blob {
+  position: absolute; inset: 10px 12px;
+  background: var(--butter-200);
+  border-radius: 58% 42% 55% 45% / 48% 60% 40% 52%;
+  transform: rotate(-7deg);
+}
+.cart__mark-ico { position: absolute; left: 50%; top: 50%; margin: -23px 0 0 -23px; color: var(--ink-900); transform: rotate(-4deg); }
+.cart__mark-spark { position: absolute; right: 2px; top: -2px; width: 24px; height: 24px; color: var(--violet-600); transform: rotate(16deg); }
+.cart__done-h1 { margin-top: 18px; }
+.cart__done-note { margin: 14px 0 0; max-width: 290px; font-size: var(--text-sm); line-height: 1.55; color: var(--gray-700); }
+.cart__done-credit { font-weight: 700; color: var(--text-brand); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cart__pm:active::before { transform: none; }
+}

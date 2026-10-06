@@ -1,0 +1,50 @@
+/* The shop's filter sheet — the app's sheet geometry, in the paper language:
+   white sheet, caps labels, the shop's own chips, drawn checkboxes. */
+.sfs__overlay { position: fixed; inset: 0; z-index: 100; background: var(--overlay); }
+.sfs {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; z-index: 101;
+  width: 100%; max-width: 520px; box-sizing: border-box; max-height: 90vh; overflow-y: auto;
+  background: var(--surface-card); border-radius: 18px 22px 0 0 / 22px 18px 0 0;
+  /* No vertical padding of its own: the sticky head and foot carry it, so they
+     sit flush against the sheet's top and bottom edges while the middle
+     scrolls under them. */
+  box-shadow: var(--shadow-paper-lg); padding: 0 18px;
+}
+/* Sticky head: grab handle and the title row, full-bleed across the sheet so
+   scrolled content never peeks at its sides. No shadow (owner, 2026-09-09). */
+.sfs__head {
+  position: sticky; top: 0; z-index: 2;
+  margin: 0 -18px; padding: 10px 18px 4px;
+  background: var(--surface-card);
+}
+.sfs__grab { width: 42px; height: 4px; margin: 0 auto 6px; border-radius: var(--radius-pill); background: var(--gray-200); }
+.sfs__top { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.sfs__h { flex: 1; margin: 0; font-family: var(--font-display); font-weight: 800; font-size: var(--text-xl); letter-spacing: var(--tracking-tight); color: var(--text-primary); }
+.sfs .sfs__reset, .sfs .sfs__link {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; border: none; background: none; cursor: pointer;
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700; letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--violet-600);
+}
+.sfs .sfs__link:disabled { color: var(--gray-400); cursor: default; }
+.sfs .sfs__x { width: 44px; height: 44px; margin-right: -10px; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-900); }
+.sfs__x-mark { position: relative; width: 16px; height: 16px; }
+.sfs__x-mark::before, .sfs__x-mark::after { content: ''; position: absolute; left: 7px; top: -1px; width: 2px; height: 18px; border-radius: 1px; background: currentColor; transform: rotate(45deg); }
+.sfs__x-mark::after { transform: rotate(-45deg); }
+.sfs__lab { margin: 20px 0 8px; font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700; letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-secondary); }
+.sfs__lab-row { display: flex; align-items: center; gap: 4px; margin-top: 8px; }
+.sfs__lab-row .sfs__lab { flex: 1; margin: 12px 0 0; }
+.sfs__lab-row .sfs__link { margin-top: 12px; }
+/* The chips scroll sideways on the page; in the sheet they wrap. */
+.sfs__chips .fc { flex-wrap: wrap; overflow: visible; gap: 0 4px;   /* (owner, 2026-09-09) 4px between pills; this rule outranks parts.css's .fc--pill */ margin: 0 -3px; padding: 4px 0; }
+.sfs__brands { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; }
+/* The brand row is the system's Checkbox label, full width and 48px tall so
+   the row — not the 21px box inside it — is what the thumb hits. */
+.sfs .sfs__brand { width: 100%; min-height: 48px; padding: 0 2px; box-sizing: border-box; border-bottom: 1.5px solid var(--gray-100); font-size: var(--text-sm); font-weight: 600; }
+.sfs__brands li:last-child .sfs__brand { border-bottom: none; }
+.sfs__hint { margin: 8px 0 0; font-size: var(--text-xs); color: var(--text-secondary); }
+/* Sticky foot: Show N results, always in reach; the sheet's bottom padding and
+   the safe area live here now. */
+.sfs__act {
+  position: sticky; bottom: 0; z-index: 2;
+  margin: 20px -18px 0; padding: 12px 18px calc(20px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface-card);
+}

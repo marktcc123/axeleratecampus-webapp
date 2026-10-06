@@ -1,0 +1,202 @@
+/* App shell. Colours are tokens only.
+   Note the (0,2,0) scoping rule from src/components/shell.css: any rule here
+   that competes with an ax-* class on the same element is scoped under .app. */
+
+/* The one colour the app defines for itself, and it fills a real gap: the
+   design system ships --accent-coral and --accent-coral-soft and nothing
+   between them, so coral has a ground tone and a tint but no TYPE tone.
+   --accent-coral measures 3.45:1 on white and 3.22 on the panel's cream, which
+   is fine for a graphic (3:1) and short of what text under 18px needs (4.5).
+   This is the same hue at 80% — 5.09 on white, 4.76 on cream — so a coral
+   label can be coral without failing AA. It belongs in the system's colour
+   ramps the next time that pin moves; every other ramp there (violet, amber,
+   green, red) already has its 700. */
+:root { --coral-700: #C24324; }
+
+.app {
+  min-height: 100vh;
+  /* `background-color`, not the `background` shorthand: the shorthand resets
+     every background sub-property it omits, including `background-image` —
+     which would silently null out the ax-grid-paper utility's grid on this
+     same element (spec §3.3). */
+  background-color: var(--surface-page);
+  font-family: var(--font-body);
+}
+.app__col {
+  /* Published so a full-bleed child can cancel exactly this much and no more.
+     --gutter is 20px on a phone, so a band that bled by it overflowed the
+     shell by 4px on every banded screen. */
+  --shell-pad: 16px;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px var(--shell-pad) calc(112px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Tab bar — from H5.dc.html. A floating pill of transparent buttons; the
+   current one grows a hand-drawn blob in its own tint behind the icon. The blob
+   is a state change, not a hover effect, so it is allowed to move.
+   4x48 + 3x4 gap + 2x2 padding = 208px, down from 230. The buttons keep their
+   52px height, so the pill's own height and everything measured off it are
+   unchanged — only the width came in. */
+.app__tabs {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  display: flex;
+  gap: 2px;   /* 4 → 2 (owner, 2026-09-09): with 44px tabs the bar is 186px, from 208 */
+  padding: 1px 4px;
+  background: var(--gray-0);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--sticker-cut), var(--shadow-paper-lg);
+}
+
+/* Above the bar, not the design system's suggested bottom-right corner: that
+   corner already holds the cart button, and the bar sits under it. z-index 41
+   clears the bar (40) and the cart (39). */
+.app__toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+  z-index: 41;
+  width: 100%;
+  max-width: 520px;
+  box-sizing: border-box;
+  padding: 0 16px;
+}
+
+.app .nav-btn {
+  position: relative;
+  /* 52 tall, and as wide as its word needs above a 54px floor (44 until
+     2026-09-21, when the labels came out from under sr-only): the icon over the
+     name, both centred. gray-600, not gray-500 — a 10px label needs 4.5:1 and
+     gray-500 measures 4.22 on white; the icon takes the same tone. */
+  box-sizing: border-box;
+  width: 56px;   /* fixed, not min: the bar must not shift when the label font arrives */
+  height: 52px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 0 2px;
+  text-decoration: none;
+  color: var(--gray-600);
+}
+/* The blob sits behind the icon alone, not the word: sized to the glyph and
+   centred on it, so the label reads on white whatever the tab's tint. */
+.app .nav-btn .blob {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 38px;
+  height: 36px;
+  margin-left: -19px;
+  border-radius: 58% 42% 52% 48% / 48% 60% 40% 52%;
+  transform: rotate(-8deg) scale(0);
+  transition: transform var(--dur-slow) var(--ease-launch);
+}
+.app .nav-btn[aria-current='page'] { color: var(--ink-900); }
+.app .nav-btn[aria-current='page'] .blob { transform: rotate(-7deg) scale(1); }
+.app .nav-btn .ic { position: relative; z-index: 1; }
+/* The name under the icon (owner, 2026-09-21). */
+.app .nav-btn .app__tab-label {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.app .nav-gigs .blob { background: var(--accent-lavender-soft); }
+.app .nav-perks .blob { background: var(--accent-yellow-soft); }
+.app .nav-app .blob { background: var(--accent-blush-soft); }
+.app .nav-me .blob { background: var(--accent-coral-soft); }
+/* Visible to a screen reader, to nothing else. Shared, because three
+   components had grown their own copy of this block. (The tab labels used to
+   share it; they are drawn since 2026-09-21.) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* ─── state changes that used to happen in one frame (2026-09-22) ─────────
+   The seven bottom sheets and their scrims arrive the way the account drawer
+   does: the sheet rises 240ms, the scrim fades 200ms, both on the system's
+   launch curve and both inside DESIGN.md's 320ms ceiling. Entrance only, as
+   the drawer's is — they unmount on close. The `to` state restates each
+   sheet's own translateX(-50%), which is how they are centred at rest. */
+.ats, .cos, .gs, .rs, .wds, .sfs, .gd__apply { animation: sheet-up 240ms var(--ease-launch) both; }
+.ats__overlay, .cos__overlay, .gs__overlay, .rs__overlay, .wds__overlay, .sfs__overlay, .gd__overlay { animation: scrim-in 200ms var(--ease-launch) both; }
+@keyframes sheet-up { from { transform: translate(-50%, 100%); } to { transform: translateX(-50%); } }
+@keyframes scrim-in { from { opacity: 0; } to { opacity: 1; } }
+/* The toast rises 8px as it appears (it mounts per message), so "Added to
+   cart" reads as an arrival rather than a blink. */
+.app__toast { animation: toast-in 200ms var(--ease-launch) both; }
+@keyframes toast-in { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translateX(-50%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .app .nav-btn .blob { transition: none; }
+  .ats, .cos, .gs, .rs, .wds, .sfs, .gd__apply,
+  .ats__overlay, .cos__overlay, .gs__overlay, .rs__overlay, .wds__overlay, .sfs__overlay, .gd__overlay,
+  .app__toast { animation: none; }
+}
+
+
+/* ImageSlot — dashed placeholder standing in for photography that does not exist. */
+.app__slot {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px;
+  box-sizing: border-box;
+  background: var(--surface-quiet);
+  border: 1.5px dashed var(--gray-300);
+  color: var(--gray-600);
+  font-family: var(--font-hand);
+  font-size: var(--text-sm);
+  line-height: 1.25;
+}
+
+/* A slot carrying a real shot: no dashed frame, no caption, and the image
+   covers the box. The covers are posters of assorted heights (736x736 up to
+   735x1137) and the slots are 1:1 and 4:3, so `cover` is doing real cropping
+   rather than tidying up a rounding error. */
+.app__slot--shot { border: none; background: none; padding: 0; overflow: hidden; }
+.app__slot-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* Where the crop anchors. A poster puts its title at the top, so cropping one
+   to a square card or a 4:3 hero has to keep the top; a product shot centres
+   its subject, and anchoring that to the top cuts its feet off. Centre is the
+   default because it is right for a photograph; the poster slots name
+   themselves here. */
+.mt__photo .app__slot-img,
+.ev-c__photo .app__slot-img,
+.edp__photo .app__slot-img,
+.gd__cover .app__slot-img,
+.tk__photo .app__slot-img { object-position: top; }
+
+/* Doodle base. Doodle.jsx hands the SVG in as --doodle and nothing else; the
+   mask lives here so the component works on any surface. Colour comes from
+   `background`, which each caller sets — currentColor by default so a doodle
+   reads as the ink of whatever it sits on rather than a pasted sticker. */
+.doodle {
+  display: block;
+  aspect-ratio: 1;
+  background: currentColor;
+  -webkit-mask: var(--doodle) center / contain no-repeat;
+  mask: var(--doodle) center / contain no-repeat;
+  pointer-events: none;
+}

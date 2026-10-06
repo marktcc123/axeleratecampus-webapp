@@ -1,0 +1,50 @@
+.mc { display: flex; flex-direction: column; gap: var(--space-sm); }
+.mc__top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-sm); }
+.mc__pay {
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.mc__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: var(--leading-snug);
+}
+.mc__brand { color: var(--text-secondary); font-size: var(--text-sm); }
+.mc__meta {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.mc__skills { display: flex; flex-wrap: wrap; gap: 6px; }
+.mc__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); margin-top: var(--space-2xs); }
+.mc__xp {
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--text-brand);
+  font-variant-numeric: tabular-nums;
+}
+/* Locked: the card stays fully readable — R8 says show distance, never hide. */
+.mc__lock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-hand-sm);
+  background: var(--surface-quiet);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+.mc__lock b { color: var(--text-primary); font-weight: 600; }
+.mc__lock-dist { font-family: var(--font-hand); font-size: var(--text-sm); color: var(--gray-600); }

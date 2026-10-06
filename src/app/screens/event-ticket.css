@@ -1,0 +1,170 @@
+/* /me/events/:date — one ticket. Paper with two tear lines punched through it. */
+
+.tk {
+  margin: 12px auto 0;
+  max-width: 340px;
+  background: var(--surface-quiet);
+  border-radius: var(--radius-hand-lg);
+  box-shadow: var(--shadow-paper);
+}
+.tk__photo { padding: 12px 12px 0; }
+
+.tk__head { padding: 20px 22px 0; }
+.tk__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--text-primary);
+}
+.tk__sub {
+  margin: 6px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* A tear line: a dashed rule with a half-circle bitten out of each end. The
+   circles are the page's own colour rather than transparent, because the
+   ticket sits on white and a mask here would also punch the dashes. */
+.tk__tear {
+  position: relative;
+  margin-top: 18px;
+  height: 1.5px;
+  background-image: linear-gradient(90deg, var(--gray-300) 0 6px, transparent 6px 12px);
+  background-size: 12px 1.5px;
+  background-repeat: repeat-x;
+}
+.tk__tear::before,
+.tk__tear::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--surface-page);
+  transform: translateY(-50%);
+}
+.tk__tear::before { left: -8px; }
+.tk__tear::after { right: -8px; }
+
+/* The stub half of the ticket, below the second tear. It owns the bottom
+   padding so the grid and the note can sit inside it without one of them
+   having to know it is last. */
+.tk__body { padding: 18px 22px 20px; }
+.tk__grid {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.tk__grid dt {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.tk__grid dd {
+  margin: 4px 0 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.tk__note {
+  margin: 14px 0 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--gray-700);
+}
+
+.tk__foot { padding: 16px 20px; display: flex; flex-direction: column; align-items: center; gap: 7px; }
+.tk__bars { width: 100%; max-width: 200px; height: 26px; fill: var(--ink-900); opacity: 0.8; }
+.tk__stub {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-align: center;
+  /* A door-list name is whatever the student typed: 60 characters of one
+     unbroken token has to fold rather than push the ticket off the screen. */
+  overflow-wrap: anywhere;
+}
+
+/* The line the seat sheet took for the host. Same rule: a note with no spaces
+   in it is a single token, and at 320px it ran 1,640px wide before this. */
+.tk__msg { margin: 14px 0 0; padding-top: 12px; border-top: 1.5px dashed var(--gray-200); }
+.tk__msg-lab {
+  margin: 0;
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-secondary);
+}
+.tk__msg-t {
+  margin: 4px 0 0; font-size: var(--text-xs); line-height: 1.5; color: var(--gray-700);
+  overflow-wrap: anywhere;
+}
+
+/* Outside the pass. Two links, split by a hairline, each carrying the 44px
+   touch floor without inflating the row — the same pattern the board's "view
+   all" uses. */
+.tk__links {
+  margin: 14px auto 0;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+}
+.tk__link {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 22px;
+  border-bottom: 1.5px solid var(--gray-200);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+.tk__link:last-child { border-bottom: none; }
+.tk__link:hover { color: var(--text-brand); }
+
+/* A spent pass. The bars fade and grey off — the code is the only part that
+   stops working, so it is the only part that changes. The art, the title and
+   the details stay as they were. */
+.tk--past .tk__bars { fill: var(--gray-400); opacity: 0.55; }
+.tk__void {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--gray-600);
+}
+
+.tk__drop { margin-top: 6px; display: flex; justify-content: center; }
+.tk__drop-btn {
+  min-height: 44px;
+  padding: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  color: var(--gray-600);
+}
+.tk__drop-btn:hover { color: var(--text-primary); }

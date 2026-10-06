@@ -1,0 +1,154 @@
+/* The public profile, redrawn 2026-09-21 on the reference build's /u/marktao.
+   Narrow: it is one card about one person, read by someone who arrived from
+   a link with no other context. */
+.pp {
+  min-height: 100vh;
+  /* content-box + min-height stacks the padding on top of the 100vh floor
+     (see the box-sizing note in the other app screens) — border-box keeps
+     the padding inside it instead of adding to it. */
+  box-sizing: border-box;
+  padding: 8px 16px 44px;
+  background: var(--surface-page);
+}
+.pp__inner { max-width: 420px; margin: 0 auto; text-align: left; }
+
+/* Back: the chevron and the word, one 44px control. A button, not a link:
+   where it goes depends on whether this visitor has an in-app history entry
+   (see PublicProfile.jsx), and a href cannot say that. */
+.pp__top { display: flex; align-items: center; min-height: 44px; }
+.pp .pp__back {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-left: -6px;
+  padding: 0 6px;
+  border: none;
+  background: none;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+/* The CSS chevron every other detail screen in this app draws. */
+.pp__chev {
+  width: 9px;
+  height: 9px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  border-radius: 1px;
+  transform: rotate(45deg);
+  margin-left: 3px;
+}
+/* Share at the row's right (owner, 2026-09-23): a 44px box round a 20px mark,
+   hanging 12px into the gutter so the mark's edge lands on the content edge,
+   the way the shop's search glyph does. */
+.pp .pp__share {
+  box-sizing: border-box;
+  width: 44px; height: 44px; flex: none;
+  margin-left: auto; margin-right: -12px;
+  display: inline-grid; place-items: center;
+  border: none; background: none; color: var(--text-primary); cursor: pointer;
+}
+.pp__back-t {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+/* The identity row: disc left, name, campus and rung right, like Me's. */
+.pp__id { display: flex; align-items: center; gap: 16px; margin-top: 12px; }
+.pp__avatar { flex: none; }
+.pp__who { min-width: 0; flex: 1; }
+.pp__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-2xl);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+.pp__campus {
+  margin: 6px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+  color: var(--gray-700);
+}
+/* Scoped to (0,2,0): the icon wears .ax-icon, which the design system injects
+   after the app bundle. Coral, a graphic with its words beside it in sr-only,
+   so 3:1 is the bar it has to clear. */
+.pp .pp__tick { color: var(--accent-coral); flex: none; }
+/* The rung, in the ladder's own colour for it (Unlock's LEVEL_HUE) at the
+   -700 step that clears AA as text — the same line Me draws. */
+.pp__level-name {
+  margin: 6px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--coral-700);
+}
+
+/* The figures, split by dashed rules — Me's own row. */
+.pp__stats { margin: 22px 0 0; display: flex; }
+.pp__stat { flex: 1; display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
+.pp__stat:first-child { padding-left: 0; }
+.pp__stat + .pp__stat { border-left: 1.5px dashed var(--gray-300); }
+.pp__stat dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.pp__stat dt {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* The section heading: the board's display caps, so the card reads as the
+   same product as the app that issued it. 48 above it (owner, 2026-09-21:
+   more air between the figures and the list). */
+.pp__h2 {
+  margin: 48px 0 6px;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: var(--text-xl);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+/* One row per brand: the disc, the brand, what kind of work with its tick,
+   how many missions and which. Hairlines between rows, none after the last. */
+.pp__exp { list-style: none; margin: 0; padding: 0; }
+.pp__row { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1.5px solid var(--gray-200); }
+.pp__row:last-child { border-bottom: none; }
+.pp .pp__disc { flex: none; }
+.pp__row-who { flex: 1; min-width: 0; }
+.pp__row-name { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: var(--text-lg); letter-spacing: -0.02em; color: var(--text-primary); }
+.pp__row-kind {
+  margin: 4px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.pp__row-meta { margin: 4px 0 0; font-size: var(--text-xs); line-height: 1.45; color: var(--gray-700); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp__empty { margin: 10px 0 0; font-size: var(--text-sm); color: var(--gray-700); }

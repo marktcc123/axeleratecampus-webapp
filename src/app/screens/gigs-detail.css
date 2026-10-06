@@ -1,0 +1,365 @@
+/* The dock at the bottom is a note stacked on the bar, which is taller than
+   the 112px .app__col reserves for a bare bar. Without this the last section
+   of the brief sits under the note and cannot be scrolled clear. */
+/* isolation: the paper and the desk under it are z-index:-1 / -2 pseudos,
+   which must not slip behind the app column's own background. */
+/* margin-top -16px: the page itself escapes the column's top padding, so its
+   box begins at the screen's top edge — the cover then needs no negative
+   margin of its own (a first child's would collapse through and move this box
+   instead, which put the Back chip above the screen), and the chip's `top` is
+   measured from the real top. */
+.gd { margin-top: -16px; padding-bottom: 56px; position: relative; isolation: isolate; }
+/* The desk. White paper on a white page has no edge to see — only a 2px shadow
+   on one side — which is why "the paper does not reach the bottom" kept being
+   true to the eye however far the paint ran (owner, twice, 2026-09-08). The
+   mission page's ground is the system's quiet surface, bled out to the column
+   edges and down behind the dock, at least a screenful tall; the white sheet
+   then reads as a sheet all the way down. */
+.gd::before {
+  content: ''; position: absolute; z-index: -3;
+  top: 0; left: calc(var(--shell-pad) * -1); right: calc(var(--shell-pad) * -1);
+  bottom: calc(-112px - env(safe-area-inset-bottom, 0px));
+  min-height: 100vh;
+  background: var(--surface-quiet);
+}
+.gd__top { display: flex; align-items: center; gap: 6px; }
+/* The cover at the screen's top edge: -16px escapes the column's top padding,
+   the gutters go with --shell-pad, and z-index -2 puts it between the desk
+   (-3) and the sheet's paper (-1), so the paper's rounded top lies on the
+   photo. */
+.gd__cover { position: relative; z-index: -2; margin: 0 calc(var(--shell-pad) * -1); }
+/* Back and Share over the photo: parts/DetailTopBar.jsx, fixed to the top. */
+.gd .gd__back {
+  width: 44px; height: 44px; margin: -8px 0 -8px -14px;
+  display: flex; align-items: center; justify-content: center;
+  border: none; background: none; cursor: pointer; color: var(--ink-900);
+  text-decoration: none;
+}
+.gd__chev-l {
+  display: inline-block; width: 11px; height: 11px;
+  border-left: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor;
+  border-radius: 1px; transform: rotate(45deg); margin-left: 4px;
+}
+/* Under the photo, the event page's pair (owner, 2026-09-09): one caps line of
+   tags, then the title in the display face. */
+.gd__caps {
+  margin: 16px 0 0;
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 600;
+  letter-spacing: 0.07em; text-transform: uppercase; color: var(--gray-600);
+}
+
+/* The sheet. No horizontal padding: it used to add 16px inside the page's
+   own 16, so the photo wore a white frame and the title sat 32px in while the
+   rest of the app sets its text at 16.
+
+   Since 2026-09-08 (owner) the paper runs from the cover to the bottom of the
+   screen — the brief lives inside it — so it is PAINT, not a box: a ::before
+   that takes no space, extended past the sheet's own end by exactly the
+   clearance below it (.gd's 56px + the column's 112px + the safe area). The
+   sheet itself still ends where its content ends, which is what the
+   occlusion guard measures (the Career screen learned this the hard way).
+   The half-degree tilt went with the change: a tilt reads on a card and
+   skews on a page-tall sheet. Ring and shadow stay, on the paint. */
+/* Flush under the photo (owner, 2026-09-09: no bite): the paper simply
+   continues from the photo's foot, so the first line is the brand and who is
+   going. */
+.gd__sheet { margin-top: 0; position: relative; padding: 0 0 20px; }   /* the caps line carries the 16px under the photo */
+.gd__sheet::before {
+  content: ''; position: absolute; z-index: -1;
+  left: calc(var(--shell-pad) * -1); right: calc(var(--shell-pad) * -1); top: 0;
+  bottom: calc(-56px - 112px - env(safe-area-inset-bottom, 0px));
+  /* At least a screenful from the sheet's top: a short brief on a tall phone
+     otherwise ended its paper above the fold (the Career screen's lesson). */
+  min-height: 100vh;
+  background: var(--gray-0);
+  /* Square and full-bleed: it meets the photo's edges (owner, 2026-09-09). */
+  border-radius: 0;
+}
+/* The mission's name is a screen title, so it takes --font-title. */
+.gd__title {
+  margin: 6px 0 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--text-primary);
+}
+/* One line, small: a 22px mark and the brand's name. The 34px disc with the
+   name and the role stacked beside it was the loudest thing under the title. */
+.gd__host { margin-top: 14px; display: flex; align-items: center; gap: 8px; }
+/* The reward note's tape, at its right end: the system's strip (62x18, white
+   at .55, a hairline keyline), tilted the other way since it hangs off a corner. */
+.gd__note { position: relative; }
+.gd__note-tape {
+  position: absolute; z-index: 1; right: 14px; top: -9px; width: 62px; height: 18px;
+  transform: rotate(2deg); background: rgba(255, 255, 255, 0.55); box-shadow: inset 0 0 0 1px rgba(23, 16, 41, 0.06);
+}
+/* 32px mark and a --text-lg name (owner, 2026-09-09: bigger) — with the title
+   now on the photo, this line is the first thing on the sheet and carries it. */
+.gd__host-mark {
+  width: 32px; height: 32px; flex: none; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: var(--violet-600); color: var(--text-on-brand);
+  font-family: var(--font-display); font-weight: 800; font-size: var(--text-xs);
+}
+.gd__host-name { font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); }
+/* The link round mark and name: a 44px row for the thumb without moving the
+   line (negative block margin, the .apps__add trick). */
+.gd .gd__host-link { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin: -6px 0; text-decoration: none; color: inherit; }
+.gd__going { display: flex; align-items: center; margin-left: auto; }
+.gd__pip {
+  width: 24px; height: 24px; flex: none; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700;
+  box-shadow: 0 0 0 2px var(--gray-0); margin-left: -8px;
+}
+.gd__pip:first-child { margin-left: 0; }
+.gd__earn-wrap { margin-top: 20px; position: relative; }
+/* No top margin and no leading on the two lines (owner, 2026-09-09: the note's
+   padding read as more above than below — the label's 14.5px line box and the
+   figure's 24.65px one were the difference). Tight line-heights put the ink
+   where the padding says it is, 12px from every edge. */
+.gd__earn-grid { margin-top: 0; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+/* Label first, figure under it. The label used to trail the figure, which is
+   why it carried a top margin; the spacing moves with the order. */
+.gd__earn-fig {
+  line-height: 1.1;
+  font-family: var(--font-display); font-weight: 800; font-size: var(--text-lg);
+  letter-spacing: var(--tracking-tight); font-variant-numeric: tabular-nums; color: var(--ink-900);
+}
+.gd__earn-lab {
+  margin: 0; line-height: 1; font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 600;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--gray-700);
+}
+.gd__earn-grid .gd__earn-fig { margin-top: 3px; }
+/* Outside the note, on the page ground: a plain two-item row, no rule above it.
+   The labels here need their own colour — .gd__earn-lab's is mixed for the
+   yellow paper inside the note, and reads too light on white. */
+/* Deadline, duration, spots — three even columns across the row rather than a
+   flex row bunched at the left edge. A grid, not space-between: at 320px the
+   values are different widths, so space-between would leave the middle column
+   wandering while a third-each keeps them on a fixed rhythm. */
+/* The facts, one to a line with a glyph (owner, 2026-09-09) — the event page's
+   construction. The label and the value share the line; the going control
+   rides at the right of the Spots line. */
+.gd__earn-meta { margin: 18px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 2px; }
+.gd__fact { display: flex; align-items: center; gap: 10px; min-height: 32px; }
+.gd .gd__fact-ico { flex: none; color: var(--text-secondary); }
+.gd__fact .gd__earn-lab { flex: none; min-width: 72px; }
+.gd__fact .gd__going { margin-left: auto; }
+
+/* Bigger than the note's own labels: 12px caps over a 17px figure. These three
+   are facts a student decides on, and at 10/12 they read as a footnote to the
+   note above them. */
+.gd__earn-meta .gd__earn-lab { color: var(--text-secondary); font-size: var(--text-xs); }
+.gd__earn-val {
+  margin-top: 3px; font-family: var(--font-label); font-size: var(--text-xs); font-weight: 700;
+  letter-spacing: .02em; font-variant-numeric: tabular-nums; color: var(--ink-900);
+}
+.gd__earn-meta .gd__earn-val { margin-top: 0; font-size: var(--text-sm); letter-spacing: -0.01em; }
+
+/* Body + accordion, at the screen's own 16px inset — no padding of its own.
+   It used to add 16 to match the SHEET's inner edge, which put this column at
+   32 while every other screen in the app (event detail, perk detail, orders,
+   wallet) sets its text at 16. The sheet is a card and its content follows the
+   card; this column is the page, and it follows the page. */
+.gd__body { padding: 0; }
+
+/* The section's heading now, not a label above one, so it takes the size the
+   deleted "The mission" h3 had. */
+.gd__section-label {
+  margin: 32px 0 0; font-family: var(--font-label); font-size: var(--text-sm); font-weight: 700;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-primary);
+}
+.gd__section-label span { background: var(--scribble-butter) left bottom / 100% 7px no-repeat; padding: 0 2px 6px; }
+.gd__prose { margin-top: 8px; font-size: var(--text-sm); line-height: 1.6; color: var(--gray-700); }
+/* The brief opens the body with no label above it, so no gap of its own. */
+
+/* Each part of the brief, headed rather than folded. These were buttons in an
+   exclusive accordion — a 44px row, a chevron and two of the three sections
+   hidden behind a tap; the chevron's rotation and the .gd__acc-* rules went
+   with them. */
+/* No rule above each heading: the owner asked the dividers off, and the gap
+   plus the display face is enough to separate one part of the brief from the
+   next. */
+.gd__sec-h {
+  margin: 38px 0 0;
+  font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg);
+  letter-spacing: -0.01em; color: var(--text-primary);
+}
+/* Coral is on this section's bullet marks (set in GigsDetail.jsx), not on its
+   heading — the headings all read ink. */
+.gd__steps { margin: 12px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.gd__step { display: flex; align-items: flex-start; gap: 10px; }
+.gd__step-n {
+  flex: none; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-pill); background: var(--accent-yellow); color: var(--text-on-accent);
+  box-shadow: var(--sticker-cut);
+  font-family: var(--font-label); font-size: var(--text-xs); font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.gd__step-t { font-size: var(--text-sm); line-height: 1.55; color: var(--gray-700); }
+.gd__bullets { margin: 12px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.gd__bullet { display: flex; align-items: flex-start; gap: 10px; font-size: var(--text-sm); line-height: 1.55; color: var(--gray-700); }
+
+/* Apply sheet. */
+.gd__overlay { position: fixed; inset: 0; z-index: 100; background: var(--overlay); }
+.gd__apply {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: 0; z-index: 101; width: 100%; max-width: 520px; box-sizing: border-box;
+  background: var(--surface-card);
+  border-radius: 18px 22px 0 0 / 22px 18px 0 0;
+  box-shadow: var(--shadow-paper-lg);
+  padding: 22px 20px calc(28px + env(safe-area-inset-bottom, 0px));
+}
+.gd__apply h2 {
+  margin: 0 0 8px; font-family: var(--font-display); font-weight: 800; font-size: var(--text-xl);
+  letter-spacing: var(--tracking-tight); color: var(--text-primary);
+}
+.gd__apply p { margin: 0 0 18px; font-size: var(--text-sm); line-height: 1.55; color: var(--text-secondary); }
+
+/* An out-of-reach mission states its distance where Apply would be — R8. */
+.gd__locked {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-100);
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+
+/* Takes the tab bar's place on this screen, the same geometry the perk page's
+   buy bar uses — but the dock is taller than a bar now, so the shell's 112px
+   is no longer enough on its own and .gd adds the rest (see .gd below). */
+.gd__dock {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  max-width: 520px;
+  width: calc(100% - var(--shell-pad) * 2);
+  box-sizing: border-box;
+}
+/* The note hangs ON the bar, so the bar overlaps its bottom edge rather than
+   floating 10px clear of it: a gap between two fixed cards is a window, and
+   the brief scrolled through it. The overlap eats only the note's own bottom
+   padding. It is inside .gd__dock's width, so it needs no positioning of its
+   own — the two move as one. */
+.gd__dock .gd__earn-wrap { margin: 0 0 -10px; }
+.gd__bar {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 12px;   /* 56px tall round the 44px button (owner, 2026-09-09: shorter); was 10 → 64 */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--radius-hand-lg);
+  background: var(--gray-0);
+  box-shadow: var(--sticker-cut), var(--shadow-paper-lg);
+}
+.gd__bar-when { flex: 1; min-width: 0; }
+.gd__bar-lab {
+  display: block;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.gd__bar-fig {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink-900);
+}
+.gd__bar-act { flex: none; }
+.gd__bar .gd__locked { flex: none; }
+
+/* Ink, not violet, matching the shop's Add-to-cart. Scoped under .gd so it
+   reaches (0,2,0): the design system injects its own button rule after the app
+   bundle, so a single class here would lose the tie. */
+.gd .gd__bar-btn { background: var(--ink-900); color: var(--gray-0); }
+
+
+/* Who is on the mission, inside Dialog. Avatar, name, campus, and the row is
+   a link to that student's public profile. */
+.gd .gd__going {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  /* 44px of target with the pips drawn inside it, and negative block margins
+     so a touch-sized control does not inflate the host row — the same trick
+     .gb__viewall and .apps__add use. */
+  min-height: 44px;
+  margin-block: -10px;
+  padding: 0 2px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.gd__crew { list-style: none; margin: 0; padding: 0; }
+.gd__crew-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 0;
+  text-decoration: none;
+  color: inherit;
+}
+.gd__crew-photo { flex: none; width: 38px; }
+.gd__crew-who { flex: 1; min-width: 0; }
+.gd__crew-name {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.gd__crew-campus {
+  display: block;
+  margin-top: 1px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+/* The same drawn chevron the hub's rows use. Not a glyph. */
+.gd__crew-chev {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--gray-400);
+  border-top: 2px solid var(--gray-400);
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+
+/* The ended page: what /app/earn/:slug shows when the slug is one of the
+   student's applications but no longer one of the board's missions. */
+.gd--ended .gd__caps { margin-top: 26px; }
+.gd__ended-h1 {
+  margin: 8px 0 0;
+  font-family: var(--font-title); font-weight: 600; font-size: var(--text-2xl);
+  letter-spacing: 0.01em; text-transform: uppercase; color: var(--text-primary);
+}
+.gd--ended .gd__prose { margin-top: 12px; }
+.gd .gd__ended-back {
+  display: inline-flex; align-items: center; min-height: 44px; margin-top: 10px;
+  font-family: var(--font-label); font-size: var(--text-xs); font-weight: 700;
+  color: var(--violet-600); text-decoration: underline; text-underline-offset: 3px;
+}

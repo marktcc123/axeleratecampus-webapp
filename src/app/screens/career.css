@@ -1,0 +1,142 @@
+/* Axelerate career — the rewards ladder: a run rate at the top and a deck of
+ * rewards under it, most of them still locked.
+ *
+ * This screen was the app's ONE DARK SCREEN, built to the owner's reference on
+ * 2026-09-02 (5bf496c). Reverted to the light paper language on 2026-09-03 at
+ * the user's request: it was the only screen in Me that stepped outside the
+ * app's own surfaces, and reaching it from the Me list read as a different
+ * product. If the owner pushes back, the dark version is that commit.
+ *
+ * Two things the dark version taught, kept here because they explain why the
+ * rules below look the way they do:
+ *
+ * - the ground was PAINT, not a box. A full-bleed built the usual way — negative
+ *   margins out to the viewport, padding putting the content back — made the
+ *   screen root end 112px below the tab bar, and the app column's last child is
+ *   exactly what the occlusion guard measures, so a ground that runs behind the
+ *   bar read as content buried under it. Light needs no ground at all, so both
+ *   the .crr background and its ::before bleed are gone rather than recoloured.
+ * - accents cannot simply invert. Coral carried every figure on ink-900; on
+ *   white it measures 3.45:1 and fails AA on normal text, as does accent-yellow
+ *   at ~1.6:1. Both moved to violet-600 (6.48:1), which is Me's accent anyway —
+ *   Wallet's +XP figures are the same colour.
+ */
+/* The header is SubScreen's blush band now (parts/sub-screen.css) — the back
+   control, title, handwritten aside and lede all come from the shared
+   ScreenHeader, so the .crr__top / __back / __chev / __eyebrow / __kicker /
+   __title / __lede rules that used to sit here are gone rather than restyled.
+   The band's palette, including the --sh-* overrides that keep its note at
+   AA on blush, lives with the other four bands. */
+
+/* The run rate. A filled, padded panel until 2026-09-04; it and the row of
+   filled reward cards under it made the screen read as a stack of boxes rather
+   than a page. Both are plain content on the page ground now, separated by
+   space and hairlines instead of by fills. */
+/* The run rate sits on the system's sticky note now (the mission page's own
+   device for what a mission pays): yellow, taped, no dog-ear. Its padding is
+   set on the component (Career.jsx) — app CSS may not reach into .ax-note. */
+.crr .crr__rate, .sub .crr__rate { margin-top: 22px; display: block; }
+.crr__rate-lab {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+/* The figure, large, in the display face. */
+.crr__rate-fig {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink-900);
+}
+.crr__rate-n { font-variant-numeric: tabular-nums; }
+.crr__rate-note {
+  margin: 8px 0 0;
+  font-size: var(--text-xs);
+  line-height: 1.55;
+  color: var(--gray-700);
+}
+.crr__rate-note b { color: var(--text-primary); font-weight: 700; }
+
+.crr__label {
+  margin: 26px 0 8px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.crr__label span { background: var(--scribble-butter) left bottom / 100% 7px no-repeat; padding: 0 2px 6px; }
+.crr__lane { margin-top: 26px; }
+/* The brand's name in ink, the display face (owner, 2026-09-09: "black"). */
+.crr__brand {
+  margin: 0 0 8px;
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+/* Dots left, "x/x finished" at the right end, one line. */
+.crr__meter-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.crr__meter-row .crr__dots { margin-top: 0; }
+.crr__lane-n {
+  margin: 0 0 0 auto; flex: none;
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700;
+  letter-spacing: 0.04em; font-variant-numeric: tabular-nums;
+  /* Pink, like the dots (owner, 2026-09-09) — but the accent itself is 1.7:1 on
+     white, far under AA for 10px type, so it is pulled towards ink until it
+     clears 4.5:1 (measured 5.75). The plain accent is the fallback where
+     color-mix is unknown. */
+  color: var(--accent-pink); color: color-mix(in oklab, var(--accent-pink) 72%, var(--ink-900));
+}
+.crr .crr__brand-disc, .sub .crr__brand-disc { flex: none; }
+
+/* One reward. A hairline between rows rather than a fill around each — the
+   same list shape Levels' ladder uses (.lv__step). */
+.crr__card {
+  padding: 16px 0;
+  border-top: 1.5px solid var(--gray-100);
+}
+.crr__card:first-of-type { border-top: 0; padding-top: 8px; }
+.crr__card-title {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+/* The dot row (design-system MarkerBar). Its width is set on the component
+   itself (Career.jsx) — app CSS may not reach into it. */
+.crr__dots { margin-top: 10px; }
+.crr__card-note {
+  margin: 8px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  /* Locked is instruction, not achievement — it reads secondary, and the one
+     row that is actually open takes the accent below. */
+  color: var(--text-secondary);
+}
+.crr__card[data-locked='false'] .crr__card-note, .crr__card-note[data-locked='false'] { color: var(--violet-600); }
+
+/* A lane's rewards, as bare titles under its one distance line. */
+.crr__rewards { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.crr__reward-t {
+  margin: 0; font-family: var(--font-display); font-weight: 700; font-size: var(--text-sm);
+  letter-spacing: -0.01em; color: var(--text-primary);
+}
+.crr__reward-d { margin: 3px 0 0; font-size: var(--text-xs); line-height: 1.5; color: var(--gray-700); }
+/* The proof's own description, the same rung. */
+.crr__card-desc { margin: 4px 0 0; font-size: var(--text-xs); line-height: 1.5; color: var(--gray-700); }

@@ -1,0 +1,124 @@
+/* The brand row on Discover: white cards in a line (owner, 2026-09-21, from a
+   reference). Bleeds -16px like the event reel so the last visible card is cut
+   by the screen edge, which is what says there are more; scroll-padding keeps
+   the first on the gutter. The row's own top padding is for the cards' shadow
+   and the bottom for its fall. */
+.br__row {
+  list-style: none;
+  margin: 14px -16px 0;
+  padding: 0 16px 4px;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: 16px;
+  scrollbar-width: none;
+}
+.br__row::-webkit-scrollbar { display: none; }
+.br__item { flex: none; scroll-snap-align: start; display: flex; }
+/* Paper, not white-with-a-shadow (owner, 2026-09-21): the card is the same
+   quiet ground the hub panel and the intro's rows sit on, and its tone alone
+   is the edge — no shadow, no hairline. Sized three times the same day, and
+   the width is where two of the owner's asks meet: the third card should show
+   at 390, and the type should be bigger. At 144px the third showed 66px but
+   the name could not go past 14px without truncating "Axelerate Beauty"; that
+   name measures 139px at 17px, so the column is 140: a 160px card with 10px
+   of side padding. The third card shows 34px at 390, which is enough to say
+   the row scrolls. Colour arrives on the disc alone. */
+.br__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  width: 160px;
+  box-sizing: border-box;
+  padding: 12px 10px 12px;
+  border-radius: var(--radius-hand);
+  background: var(--surface-quiet);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.br__card .avatar { margin-bottom: 10px; }
+.br__tag { margin-bottom: 10px; }
+/* One line, and an ellipsis past it (owner, 2026-09-21): "August Uncommon
+   Tea" wrapped to two and made its card taller than the row. width: 100%,
+   because a flex-start column child is only as wide as its text until told
+   otherwise, and the ellipsis needs an edge to run into.
+
+   --text-sm again (owner, 2026-09-21, the third turn on this: "all the type
+   is too big, except the title"). The card keeps the 160px the 17px name had
+   asked for, so the name now has room to spare and nothing truncates but
+   "August Uncommon Tea". */
+.br__name {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+/* Two lines at most (owner, 2026-09-21), an ellipsis past them: a card that
+   grew with its longest blurb would drag the whole row's height. Both spellings
+   of the clamp, for the engines that have moved off the prefix. */
+.br__tag {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+/* The count, in yellow (owner, 2026-09-21: not violet). Yellow type on paper
+   cannot be read — accent-yellow is 1.5:1 there and even butter-600 only 2.8,
+   against the 4.5 a 10px line needs — so the yellow is the ground and the ink
+   sits on it at 11.97:1, the way the shop's cashback pill and Unlock's chips
+   carry every accent that cannot carry type. Pinned to the foot so every card
+   in the row ends on the same line whatever its tagline did. */
+.br__n {
+  margin-top: auto;
+  padding: 4px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-yellow);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-900);
+}
+
+/* The brand's sheet, inside the system's Dialog. The subtitle sits right under
+   the Dialog's own title row. */
+.bd__meta { margin: -8px 0 0; font-size: var(--text-sm); color: var(--gray-700); font-variant-numeric: tabular-nums; }
+.bd__lab {
+  margin: 22px 0 2px;
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--gray-700);
+}
+/* Missions as the board's rows, products as the shop's card copy — both with
+   no ground under them (owner, 2026-09-09). */
+.bd__tiles { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.bd__grid { list-style: none; margin: 6px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.bp-p { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-decoration: none; color: inherit; }
+.bp-p .app__slot { width: 100%; }
+.bp-p__brand {
+  margin: 6px 0 0; font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 600;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-secondary);
+}
+.bp-p__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: var(--text-sm); letter-spacing: -0.01em; line-height: 1.3; color: var(--text-primary); }
+.bp-p__earn { margin: 2px 0 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bp-p__price { font-family: var(--font-display); font-weight: 800; font-size: var(--text-lg); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+.bp-p__from { font-family: var(--font-body); font-weight: 600; font-size: var(--text-sm); letter-spacing: 0; margin-right: 4px; color: var(--text-secondary); }
+.bp-p__price--out { font-family: var(--font-body); font-weight: 600; font-size: var(--text-sm); color: var(--gray-700); }
+.bp-p__back {
+  padding: 2px 7px; border-radius: var(--radius-pill); background: var(--accent-coral-soft, #FCD9D1);
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700; letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--ink-900);
+}
+.bd__none { margin: 6px 0 0; font-size: var(--text-xs); color: var(--gray-700); }

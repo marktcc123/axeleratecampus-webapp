@@ -1,0 +1,51 @@
+[
+  {
+    "id": "solra",
+    "name": "Solra",
+    "role": "Brand",
+    "blurb": "Sparkling yuzu, a little salt, no sugar. Solra runs its campus launch through student reels and sells the 12-pack it films.",
+    "cover": "mission-solra-unbox"
+  },
+  {
+    "id": "notely",
+    "name": "Notely",
+    "role": "Brand",
+    "blurb": "Paper for people who type all day. The Five Minute Journal in linen, and the chalk drops that put it on the quad the night before launch.",
+    "cover": "mission-notely-quad"
+  },
+  {
+    "id": "vera",
+    "name": "Vera",
+    "role": "Brand",
+    "blurb": "Going-out clothes and the Friday pop-ups that sell them. Vera staffs its own door with students who work the line.",
+    "cover": "mission-vera-popup"
+  },
+  {
+    "id": "axelerate-beauty",
+    "name": "Axelerate Beauty",
+    "role": "US operating partner for Dermabell",
+    "blurb": "Clinical K-beauty brought to US campuses. Axelerate Beauty places Dermabell in local salons and stocks the glass skin serum behind the counter.",
+    "cover": "mission-dermabell-shelf"
+  },
+  {
+    "id": "loop",
+    "name": "Loop",
+    "role": "Brand",
+    "blurb": "One box, one common room. Loop ships the demo kit and pays the student who fills the room.",
+    "cover": "mission-loop-dorm"
+  },
+  {
+    "id": "august-uncommon-tea",
+    "name": "August Uncommon Tea",
+    "role": "Brand",
+    "blurb": "Loose-leaf blends with a story per tin. Southern Gothic — peach and a whisper of bourbon smoke — is the one that got it on campus.",
+    "cover": "product-tea-tin"
+  },
+  {
+    "id": "italic",
+    "name": "Italic",
+    "role": "Brand",
+    "blurb": "Turkish cotton woven in Denizli, sold without the hotel markup. Three towels, sized for a shared bathroom.",
+    "cover": "product-towel-rail"
+  }
+]

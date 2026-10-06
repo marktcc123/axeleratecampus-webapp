@@ -1,0 +1,67 @@
+/* ============================================================
+   Axelerate website — token override layer
+   ------------------------------------------------------------
+   The design system defines every token on a bare :root{} and has
+   no @media rules. This file is loaded AFTER its styles.css, so the
+   declarations below win on source order at equal specificity.
+
+   Mobile-first. Three tiers:
+     base  <= 640px   phone   — new values
+     md    641–1024   tablet  — new values
+     lg    >= 1025px  desktop — EXACTLY the system's own values, so
+                               wide screens render as the system intends
+
+   Sizes are rem to match the system: a reader's browser font-size
+   setting and 200% zoom apply to the overrides too, not just to the
+   rungs this file leaves alone.
+
+   --text-xl is deliberately absent. It is 22px at every tier, and it
+   used to be the one display rung this file did NOT step down — which
+   left --text-2xl (20px) SMALLER than --text-xl (22px) on every phone,
+   an inverted scale. The phone and tablet ladders below now ascend
+   monotonically from --text-xl at ratios 1.14-1.28.
+
+   Only these nine tokens move. Colour, radius, shadow and motion
+   never change by viewport — the brand does not change shape.
+   tests/unit/responsive-tokens.test.js asserts every value here.
+   ============================================================ */
+
+:root {
+  --text-6xl: 3rem;         /* 48px */
+  --text-5xl: 2.5rem;       /* 40px */
+  --text-4xl: 2.125rem;     /* 34px */
+  --text-3xl: 1.8125rem;    /* 29px */
+  --text-2xl: 1.5625rem;    /* 25px */
+  --container-max: 100%;
+  --gutter: 20px;
+  --space-4xl: 56px;
+  --space-3xl: 40px;
+}
+
+@media (min-width: 641px) {
+  :root {
+    --text-6xl: 4rem;       /* 64px */
+    --text-5xl: 3.125rem;   /* 50px */
+    --text-4xl: 2.5rem;     /* 40px */
+    --text-3xl: 2rem;       /* 32px */
+    --text-2xl: 1.625rem;   /* 26px */
+    --container-max: 100%;
+    --gutter: 32px;
+    --space-4xl: 72px;
+    --space-3xl: 52px;
+  }
+}
+
+@media (min-width: 1025px) {
+  :root {
+    --text-6xl: 5rem;       /* 80px */
+    --text-5xl: 3.75rem;    /* 60px */
+    --text-4xl: 2.875rem;   /* 46px */
+    --text-3xl: 2.25rem;    /* 36px */
+    --text-2xl: 1.75rem;    /* 28px */
+    --container-max: 1160px;
+    --gutter: 24px;
+    --space-4xl: 96px;
+    --space-3xl: 64px;
+  }
+}

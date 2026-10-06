@@ -1,0 +1,294 @@
+/* Mission tile — a horizontal row: 140px square of photo on the left, copy on
+ * the right. It was a two-column grid of vertical cards; the design moved to
+ * one column of rows, which gives the title room to breathe at 390px.
+ *
+ * `.mt` sits on the design-system Card's root alongside its own ax-card
+ * classes. Checked against node_modules/axelerate-design-system/components/
+ * display/Card.jsx: those set position, font-family, border-radius,
+ * transition, background, box-shadow, border, padding and cursor. None of it
+ * overlaps what `.mt` declares, so there is no (0,1,0) tie to win and `.mt`
+ * needs no container scoping. Every other selector here targets a child.
+ */
+/* --mt-h: the photo's side AND the copy column's minimum height, so the usual
+   row is exactly one square tall. 112 fitted caps + a two-line title + the pay
+   row (2026-09-09). The usual row is now brand + a one-line title + caps + the
+   pay row (2026-09-22) and comes to the same 112 — while the brand line wore a
+   24px disc it came to 118, and --mt-h followed it up and back. */
+.mt { position: relative; --mt-h: 112px; }
+
+.mt__link { display: block; text-decoration: none; color: inherit; }
+
+/* The tile's own inset (the Card carries none): the card is the photo plus
+   10px above and below it, no more (owner, 2026-09-09). */
+.mt__row { display: flex; gap: 12px; align-items: stretch; padding: 10px; }
+
+.mt__photo {
+  /* A --mt-h square inside the padding (owner, 2026-09-09: smaller, square,
+     with padding round it). The copy column is at least --mt-h tall, so with a
+     two-line title the tile is exactly photo + padding; a three-line title
+     (320px) makes the tile taller and the photo follows it — a touch portrait,
+     never a strip of card under the art. NOT aspect-ratio with stretch: that
+     pair feeds back (width → row height → width) and blew the photo up to the
+     column's width, the cart's 540px lesson again. */
+  width: var(--mt-h);
+  flex: none;
+  align-self: stretch;
+  display: flex;
+}
+.mt__photo .app__slot { align-self: stretch; width: 100%; height: 100%; }
+.mt--locked .mt__photo { opacity: 0.6; }
+
+.mt__col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 0 4px 0 0;
+  min-height: var(--mt-h);
+  box-sizing: border-box;
+  padding: 4px 0;
+}
+
+.mt__caps {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* The brand's name, first in the column (owner, 2026-09-22: brand, title, kind,
+   pay): the title used to open with the brand's word, and a card should say who
+   once, in a place of its own. Label face at xs, secondary — the title under it
+   is the loud line. A name only, no disc (owner, same day). It truncates rather
+   than wrapping. */
+.mt__brand {
+  display: block;
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.mt__brand-t { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* One rung down, with the figures one rung up (owner, 2026-09-21): the title
+   names the work, the pay and the XP are why you would do it, and the row
+   should read in that order of weight. */
+.mt__title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+.mt--locked .mt__title { color: var(--text-secondary); }
+
+/* The gate line in the caps slot: the crown sits on the text's line. */
+.mt__caps--gate { gap: 6px; }
+/* The label text takes the room the marker does not, and truncates rather
+   than pushing it off the row. */
+.mt__caps-t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.mt__earn {
+  margin: auto 0 0;
+  padding-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* The design's ink tag. Square, not a pill — it carries no radius at all, and
+   cash leads, so it is the only filled thing on the row. */
+/* The pay, --text-xl (owner, 2026-09-21: "the price bigger"), with a
+   highlighter swipe behind it: one butter bar, a degree and a half off level,
+   under the lower two thirds of the figure the way a real highlighter pass
+   lands. Ink over accent-yellow is 11.97:1; where the bar does not reach, ink
+   is on the row's own ground. Chosen from a rendered comparison over a marker
+   ring, a sticker, a tag and a plain pill (owner, 2026-09-21). */
+.mt__pay {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 6px;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+.mt__pay::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 26%;
+  height: 58%;
+  border-radius: 3px;
+  background: var(--accent-yellow);
+  rotate: -1.5deg;
+}
+.mt__pay-t { position: relative; }
+/* The design puts --gray-500 on --gray-100 here, which is 3.7:1 behind 13px
+   bold — under the 4.5:1 that size needs. --text-secondary is the same
+   intent and clears it. */
+/* Locked: the figure steps back to secondary and the swipe to a pencil grey,
+   so the one thing highlighted on a row you can act on is not highlighted here. */
+.mt--locked .mt__pay { color: var(--text-secondary); font-size: var(--text-lg); }
+.mt--locked .mt__pay::before { background: var(--gray-200); }
+
+.mt__xp {
+  font-family: var(--font-label);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  /* Grey, not brand violet. The cash pill beside it is the figure that should
+     pull the eye; two coloured numbers in one row competed. gray-600 measures
+     6.1:1 on the panel these tiles sit on, so it clears AA at 12px. */
+  color: var(--gray-600);
+}
+
+/* Quiet by construction: the money is the loudest thing on a mission and a
+   tier marker must not compete with it. Pale ground, label face, the smallest
+   rung — it reads when looked for and recedes when not. `.mt` is already
+   position: relative, so this needs no new stacking context. */
+.mt__tier {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 7px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-quiet);
+  color: var(--gray-700);
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--text-3xs);
+  letter-spacing: var(--tracking-caps);
+  font-variant-numeric: tabular-nums;
+}
+.mt__badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 11px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-0);
+  color: var(--ink-900);
+  box-shadow: var(--shadow-paper);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  animation: mt-pop 320ms var(--ease-launch) both;
+}
+
+/* The arrow that surfaces on a row: it slides in from 26px and tilts, as the
+   design draws it. */
+.card-hit { position: relative; overflow: visible; }
+.card-hit .card-go {
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  margin-top: -19px;
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  /* No fill. It was an ink disc with a white die-cut keyline, which read as a
+     sticker pinned on the row; the owner asked for the Applications screen's
+     quieter arrow instead — the glyph alone, in ink. */
+  background: none;
+  /* Ink, not gray-0: with the disc gone a white glyph would be invisible. And
+     no box-shadow — --sticker-cut is the 2.5px white die-cut keyline, which
+     belongs to buttons and made sense only while this was a filled disc. */
+  color: var(--ink-900);
+  opacity: 0;
+  /* The design slides this in and tilts it. It is the one place in the app
+     where a hover moves something, kept because the owner asked for this
+     screen to match the design exactly. Everything else still holds still. */
+  transform: translateX(26px);
+  transition: opacity var(--dur-med) var(--ease-launch),
+    transform var(--dur-med) var(--ease-launch);
+}
+.card-hit .card-go::before {
+  content: '';
+  width: 17px;
+  height: 17px;
+  background: currentColor;
+  -webkit-mask: var(--arrow-cr) center / contain no-repeat;
+  mask: var(--arrow-cr) center / contain no-repeat;
+}
+.card-hit:hover .card-go,
+.card-hit:focus-visible .card-go { opacity: 1; transform: translateX(0) rotate(-4deg); }
+
+/* Nothing on touch. This block used to do the opposite — touch has no hover,
+   so the arrow would never arrive, and it was pinned open there instead. The
+   owner's call on 2026-09-02 is that it belongs to the pointer: on a phone the
+   whole tile is obviously tappable and a permanent arrow is decoration that
+   costs a row of width.
+   `hover`, not a width breakpoint: a narrow desktop window still has a mouse
+   and still gets it, a large tablet has neither and does not. */
+@media (hover: none) {
+  .card-hit .card-go { display: none; }
+}
+
+@keyframes mt-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  70% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Quiet by construction: the money is the loudest thing on a mission and a
+   tier marker must not compete with it. Pale ground, label face, the smallest
+   rung — it reads when looked for and recedes when not. `.mt` is already
+   position: relative, so this needs no new stacking context. */
+.mt__tier {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 7px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-quiet);
+  color: var(--gray-700);
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--text-3xs);
+  letter-spacing: var(--tracking-caps);
+  font-variant-numeric: tabular-nums;
+}
+.mt__badge { animation: none; }
+  .card-hit .card-go { transition: none; transform: translateX(0); }
+  .card-hit:hover .card-go { transform: translateX(0); }
+}
+
+/* Bare: the row without a Card under it (the brand page), and without the
+   card's 10px inset — the art sits on the page's own edge (owner, 2026-09-09). */
+.mt--bare { background: none; box-shadow: none; }
+.mt--bare .mt__row { padding: 0; }
+/* The card's go-arrow belongs to the card. A bare row has none, and the arrow
+   sat in the padding the bare row does not have — 16px past the page's gutter
+   at 320px. It is decorative (aria-hidden), so it goes with the card. */
+.mt--bare + .card-go, .mt__link:has(.mt--bare) .card-go { display: none; }

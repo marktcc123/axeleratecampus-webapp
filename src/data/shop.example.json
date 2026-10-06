@@ -1,0 +1,512 @@
+{
+  "products": [
+    {
+      "id": "p1",
+      "brandId": "notely",
+      "siteUrl": "https://notely.example",
+      "title": "The Five Minute Journal — original linen",
+      "priceUsd": 32,
+      "cashbackPct": 20,
+      "stock": 883,
+      "topic": "Dorm collection",
+      "photo": "Journal shot",
+      "desc": "Five minutes a day, on paper. Gratitude in the morning, a win at night — the linen original, no app required.",
+      "details": [
+        {
+          "label": "Material",
+          "value": "Linen-bound hardcover, 90gsm cream paper"
+        },
+        {
+          "label": "Size",
+          "value": "5.5 × 8.25 in, 250 pages"
+        },
+        {
+          "label": "Care",
+          "value": "Wipe the cover; do not machine wash a book"
+        }
+      ],
+      "reviews": [
+        {
+          "name": "Maya O.",
+          "rating": 5,
+          "date": "2026-08-18",
+          "body": "Two weeks in and it is the only habit that stuck. The prompts are short enough that I actually do them."
+        },
+        {
+          "name": "Devon P.",
+          "rating": 4,
+          "date": "2026-08-04",
+          "body": "Paper is lovely. Wish the elastic were tighter — mine has already loosened."
+        },
+        {
+          "name": "Alex C.",
+          "rating": 5,
+          "date": "2026-07-29",
+          "body": "Bought it for the gratitude thing, kept it for the evening win. Good buy."
+        }
+      ],
+      "photos": [
+        "Journal shot",
+        "Journal open on a desk",
+        "Journal spine and linen"
+      ],
+      "category": "Mindfulness",
+      "covers": [
+        "product-journal"
+      ]
+    },
+    {
+      "id": "p2",
+      "brandId": "august-uncommon-tea",
+      "title": "Southern Gothic — peach bourbon black tea",
+      "priceUsd": 14.09,
+      "cashbackPct": 10,
+      "stock": 0,
+      "topic": "All",
+      "soldOut": true,
+      "photo": "Tea tin shot",
+      "desc": "Black tea with peach and a whisper of bourbon smoke. Tastes like a porch at dusk.",
+      "details": [
+        {
+          "label": "Contents",
+          "value": "Black tea, peach, bourbon-barrel oak"
+        },
+        {
+          "label": "Size",
+          "value": "80g loose leaf, about 32 cups"
+        },
+        {
+          "label": "Care",
+          "value": "Airtight, out of the sun"
+        }
+      ],
+      "reviews": [
+        {
+          "name": "Priya R.",
+          "rating": 5,
+          "date": "2026-08-21",
+          "body": "Tastes exactly like the description, which almost never happens. The smoke is faint, not perfume."
+        },
+        {
+          "name": "Sam W.",
+          "rating": 4,
+          "date": "2026-08-09",
+          "body": "Great cold-brewed overnight. A bit delicate hot if you steep past four minutes."
+        }
+      ],
+      "category": "Beverages",
+      "covers": [
+        "product-tea-tin"
+      ]
+    },
+    {
+      "id": "p3",
+      "brandId": "italic",
+      "title": "Nautilus towels",
+      "priceUsd": 39,
+      "cashbackPct": 10,
+      "stock": 193,
+      "topic": "Dorm collection",
+      "photo": "Towel shot",
+      "desc": "Heavyweight Turkish cotton, woven in Denizli. The good-hotel towel, dorm edition.",
+      "sizes": [
+        "Hand",
+        "Bath",
+        "Set"
+      ],
+      "details": [
+        {
+          "label": "Material",
+          "value": "100% Turkish cotton, 700gsm, woven in Denizli"
+        },
+        {
+          "label": "Size",
+          "value": "Hand 20 × 30 in · Bath 30 × 58 in · Set is one of each"
+        },
+        {
+          "label": "Care",
+          "value": "Machine wash warm, tumble low, no softener"
+        }
+      ],
+      "reviews": [
+        {
+          "name": "Nina A.",
+          "rating": 5,
+          "date": "2026-08-16",
+          "body": "Hotel-heavy. Took two washes to get fully absorbent, then perfect."
+        },
+        {
+          "name": "Jonah R.",
+          "rating": 4,
+          "date": "2026-08-02",
+          "body": "Bath size is genuinely large. Takes a while to dry in a dorm bathroom."
+        }
+      ],
+      "photos": [
+        "Towel shot",
+        "Towel folded on a rail",
+        "Towel weave close up"
+      ],
+      "covers": [
+        "product-towel-stack",
+        "product-towel-striped",
+        "product-towel-rail"
+      ],
+      "category": "Home & bath"
+    },
+    {
+      "id": "p4",
+      "brandId": "italic",
+      "title": "Shadmoor towels",
+      "priceUsd": 39,
+      "cashbackPct": 0,
+      "stock": 261,
+      "topic": "Dorm collection",
+      "photo": "Towel shot",
+      "desc": "Same Turkish cotton, moodier stripe. Your shower caddy just got promoted.",
+      "sizes": [
+        "Hand",
+        "Bath",
+        "Set"
+      ],
+      "details": [
+        {
+          "label": "Material",
+          "value": "100% Turkish cotton, 700gsm, yarn-dyed stripe"
+        },
+        {
+          "label": "Size",
+          "value": "Hand 20 × 30 in · Bath 30 × 58 in · Set is one of each"
+        },
+        {
+          "label": "Care",
+          "value": "Machine wash warm, tumble low, no softener"
+        }
+      ],
+      "reviews": [
+        {
+          "name": "Alex C.",
+          "rating": 4,
+          "date": "2026-08-12",
+          "body": "The stripe is subtler in person, which I prefer. Same weight as the Nautilus."
+        }
+      ],
+      "covers": [
+        "product-towel-striped",
+        "product-towel-stack"
+      ],
+      "category": "Home & bath"
+    },
+    {
+      "id": "p5",
+      "brandId": "italic",
+      "title": "Umbra towels",
+      "priceUsd": 31,
+      "cashbackPct": 10,
+      "stock": 12,
+      "topic": "Dorm collection",
+      "photo": "Towel shot",
+      "desc": "Waffle-weave, quick-dry, half the hook space. Built for shared bathrooms.",
+      "sizes": [
+        "Hand",
+        "Bath",
+        "Set"
+      ],
+      "details": [
+        {
+          "label": "Material",
+          "value": "Waffle-weave Turkish cotton, 380gsm"
+        },
+        {
+          "label": "Size",
+          "value": "Hand 20 × 30 in · Bath 30 × 58 in · Set is one of each"
+        },
+        {
+          "label": "Care",
+          "value": "Machine wash warm, tumble low, dries in half the time"
+        }
+      ],
+      "reviews": [
+        {
+          "name": "Maya O.",
+          "rating": 5,
+          "date": "2026-08-19",
+          "body": "The point is the drying time and it delivers. Half a day on a hook, not two."
+        },
+        {
+          "name": "Sam W.",
+          "rating": 3,
+          "date": "2026-07-30",
+          "body": "Thinner than I expected. Fine for the gym, less luxurious than the others."
+        }
+      ],
+      "photos": [
+        "Towel shot",
+        "Waffle weave close up"
+      ],
+      "covers": [
+        "product-towel-rail",
+        "product-towel-stack"
+      ],
+      "category": "Home & bath"
+    },
+    {
+      "id": "p6",
+      "brandId": "vera",
+      "title": "BiBi star print stripe combo top",
+      "priceUsd": 27.22,
+      "cashbackPct": 10,
+      "stock": 0,
+      "topic": "All",
+      "soldOut": true,
+      "photo": "Top on model",
+      "desc": "Star-print stripe combo that reads vintage. The going-out top for the pre-game fit check.",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "details": [
+        {
+          "label": "Material",
+          "value": "Rayon-spandex jersey, mid-weight"
+        },
+        {
+          "label": "Size",
+          "value": "Model is 5’9” wearing S. Runs true to size"
+        },
+        {
+          "label": "Care",
+          "value": "Hand wash cold, hang dry"
+        }
+      ],
+      "reviews": [
+        {
+          "name": "Priya R.",
+          "rating": 5,
+          "date": "2026-08-22",
+          "body": "Fits like the photo. The stripe combo reads vintage without trying too hard."
+        },
+        {
+          "name": "Nina A.",
+          "rating": 4,
+          "date": "2026-08-07",
+          "body": "Runs true. Sleeves are a little short on me but I am long-armed."
+        }
+      ],
+      "covers": [
+        "product-sneaker"
+      ],
+      "category": "Fashion"
+    },
+    {
+      "id": "p7",
+      "brandId": "solra",
+      "title": "Solra sparkling yuzu — 12-pack",
+      "priceUsd": 24,
+      "cashbackPct": 10,
+      "stock": 140,
+      "topic": "All",
+      "photo": "Twelve cans in the box",
+      "desc": "Yuzu, a little salt, no sugar. The 12-pack the unboxing mission films — cold in twenty minutes, gone in a week.",
+      "details": [
+        {
+          "label": "Size",
+          "value": "12 × 330 ml"
+        },
+        {
+          "label": "Contains",
+          "value": "Sparkling water, yuzu juice, sea salt"
+        },
+        {
+          "label": "Keep",
+          "value": "Cool and out of the sun; best within 9 months"
+        }
+      ],
+      "reviews": [
+        {
+          "name": "Nina A.",
+          "rating": 5,
+          "date": "2026-08-27",
+          "body": "Tastes like the top of a lemon without the sugar crash. My dorm fridge is now a Solra fridge."
+        },
+        {
+          "name": "Jonah R.",
+          "rating": 4,
+          "date": "2026-08-15",
+          "body": "Good, but twelve goes fast when your roommate finds it."
+        }
+      ],
+      "photos": [
+        "Twelve cans in the box"
+      ],
+      "category": "Beverages",
+      "covers": [
+        "product-solra-can"
+      ]
+    },
+    {
+      "id": "p8",
+      "brandId": "loop",
+      "title": "Loop demo night kit",
+      "priceUsd": 45,
+      "cashbackPct": 10,
+      "stock": 30,
+      "topic": "Dorm collection",
+      "photo": "Kit box, open",
+      "desc": "Everything a dorm demo night needs in one box: the Loop, a speaker cable, twenty guest cards and the host's cheat sheet.",
+      "details": [
+        {
+          "label": "In the box",
+          "value": "1 Loop, 1 cable, 20 cards, host sheet"
+        },
+        {
+          "label": "Size",
+          "value": "30 × 22 × 12 cm, 1.1 kg"
+        },
+        {
+          "label": "Returns",
+          "value": "30 days, box intact"
+        }
+      ],
+      "reviews": [
+        {
+          "name": "Priya R.",
+          "rating": 5,
+          "date": "2026-08-30",
+          "body": "Ran a night for eleven people off this box alone. The cheat sheet is the best part."
+        }
+      ],
+      "photos": [
+        "Kit box, open"
+      ],
+      "category": "Dorm",
+      "covers": [
+        "product-loop-kit"
+      ]
+    },
+    {
+      "id": "p9",
+      "brandId": "axelerate-beauty",
+      "title": "Dermabell glass skin serum",
+      "priceUsd": 38,
+      "cashbackPct": 15,
+      "stock": 60,
+      "topic": "All",
+      "photo": "Serum bottle",
+      "desc": "The serum behind the salon mission: niacinamide and snail mucin, morning and night, two drops. Fragrance-free.",
+      "details": [
+        {
+          "label": "Size",
+          "value": "30 ml dropper bottle"
+        },
+        {
+          "label": "Contains",
+          "value": "Niacinamide 5%, snail mucin, hyaluronic acid"
+        },
+        {
+          "label": "Use",
+          "value": "Two drops on clean skin, then moisturiser"
+        }
+      ],
+      "reviews": [
+        {
+          "name": "Sam W.",
+          "rating": 5,
+          "date": "2026-08-21",
+          "body": "Three weeks and my skin stopped being angry at me. Sinks in fast, no smell."
+        },
+        {
+          "name": "Devon P.",
+          "rating": 4,
+          "date": "2026-08-09",
+          "body": "Works, pricey for a student. The cashback helps."
+        }
+      ],
+      "photos": [
+        "Serum bottle"
+      ],
+      "category": "Beauty",
+      "covers": [
+        "product-serum"
+      ]
+    }
+  ],
+  "drop": {
+    "opensAt": "Friday 20:00",
+    "items": [
+      {
+        "title": "Nautilus towels",
+        "priceUsd": 39,
+        "cap": "50 only",
+        "photo": "Towels shot",
+        "cover": "product-towel-stack",
+        "id": "d1",
+        "brandId": "italic",
+        "cashbackPct": 10,
+        "desc": "Heavyweight Turkish cotton, woven in Denizli. The good-hotel towel, dorm edition.",
+        "details": [
+          {
+            "label": "Material",
+            "value": "100% Turkish cotton, 700gsm, woven in Denizli"
+          },
+          {
+            "label": "Size",
+            "value": "Hand 20 × 30 in · Bath 30 × 58 in · Set is one of each"
+          },
+          {
+            "label": "Care",
+            "value": "Machine wash warm, tumble low, no softener"
+          }
+        ],
+        "photos": [
+          "Towel shot",
+          "Towel folded on a rail",
+          "Towel weave close up"
+        ],
+        "covers": [
+          "product-towel-stack",
+          "product-towel-striped",
+          "product-towel-rail"
+        ],
+        "category": "Home & bath"
+      },
+      {
+        "title": "The Five Minute Journal",
+        "priceUsd": 32,
+        "cap": "80 only",
+        "photo": "Journal shot",
+        "id": "d2",
+        "brandId": "notely",
+        "cashbackPct": 20,
+        "desc": "Five minutes a day, on paper. Gratitude in the morning, a win at night — the linen original, no app required.",
+        "details": [
+          {
+            "label": "Material",
+            "value": "Linen-bound hardcover, 90gsm cream paper"
+          },
+          {
+            "label": "Size",
+            "value": "5.5 × 8.25 in, 250 pages"
+          },
+          {
+            "label": "Care",
+            "value": "Wipe the cover; do not machine wash a book"
+          }
+        ],
+        "photos": [
+          "Journal shot",
+          "Journal open on a desk",
+          "Journal spine and linen"
+        ],
+        "covers": [
+          "product-journal"
+        ],
+        "category": "Mindfulness",
+        "cover": "product-journal"
+      }
+    ]
+  }
+}

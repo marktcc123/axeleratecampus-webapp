@@ -1,0 +1,163 @@
+/* Write-a-review sheet. Same overlay + bottom-sheet geometry as the gift
+   sheet (gift-sheet.css) — the app's one dialog pattern — with its own
+   classes because this one carries a rating control and a text field rather
+   than a slider. */
+.rs__overlay { position: fixed; inset: 0; z-index: 100; background: var(--overlay); }
+.rs {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  z-index: 101;
+  width: 100%;
+  max-width: 520px;
+  box-sizing: border-box;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--surface-card);
+  border-radius: 18px 22px 0 0 / 22px 18px 0 0;
+  box-shadow: var(--shadow-paper-lg);
+  padding: 10px 18px calc(20px + env(safe-area-inset-bottom, 0px));
+}
+
+.rs__grab {
+  width: 42px;
+  height: 4px;
+  margin: 0 auto 6px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-200);
+}
+
+.rs__top { display: flex; align-items: center; gap: 10px; }
+.rs__title {
+  flex: 1;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+.rs .rs__title-ico { color: var(--accent-yellow); }
+.rs .rs__x {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+.rs__x-mark { position: relative; width: 15px; height: 15px; }
+.rs__x-mark::before, .rs__x-mark::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+}
+.rs__x-mark::before { transform: rotate(45deg); }
+.rs__x-mark::after { transform: rotate(-45deg); }
+
+.rs__item {
+  margin-top: 12px;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--radius-hand);
+  background: var(--surface-quiet);
+}
+.rs__thumb { flex: none; width: 46px; }
+.rs__item-text { flex: 1; min-width: 0; }
+.rs__item-title {
+  display: block;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+.rs__item-brand {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.rs__field { margin-top: 16px; }
+.rs__field-lab {
+  margin: 0 0 4px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* Five real radio inputs, each a 44x44 hit area on its own box — the label,
+   not the (invisible) input, carries the size, and the input covers it
+   fully so a tap anywhere in the 44x44 square lands on the control it looks
+   like it should. position: relative here for the same reason .cart-go
+   needs it in perks-shop.css: the input is positioned inset:0, and without a
+   positioned ancestor it would resolve against something else entirely. */
+.rs__stars { display: flex; gap: 2px; }
+.rs__star {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.rs__star-input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.rs__star-ico { color: var(--gray-300); pointer-events: none; }
+.rs__star-ico.is-on { color: var(--accent-yellow); }
+/* Keyboard focus needs a visible ring since the input itself is invisible;
+   :focus-visible on the input, styling its sibling — no :has() needed. */
+.rs__star-input:focus-visible ~ .rs__star-ico {
+  outline: 2px solid var(--ink-900);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.rs .rs__body { margin-top: 14px; }
+
+.rs .rs__done {
+  margin: 16px 0 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+.rs .rs__nothing { margin: 6px 0 20px; font-size: var(--text-xs); line-height: 1.5; color: var(--text-secondary); }
+
+/* Own wrapper, not a rule on the design system's own .ax-btn: an app rule at
+   (0,1,0) on an ax-* class loses the cascade race against the component's
+   style tag, injected after the app bundle. */
+.rs__submit { margin-top: 18px; }

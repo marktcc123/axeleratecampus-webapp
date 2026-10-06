@@ -1,0 +1,260 @@
+/* Applications — a stack of overlapping folders, as drawn. Each folder is one
+ * application; tapping its head opens the brief. The folders were plain cards
+ * before; the design makes the pipeline something you leaf through.
+ */
+.apps__empty { margin: 12px 0 0; font-size: var(--text-sm); color: var(--gray-700); }
+.apps__head { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+.apps .apps__add {
+  width: 44px;
+  height: 44px;
+  margin: 0 0 -4px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* No disc behind it: just the glyph. The 44x44 box stays because that is the
+     touch floor — it is the hit area, not a drawn circle. */
+  background: none;
+  color: var(--text-primary);
+  text-decoration: none;
+  flex: none;
+}
+.apps__note {
+  margin: 0 0 6px;
+  font-family: var(--font-hand);
+  font-size: var(--text-sm);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--violet-600);
+  transform: rotate(-2deg);
+}
+/* At the far edge, where the browse-gigs arrow was (owner, 2026-09-08). After
+   .apps__note so its margin wins the tie. */
+.apps__note--end { margin-left: auto; }
+
+/* The stack sits on the floor: the screen is a column a viewport tall and
+   `margin-top: auto` pushes the folders down, so the pipeline reads as a pile
+   you leaf down into. The negative bottom margin cancels the app column's
+   112px of tab-bar clearance, and the deepest folder pads itself back so its
+   colour runs behind the bar instead of stopping short of it. */
+.apps { min-height: calc(100vh - 40px); display: flex; flex-direction: column; }
+.apps__stack {
+  /* Full-bleed again: on the page's gutter the pile left a white strip down
+     each side. The corners still read — a folder spans exactly the viewport,
+     so its rounded top corners sit ON the edges rather than outside them. The
+     reason they looked square before was the border-radius bug, not the bleed:
+     `var(--radius-hand-sm) var(--radius-hand-sm) 0 0` is invalid and was being
+     dropped. */
+  margin: auto -16px calc(-112px - env(safe-area-inset-bottom, 0px));
+  /* 72 = 40px of clear page above the first tab + the tab's own 32px, which
+     hangs above the folder it belongs to. Was 72 (40px of clear page); the
+     clear page went to 64 on 2026-09-03 because the title and the first tab
+     still read as one block. Measured, not guessed: at 44 this left 17px of
+     gap on a screen short enough that `margin-top: auto` collapses to
+     nothing. */
+  padding-top: 96px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* One folder. The tab sits above the body, overlapping the folder in front. */
+.af {
+  position: relative;
+  /* Slighter than the tab's, on purpose: the tab is the thing you grab, so it
+     keeps the rounder corner. Top only — the next folder overlaps this one's
+     foot, and the deepest one runs off the bottom of the screen. */
+  border-radius: 9px 11px 0 0 / 11px 9px 0 0;
+  /* The foot is what reads as the space between one file and the next: the
+     folders overlap by 12px, so a 56px foot leaves a 44px band of the folder's
+     own colour below its last line before the next folder's edge. It also has
+     to clear the tab of the folder below, which is 32px tall and anchored to
+     that folder's top edge, so 20px of it reaches up into this foot. */
+  padding: 16px 18px 56px;
+  /* Paper, not accent. A folder-sized field of colour per application read as
+     far too loud once there were three of them stacked; the tab is what you
+     scan for, so the tab is what carries the hue. The stack has to read
+     without that colour, so the lip is drawn instead: a crisp top edge and a
+     lip is drawn instead, as a crisp edge. No blur: every shadow in the design
+     system is a hard offset (--shadow-paper is 2px 3px 0), so a soft shade
+     reads as borrowed from somewhere else. */
+  /* Paper per folder, but each folder's own paper. The full accent was too
+     loud with three stacked; all-white lost the seam entirely — the 2px lip
+     was the only thing dividing them and it read as one long sheet. The -soft
+     steps are the middle: enough hue to separate, nowhere near the accent's
+     jump. --ink-900 clears AA on all three (14.26 pink, 15.26 orange, 16.65
+     yellow) and --text-secondary clears it too (5.09 / 5.45 / 5.95). */
+  background: var(--surface-card);
+  color: var(--text-primary);
+  /* No lip here: the seam is drawn per tint below, in the folder's own
+     hue. A grey rule across the stack read as a divider stitched on top of
+     the paper rather than the edge of the sheet. */
+}
+/* One variable per hue rather than three rules each. The tab, the lip above
+   the folder and the two flares at the tab's base all paint in --af-hue, and
+   custom properties inherit, so the pseudo-elements can reach it — a
+   `background` cannot be inherited.
+   Blush, not yellow, for "In review" — asked for on 2026-09-02. Ink on
+   #F3A7C6 measures 8.4:1, so the 12px tab label holds AA the way the other
+   two hues do. */
+.af--blush { --af-hue: var(--accent-blush); --af-paper: var(--accent-blush-soft); }
+.af--orange { --af-hue: var(--accent-orange); --af-paper: var(--accent-orange-soft); }
+.af--lavender { --af-hue: var(--accent-lavender); --af-paper: var(--accent-lavender-soft); }
+.af { background: var(--af-paper); }
+.af + .af { margin-top: -12px; }
+/* Ink on every tab, not white. The retuned pink is 3.46:1 against white and
+   5.32:1 against ink; this tab is 12px, so white does not clear AA. The design
+   system's board asks for white on pink, which holds for large text only. */
+.af { box-shadow: 0 -2px 0 var(--af-hue); }
+.af .af__tab { background: var(--af-hue); color: var(--ink-900); }
+/* The deepest folder runs behind the tab bar. */
+.af--last { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+
+/* Bigger now that it is the only coloured thing on the folder — it has to
+   carry the state on its own rather than label a field of colour. */
+.af__tab {
+  position: absolute;
+  /* bottom:100%, not top:-31px. The tab's box was ~40px tall against a 31px
+     offset, so 9px of it drove down into the paper. Anchoring the bottom edge
+     to the folder's top edge parks it ON the sheet whatever the label's height
+     — and removes the magic number that already went stale once, when the
+     stack reserved 26px of clearance for a 31px overhang. */
+  bottom: 100%;
+  right: 16px;
+  /* The 17px bottom pad existed to tuck the tab under the folder's edge; the
+     tab no longer crosses it. */
+  padding: 9px 18px;
+  border-radius: 10px 12px 0 0 / 12px 10px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+/* No flare where the tab meets the sheet: the folder's top edge runs straight
+   past it. A fillet each side, first filled in the hue and then drawn as the
+   lip curving up into the tab, was tried on 2026-09-02 and taken back out —
+   the straight line is what the design wants. */
+
+/* The whole upper folder is the control now: a column holding the tab, the
+   applied/pay row and the brand block. Its children are spans (a <button> may
+   only contain phrasing content), so each block sets its own display here. */
+.af__head {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+}
+.af__row {
+  /* No min-height here. The 44px was the touch floor from when THIS row was
+     the whole button; the button is the entire upper folder now (~89px), so
+     the floor is met elsewhere and this only hung 23px of empty box under the
+     text — which read as a gap before the brand block. */
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.af__applied {
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.af__pay {
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.af__who { margin-top: 7px; display: flex; align-items: center; gap: 12px; }
+.af__who-text { display: block; min-width: 0; }
+.af__mark {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  /* White again, and no ring. The ring was added when the folders went white
+     and this circle vanished into them; they carry their own tint now, so the
+     paper disc reads on its own. */
+  background: var(--gray-0);
+  color: var(--ink-900);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  text-transform: uppercase;
+}
+.af__brand {
+  display: block;
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.af__title {
+  display: block;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+/* The brief. A grid track, not display: the transition has something to animate
+   and the content stays in the accessibility tree either way.
+   
+   `max-height: 260px` did this job until 2026-09-10 and hid a bug: the cap is a
+   number, and at 150% text 4 of 6 briefs measured past it, at 200% all 6 — so
+   `overflow: hidden` cut the brief and the "Open the mission" link off with no
+   scrollbar (WCAG 1.4.4). A 0fr → 1fr track has no cap and needs no number, so
+   the panel is as tall as its content at any text size. The inner wrapper is
+   what makes it one track rather than three. */
+.af__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--dur-med) var(--ease-launch), opacity var(--dur-fast) var(--ease-launch);
+}
+.af__body-inner { overflow: hidden; min-height: 0; }
+.af__body[data-open='true'] { grid-template-rows: 1fr; opacity: 1; }
+.af__body-label {
+  margin: 22px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.af__brief { margin: 6px 0 0; font-size: var(--text-sm); line-height: 1.55; }
+.af__link {
+  display: inline-block;
+  margin-top: 12px;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: inherit;
+}
+.af__link { min-height: 44px; line-height: 44px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .af__body { transition: none; }
+}

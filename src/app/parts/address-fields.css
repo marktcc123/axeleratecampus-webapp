@@ -1,0 +1,16 @@
+/* The address form. A two-column grid: everything spans both columns except
+   State and ZIP, which take one each.
+
+   The grid item is a plain wrapper div rather than the Input itself, so no app
+   class ever lands on the same element as .ax-field and has to win a cascade
+   race against a stylesheet the design system injects after this one. */
+.addr {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 12px;
+}
+/* min-width:0 on the items too: a grid track's default `auto` minimum is the
+   item's content, so a long street value would push the row wider than 320px
+   instead of scrolling inside its own field. */
+.addr > * { min-width: 0; }
+.addr > *:not(.addr__half) { grid-column: 1 / -1; }

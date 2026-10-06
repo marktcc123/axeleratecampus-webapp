@@ -1,0 +1,79 @@
+/* The row: fixed to the viewport's top, the column's width (the dock's own
+   centring trick), 5px in from the sides so a chip's 34px disc — drawn inside
+   its 44px box — sits 10px from the screen's edge. pointer-events: none on the
+   row, auto on the chips, so the cover underneath still scrolls from a touch
+   between them. */
+.dtb {
+  position: fixed;
+  top: calc(5px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, 520px);
+  box-sizing: border-box;
+  padding: 0 5px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 40;
+  pointer-events: none;
+}
+/* A chip: 44px of target (the touch sweep measures it), a 34px white disc
+   shown, ink glyph. isolation keeps the disc's z-index -1 inside the chip. */
+.dtb__chip {
+  pointer-events: auto;
+  position: relative;
+  isolation: isolate;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-900);
+  text-decoration: none;
+}
+.dtb__chip::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  z-index: -1;
+  border-radius: 50%;
+  background: var(--gray-0);
+  box-shadow: var(--shadow-paper);
+}
+.dtb__end {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+}
+.dtb__chev {
+  width: 10px;
+  height: 10px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  border-radius: 1px;
+  transform: translateX(2px) rotate(45deg);
+}
+.dtb__cart { position: relative; }
+.dtb__cart-n {
+  position: absolute;
+  top: 4px;
+  right: 2px;
+  min-width: 15px;
+  height: 15px;
+  box-sizing: border-box;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: var(--violet-600);
+  color: var(--text-inverse);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  line-height: 15px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}

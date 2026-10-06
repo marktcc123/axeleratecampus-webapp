@@ -1,0 +1,153 @@
+/* /me/levels — the ladder, on the yellow band. */
+
+/* Where you are now: the level number carried at display scale, the name and
+   the banked XP stacked beside it. */
+.lv__now {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.lv__now-num {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-2xl);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.lv__now-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.lv__now-xp {
+  margin: 3px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.lv__climb { margin-top: 22px; }
+.lv__climb-row {
+  margin: 8px 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.lv__climb-fig {
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.lv__climb-away {
+  font-family: var(--font-hand);
+  font-size: var(--text-sm);
+  color: var(--violet-600);
+  transform: rotate(-1.5deg);
+}
+
+/* The ladder. Numbered circle, then the step's own column. */
+.lv__ladder { list-style: none; margin: 0; padding: 0; }
+.lv__step {
+  display: flex;
+  gap: 12px;
+  padding: 15px 0;
+  border-top: 1.5px solid var(--gray-100);
+}
+.lv__step:first-child { border-top: 0; }
+.lv__step-n {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-lavender-soft);
+  color: var(--violet-700);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+/* A step you have not reached loses the brand colour but keeps the number:
+   the ladder stays countable, it just stops being yours. */
+/* --gray-500 on --gray-100 is 3.60:1; --gray-600 is 5.61:1. */
+.lv__step[data-state='locked'] .lv__step-n { background: var(--gray-100); color: var(--gray-600); }
+.lv__step-n--ink { background: var(--ink-900); color: var(--gray-0); }
+
+.lv__step-body { min-width: 0; flex: 1; }
+.lv__step-top {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.lv__step-name {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.lv__step-gate {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.lv__step-tick { color: var(--violet-600); }
+.lv__step-here {
+  font-family: var(--font-hand);
+  font-size: var(--text-sm);
+  color: var(--violet-600);
+  transform: rotate(-2deg);
+}
+
+/* Perks as a leading-dot list rather than ticked rows: five levels of ticks
+   reads as a checklist you are failing. */
+.lv__perks { list-style: none; margin: 7px 0 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.lv__perk {
+  font-size: var(--text-xs);
+  line-height: 1.45;
+  color: var(--gray-600);
+  padding-left: 10px;
+  position: relative;
+}
+.lv__perk::before { content: '·'; position: absolute; left: 0; color: var(--gray-400); }
+
+.lv__step-away {
+  margin: 8px 0 0;
+  font-family: var(--font-hand);
+  font-size: var(--text-sm);
+  color: var(--gray-600);
+  transform: rotate(-1deg);
+}
+/* The one link on this screen; it needs the touch floor its list rows get
+   for free. Padding rather than height so the text stays on its baseline. */
+.lv__step-away a {
+  display: inline-flex;
+  align-items: center;
+  /* border-box, or the 44px floor plus 8px of padding renders 52. */
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 4px 0;
+  color: var(--text-brand);
+}
+.lv__step--synd .lv__step-away { transform: none; font-family: var(--font-label); font-weight: 700; }

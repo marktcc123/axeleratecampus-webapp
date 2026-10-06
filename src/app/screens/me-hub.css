@@ -1,0 +1,791 @@
+/* Me — a hub. The screen used to be a stack of stat cards; the design turned it
+ * into an identity block plus a menu into eight sub-screens.
+ */
+.hub__id { display: flex; align-items: center; gap: 16px; }
+/* The avatar (Avatar.jsx), with the paper shadow the hub's disc has always worn. */
+.hub .hub__avatar { flex: none; box-shadow: var(--sticker-cut), var(--shadow-paper); }
+/* The photo control on Settings: the same disc, left-aligned in its section. */
+.set__photo { padding: 6px 0 14px; display: flex; justify-content: center; }
+
+.hub__who { min-width: 0; flex: 1; }
+.hub__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);   /* a rung up (owner, 2026-09-08) */
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.hub__school .hub__tick { color: var(--accent-coral); flex: none; }
+.hub__school {
+  margin: 5px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+/* Coral. 3.45:1 on white — it is a graphic with an sr-only name beside it, so
+   3:1 is the bar it has to clear. */
+
+/* Cash and credit side by side, split by a dashed rule. Both open the wallet. */
+.hub__figs {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1.12fr 1fr;
+  align-items: start;
+}
+/* No `.hub` ancestor requirement: this block is also the wallet's, where the
+   root is .sub. Scoping it to .hub is what left /me/wallet rendering the
+   label, figure and note inline on one broken line. Nothing here competes
+   with an ax-* class, so (0,1,0) is enough. */
+.hub__fig {
+  display: flex;
+  flex-direction: column;
+  min-height: 44px;
+  padding: 0 12px 0 0;
+  text-decoration: none;
+  color: inherit;
+}
+.hub__fig--split { padding: 0 10px 0 16px; border-left: 1.5px dashed var(--gray-300); }
+.hub__fig-label {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.hub__fig-value {
+  margin-top: 10px;
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--text-xl);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.hub__fig-sub {
+  margin-top: 3px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
+/* 30, not 18: the wallet figures and the XP bar are two different subjects —
+   what you have, and how far you are — and at 18px they read as one block. */
+/* The bar lives inside the progress paper now (2026-09-21). */
+.hub__xp-row {
+  margin: 8px 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+/* The figure stays ink — it is a reading, not an accent. The hand-written
+   distance beside it is the coral one. */
+.hub__xp-now {
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+.hub__xp-away {
+  font-family: var(--font-hand);
+  font-size: var(--text-sm);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--coral-700);
+  transform: rotate(-1.5deg);
+}
+
+/* The menu sits on the same quiet panel the board's tiles do, so the two
+   screens read as one app. */
+.hub { min-height: calc(100vh - 40px); display: flex; flex-direction: column; }
+.hub__panel {
+  /* 22px: the owner wanted air between the profile block and the menu. The
+     two wallet figures used to sit between them; they are blocks inside the
+     menu now, under the row they belong to, so this separates the menu from
+     the XP bar. */
+  margin: 22px -16px calc(-112px - env(safe-area-inset-bottom, 0px));
+  flex: 1;
+  padding: 4px 16px calc(88px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface-quiet);
+  border-radius: 22px 22px 0 0 / 18px 18px 0 0;
+  /* No shadow, like the board's panel and the shop's: full-bleed means only
+     the top lip ever showed, and it read as a stray line rather than depth.
+     The cream against white is the edge. */
+}
+/* 30 above, not 16: the three groups are three subjects, and the rows inside
+   them are now tighter, so the old 16 left the whole panel reading as one
+   undifferentiated list. */
+/* The heading row. The 30px that used to sit on the heading lives here, so a
+   group with a "View all" beside its title is no closer to the one above it
+   than a group without. */
+.hub__group-top {
+  margin: 30px 0 2px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.hub .hub__viewall {
+  margin-left: auto;
+  /* The 44px touch target stays; the negative block margin stops it INFLATING
+     a baseline-aligned row — the same trick .gb__viewall and .apps__add use. */
+  margin-block: -12px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 2px;
+  text-decoration: none;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  /* --coral-700, not --accent-coral: the accent is a ground tone and measures
+     3.22:1 on this cream, where a 10px label needs 4.5. See app.css. */
+  color: var(--coral-700);
+}
+.hub__group-label {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.hub__menu { list-style: none; margin: 0; padding: 0; }
+.hub__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* border-box is load-bearing: min-height applies to the CONTENT box, so
+     46px plus 18px of padding was rendering a 65px row. The rows inside a
+     group should sit closer than the groups do, and 65px was the reason they
+     did not. 52 total, comfortably over the 44px touch floor. */
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 6px 4px;
+  border-bottom: 1.5px solid var(--gray-100);
+  text-decoration: none;
+  color: inherit;
+}
+/* Plain, in the margin voice. A tinted disc per section was tried on
+   2026-09-02 and taken back out — the accent belongs on the tick, the XP bar
+   and "View all", not on every row's icon. */
+.hub__item-icon { width: 18px; flex: none; color: var(--text-secondary); }
+.hub__item-label { flex: 1; font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+/* A CSS chevron: two borders on a rotated square, the same trick gigs-detail
+   uses. Not a side-stripe accent. */
+.hub__chev {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-right: 2px solid var(--gray-400);
+  border-top: 2px solid var(--gray-400);
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+
+/* Wallet */
+.wal__payout {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 2px;
+  border-top: 1.5px solid var(--gray-200);
+  border-bottom: 1.5px solid var(--gray-200);
+}
+.wal__payout-title { margin: 0; font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); }
+.wal .wal__withdraw, .sub .wal__withdraw { margin-top: 18px; }
+
+/* Syndicate */
+.syn__state { margin: 18px 0 0; display: flex; align-items: center; gap: 10px; }
+
+/* Co-creations. The cards are the current examples. The line above them
+   says the board is not open, and the buttons do not submit. */
+.cc__soon {
+  margin: 16px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.cc__list { margin-top: 14px; display: flex; flex-direction: column; gap: 12px; }
+.sub .cc__cta { margin-top: 12px; }
+.cc__pitch { margin-top: 22px; }
+
+/* Events */
+.ev__date {
+  flex: none;
+  width: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.ev__when {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.ev__day {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.sub__row[data-past='true'] .ev__day { color: var(--text-secondary); }
+
+/* Invite */
+/* A ticket, not a card: dashed edge, no fill, nothing but the page behind it.
+   The dash is the one place a hairline is the drawing rather than a divider —
+   it is what makes this read as something torn off and handed over. */
+.inv__code {
+  position: relative;
+  margin-top: 18px;
+  padding: 22px 16px 20px;
+  box-sizing: border-box;
+  /* Paper, not a dashed frame. The dash read as a cut-out coupon; the tone is
+     what holds the block together now, and it drops a grey hairline the owner
+     has turned down elsewhere. */
+  background: var(--surface-quiet);
+  border-radius: var(--radius-hand-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+/* Bled off the corner, and decorative: the card says everything it needs to
+   in words. */
+.inv__code-mark {
+  position: absolute;
+  top: -10px;
+  right: -6px;
+  background: var(--butter-400);
+  transform: rotate(14deg);
+}
+.inv__code-lab {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.inv__code-value {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  /* Ink, not violet: the code is the thing being read out loud, and the
+     margin note below is where this screen spends its violet. */
+  font-size: var(--text-2xl);
+  letter-spacing: 0.02em;
+  color: var(--ink-900);
+}
+/* The margin voice, the way the wallet's asides are written. */
+.inv__steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.inv__steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--gray-700);
+}
+.inv__step-n {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  /* Lavender, not the accent yellow: H5.dc.html draws these markers in
+     --tint-lilac-soft, which this design system no longer has — lavender-soft
+     is its nearest surviving step (#F2EDFD, ink on it 9.40:1). The yellow the
+     markers used to wear belongs to the Copy button, which is where the canvas
+     puts it. */
+  background: var(--accent-lavender-soft);
+  color: var(--ink-900);
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+/* Settings */
+.set__value {
+  margin: 0;
+  flex: none;
+  max-width: 55%;
+  text-align: right;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+/* A button that looks like the line it replaced: no hover, no press, nothing
+   but the cursor. It is the console's way in and it is meant to be quiet — but
+   a control with no cursor either is one nobody can find on purpose, so the
+   cursor is the single tell it keeps.
+   No `.set` ancestor to scope under — this screen renders inside SubScreen's
+   `.sub`, and there is no .set root anywhere. The reset lives in the rule
+   itself, which is fine: nothing here wears a design-system class, so there is
+   no cascade race to win. */
+.set__version {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  /* 44px of hit area with the row's height unchanged. As a bare <button> this
+     was 358x12 and the touch-floor guard rightly refused it; padding it out
+     would have pushed the foot of the screen down by 32px. Negative block
+     margins absorb exactly that, which is the trick .gb__viewall already uses
+     for a 44px control in a 25px header row. 10 = 26 - 16, so the TEXT lands
+     where it did rather than the box's top edge. */
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  margin: 10px 0 -16px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* The last menu row already draws a line; the footer draws its own on top of
+   it, and two rules 32px apart with nothing between them read as an empty
+   row. The menu's line goes, since the footer's is the section break. */
+/* The last row in every group drops its rule. It used to sit directly above the
+   next group's label, which read as the label's own underline rather than as
+   the row's divider — the dividers belong BETWEEN rows, and after the last row
+   there is nothing to divide. */
+.hub .hub__menu li:last-child .hub__item { border-bottom: none; }
+
+/* Settings is a list of one-line facts, not of cards: the shared row is 56px
+   because most screens put a title and a meta line in it, and this screen puts
+   one line in each. The design's own paddings are 13px and 11px. */
+/* box-sizing matters here: min-height applies to the content box, so 44px
+   plus 18px of padding was rendering a 63px row. */
+.set__row { box-sizing: border-box; min-height: 44px; padding: 9px 2px; }
+/* A toggle row's height is the switch's own 44px target; the row's padding
+   would stack on top of it and make these three rows taller than the rest. */
+/* The shipping address form's own grid lives in parts/address-fields.css —
+   checkout draws the same fields, so the layout cannot live on this screen.
+   What is left here is only where the block sits on THIS screen. */
+.set__addr {
+  /* Wider than .sub__label's own 6px: every other section under that heading
+     opens with a display-face row title, but this one opens with another
+     uppercase label, and at 6px the two read as a single doubled heading. */
+  margin-top: 18px;
+}
+.set__addr-save { margin-top: 14px; }
+
+.set__delete {
+  margin-top: 20px;
+  min-height: 44px;
+  padding: 11px 2px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  /* --accent-coral is 2.82:1 on white; the red ramp carries it instead. */
+  color: var(--red-600);
+  text-align: left;
+}
+.set__delete:hover { color: var(--red-500); }
+
+/* The Admin account row is a button, not a link: the console asks for a
+   password first. Scoped under .hub so it clears the design system's own
+   injected rules, which land after this stylesheet. */
+
+
+/* The cash and credit blocks — the whole of the Wallet group. Two small white
+   cards on the panel's cream, which is what makes white read as a block here
+   at all. Their own classes rather than .hub__fig's, which the wallet screen
+   also wears. */
+.hub__cards {
+  margin: 8px 0 2px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.hub__card {
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 10px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  background: var(--gray-0);
+  /* The whole token, not two of its corners: --radius-hand-sm is itself a
+     complete border-radius shorthand with a slash in it, so it only works as
+     the entire value. */
+  border-radius: var(--radius-hand-sm);
+  /* No shadow (owner, 2026-09-21): white on the cream is the edge. */
+}
+.hub__card-label {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.hub__card-value {
+  margin-top: 4px;
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+
+/* Invite — the two ways out of the ticket, what the code has paid, who used
+   it, and the way in for somebody else's. */
+.inv__acts {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.inv__earned {
+  margin-top: 8px;
+  padding: 12px 14px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-radius: var(--radius-hand-sm);
+  background: var(--gray-0);
+  box-shadow: var(--shadow-paper);
+}
+.inv__earned-fig {
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.inv__earned-sub {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
+.inv__friends { list-style: none; margin: 8px 0 0; padding: 0; }
+.inv__friend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1.5px solid var(--gray-100);
+}
+.inv__friend:last-child { border-bottom: none; }
+.inv__friend-mark {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-lavender-soft);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xs);
+  color: var(--violet-700);
+}
+.inv__friend-who { flex: 1; min-width: 0; }
+.inv__friend-name {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.inv__friend-meta {
+  display: block;
+  margin-top: 1px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+.inv__friend-fig {
+  flex: none;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--violet-700);
+}
+/* gray-600, not gray-500: at 10px this needs 4.5:1 and gray-500 measures
+   4.22 on white. */
+.inv__friend-fig--wait { color: var(--gray-600); }
+
+.inv__enter { margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+.inv__enter-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--gray-0);
+  box-shadow: inset 0 0 0 1.5px var(--gray-300);
+  font-family: var(--font-label);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-900);
+}
+/* gray-600 on white is 6.6:1, so the placeholder clears AA rather than sitting
+   at the browser's default grey. */
+.inv__enter-input::placeholder { color: var(--gray-600); font-weight: 600; }
+.inv__enter-input:focus-visible { outline: 2px solid var(--violet-600); outline-offset: 2px; }
+.inv__enter-go { flex: none; }
+.inv__enter-note {
+  margin: 8px 0 0;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--gray-700);
+}
+
+/* Share: a 44px glyph button on the identity row's right. No disc — the row's
+   other marks are naked glyphs too (the bell above it). Disabled reads quiet. */
+
+/* The outside view of you, on one row: the link that opens your public card
+   and the button that hands it to someone else (owner, 2026-09-21, when the
+   header row became identical on every tab and Share left it). */
+.hub__outside { display: flex; align-items: center; gap: 4px; }
+/* 44px on both axes, with the ink small inside it — the split every small
+   control in this app makes. The negative block margin keeps that target from
+   pushing the campus line and the name apart.  */
+.hub .hub__share {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-block: -12px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--ink-900);
+}
+
+
+/* ---- Me, rebuilt 2026-09-21 (owner: carry the reference /me's content) ---- */
+
+/* Your rung, over the progress bar. --coral-700 (5.0:1 on white): the ladder's
+   own colour for this level, in the tone that clears AA as small text. */
+.hub__level {
+  margin: 0 0 12px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--coral-700);
+}
+
+/* Three figures on one line, split by dashed rules. */
+.hub__stats {
+  margin: 20px 0 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.hub__stat { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
+.hub__stat:first-child { padding-left: 0; }
+.hub__stat + .hub__stat { border-left: 1.5px dashed var(--gray-300); }
+.hub__stat dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.hub__stat dt {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* The way to your public card, under the campus line: caps in coral-700, a
+   44px target whose negative block margins keep the identity block the
+   avatar's height (the .hub__viewall trick). */
+.hub .hub__public {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  margin: -8px 0 -14px;
+  text-decoration: none;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--coral-700);
+}
+.hub .hub__public:hover { color: var(--coral-700); text-decoration: underline; }
+
+/* Section headings: the board's own display caps (gigs-board.css .gb__h2), so
+   the tabs read as one app. */
+.hub__h2 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: var(--text-xl);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+.hub__sec { margin-top: 30px; }
+.hub__sec:first-child { margin-top: 26px; }
+.hub__sec-top { display: flex; align-items: baseline; gap: 10px; }
+.hub__sec-top .hub__h2 { flex: 1; min-width: 0; }
+.hub .hub__sec-top .hub__viewall { margin-left: 0; }
+/* White paper on the cream, the wallet blocks' own treatment — no shadow
+   (owner, 2026-09-21): the white against the cream is the edge. */
+.hub__paper {
+  box-sizing: border-box;
+  background: var(--gray-0);
+  border-radius: var(--radius-hand-sm);
+}
+.hub__prog { margin-top: 12px; padding: 16px 14px 6px; }
+
+/* The caps link that ends a section — "See next unlocks", "View full track
+   record": coral-700 (4.5+ on white and on the cream), 44px tall with the
+   text where a line of it would sit. */
+.hub .hub__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  margin-top: 6px;
+  text-decoration: none;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--coral-700);
+}
+.hub .hub__more:hover, .hub .hub__card-go:hover { color: var(--coral-700); text-decoration: underline; }
+
+/* Experience rows: a disc, the brand, what kind of work, and which missions. */
+.hub__exp { list-style: none; margin: 8px 0 0; padding: 0; }
+.hub__exp-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1.5px solid var(--gray-200);
+  text-decoration: none;
+  color: inherit;
+}
+.hub__exp > li:last-child .hub__exp-row { border-bottom: none; padding-bottom: 6px; }
+.hub .hub__exp-disc { flex: none; }
+.hub__exp-who { flex: 1; min-width: 0; }
+.hub__exp-name { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: var(--text-lg); letter-spacing: -0.02em; color: var(--text-primary); }
+.hub__exp-meta { margin: 4px 0 0; font-size: var(--text-xs); line-height: 1.45; color: var(--gray-700); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hub__none { margin: 10px 0 0; font-size: var(--text-sm); color: var(--gray-700); }
+
+/* The wallet blocks' way on. */
+.hub .hub__card-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  margin-top: 2px;
+  text-decoration: none;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--coral-700);
+}
+
+/* The push: one paper link under the experience rows, the record in bold and
+   the way on under it. */
+.hub .hub__push {
+  margin: 12px 0 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  align-items: center;
+  padding: 16px 14px;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+.hub__push-t { grid-column: 1; font-size: var(--text-sm); font-weight: 700; line-height: 1.4; }
+.hub__push-go {
+  grid-column: 1;
+  margin-top: 6px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--coral-700);
+}
+.hub__push-arrow { grid-column: 2; grid-row: 1 / 3; color: var(--ink-900); }

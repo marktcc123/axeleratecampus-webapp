@@ -1,0 +1,141 @@
+/* The photo card: art on top, words under it, a foot row. Worn by the
+   Featured missions (owner, 2026-09-21, after the two rows' designs were
+   swapped). The row bleeds -16px like every other row; scroll-padding keeps
+   the first card on the gutter and `mandatory` parks each one whole. Paper
+   ground and no shadow — the tone is the edge.
+
+   232 wide (280 → 248 → 232 over 2026-09-21, owner: "narrower", then "the
+   picture a little smaller"). The art is a square the card's full width
+   (owner: "make the photo square — just make the card taller, don't change my
+   layout"), so shrinking the picture means shrinking the card, and the card's
+   height is whatever that square and the words come to. */
+.fe__row {
+  display: flex;
+  gap: 12px;
+  margin: 12px -16px 0;
+  padding: 0 16px 6px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 16px;
+  scrollbar-width: none;
+}
+.fe__row::-webkit-scrollbar { display: none; }
+.ph {
+  flex: none;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 232px;
+  box-sizing: border-box;
+  padding: 10px 12px 12px;
+  border-radius: 16px;
+  background: var(--surface-quiet);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.ph__photo { position: relative; width: 100%; aspect-ratio: 1 / 1; margin-bottom: 8px; }
+.ph__photo .app__slot { width: 100%; height: 100%; }
+/* The format, pinned to the art's corner on a white chip: ink on white, so it
+   reads whatever the art behind it is doing. */
+.ph__kind {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-card);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--ink-900);
+}
+/* The brand line: the mission row's own (mission-tile.css .mt__brand) — the
+   name alone, no disc (owner, 2026-09-22). */
+.ph__brand {
+  display: block;
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.ph__brand-t { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ph__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ph__line {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--text-xs);
+  color: var(--gray-700);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ph__fact { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.ph__ico { flex: none; color: var(--text-secondary); }
+/* The pay: the rows' own highlighter swipe, at the rows' own size (owner,
+   2026-09-21: "the same size as the price in the mission list" —
+   mission-tile.css .mt__pay, xl on a 38px line). */
+/* The foot is the card's floor (owner, 2026-09-22): margin-top auto pins it
+   to the bottom of the card, so a one-line title does not pull the pay and the
+   XP up beside a two-line neighbour's. The cards in a row are one height
+   already (flex stretch); the 8px is the least room above the foot. No
+   min-height: the 38px pay is the foot's height, and a min-height beside the
+   padding would stack on it (the content-box trap the e2e guard catches). */
+.ph__foot { margin: auto 0 0; padding-top: 8px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+/* Pay then XP, the mission row's own pair (mission-tile.css .mt__earn /
+   .mt__xp). The foot wraps rather than clips: a card is 232 wide, and a long
+   figure with three faces beside it must not push the faces off the card. */
+.ph__earn { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.ph__xp {
+  font-family: var(--font-label);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  /* gray-600, as on the rows: the highlighted pay is the figure that pulls
+     the eye, and two coloured numbers in one line competed. */
+  color: var(--gray-600);
+}
+.ph__pay { position: relative; display: inline-flex; align-items: center; height: 38px; padding: 0 6px; font-family: var(--font-display); font-weight: 800; font-size: var(--text-xl); letter-spacing: -0.01em; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+.ph__pay::before { content: ''; position: absolute; left: -2px; right: -2px; top: 26%; height: 58%; border-radius: 3px; background: var(--accent-yellow); rotate: -1.5deg; }
+.ph__pay-t { position: relative; }
+/* Who is on it: three discs overlapping by a third, a keyline in the card's
+   own ground so each reads against the next, the rest as a count. 2px in from
+   the edge, since that keyline is invisible against the card. */
+.ph__going { display: inline-flex; align-items: center; margin-right: 2px; }
+.ph__going .ph__face { margin-left: -8px; box-shadow: 0 0 0 2px var(--surface-quiet); }
+.ph__going .ph__face:first-child { margin-left: 0; }
+/* Positioned, so it paints over the discs before it. */
+.ph__more {
+  position: relative;
+  z-index: 1;
+  margin-left: -8px;
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ink-900);
+  color: var(--text-inverse);
+  box-shadow: 0 0 0 2px var(--surface-quiet);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

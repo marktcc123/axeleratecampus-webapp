@@ -1,0 +1,180 @@
+/* Event detail. The shape follows perk detail, which is the app's other
+   "one thing, in full" screen, so the two read as siblings. */
+/* margin-top -16px: the page escapes the column's top padding so its box (and
+   the chip's `top`) start at the screen's top edge — see gigs-detail.css. */
+.edp { position: relative; margin-top: -16px; }
+/* Back and Share over the photo: parts/DetailTopBar.jsx, fixed to the top. */
+/* A CSS chevron, the same trick gigs-detail and perk detail use. */
+
+/* Square, and the screen's top edge (owner, 2026-09-09): -16px escapes the
+   column's top padding, the gutters go with --shell-pad. */
+.edp__photo { aspect-ratio: 1; margin: 0 calc(var(--shell-pad) * -1); }
+
+.edp__caps {
+  margin: 16px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+}
+.edp__title {
+  margin: 6px 0 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--text-primary);
+}
+
+.edp__facts { list-style: none; margin: 16px 0 0; padding: 0; }
+.edp__fact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+/* Scoped to (0,2,0): the icon wears .ax-icon, which the design system injects
+   after the app bundle, so a bare .edp__fact-ico at (0,1,0) would lose any
+   future tie on a property the two rules share. Task 2 shipped exactly this
+   as a deferred minor (public-profile.css .pp__tick) — fixed here up front. */
+.edp .edp__fact-ico { color: var(--gray-600); flex: none; }
+
+.edp__blurb { margin: 14px 0 0; font-size: var(--text-sm); line-height: 1.55; color: var(--gray-700); }
+/* The count in the bar, where the mission page puts its deadline — the same
+   17px figure, so the two bars read as one pattern. */
+.edp__seats {
+  display: block;
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-900);
+}
+.edp__saved {
+  margin: 0;
+  padding: 12px 8px;
+  text-align: center;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-brand);
+}
+
+.edp__note {
+  margin: 16px 0 0;
+  text-align: center;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--gray-600);
+}
+
+.edp__guests { margin-top: 26px; }
+.edp__h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+/* Three across at every width the app supports. The tiles are square and the
+   name sits under them, so a fourth column would put the names at a size the
+   ladder does not have. */
+.gg__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.gg .gg__tile {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+.gg__photo { display: block; }
+/* flex-end, not center: at the narrowest tile (88px) the longest fixture name
+   wraps to two lines, and the tick is a flex item sharing the row rather than
+   flowing inline with the text — plain inline flow lets the icon spill onto
+   its own third line when it doesn't fit after the last word, which reads
+   worse than a centred icon. flex-end keeps it in the row (it can never end
+   up on a line of its own) and rests it on the wrapped block's bottom edge,
+   which is where the last line's baseline actually is. */
+.gg__name {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 0;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+/* Scoped to (0,2,0): the icon wears .ax-icon, which the design system injects
+   after the app bundle, so a bare .gg__tick at (0,1,0) would lose any future
+   tie on a property the two rules share — the same trap .edp__fact-ico and
+   the deferred .pp__tick minor already named on this plan. */
+.gg .gg__tick { color: var(--violet-600); flex: none; margin-bottom: 1px; }
+
+.gg .gg__more {
+  box-sizing: border-box;
+  min-height: 44px;
+  margin-top: 12px;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-brand);
+  cursor: pointer;
+}
+
+
+/* Same geometry as the mission page's apply bar and the shop's buy bar: this
+   screen owns the bottom, so TabBar and CartFab stand down on it. */
+.edp__bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  max-width: 520px;
+  width: calc(100% - var(--shell-pad) * 2);
+  box-sizing: border-box;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--radius-hand-lg);
+  background: var(--gray-0);
+  box-shadow: var(--sticker-cut), var(--shadow-paper-lg);
+}
+.edp__bar-seats { flex: 1; min-width: 0; }
+.edp__bar-act { flex: none; }
+/* Ink, like the mission page's Apply and the shop's Add to cart. Scoped under
+   .edp to reach (0,2,0) — the design system injects its button rule after the
+   app bundle and a single class would lose the tie. */
+.edp .edp__bar-btn { background: var(--ink-900); color: var(--gray-0); }
+/* "See pass": the same pill as the seat button, as a link to the ticket. */
+.edp .edp__pass {
+  display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; box-sizing: border-box;
+  padding: 0 18px; border-radius: var(--radius-pill); background: var(--ink-900); color: var(--gray-0); text-decoration: none;
+  font-family: var(--font-label); font-size: var(--text-sm); font-weight: 700;
+}

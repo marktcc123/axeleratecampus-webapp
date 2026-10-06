@@ -1,0 +1,177 @@
+/* Shell — Nav + NavSheet + Footer. Colours are tokens only. */
+
+/* The design system injects each component's <style> at JS execution time,
+   after this bundled stylesheet, so any rule here at (0,1,0) that competes
+   with an ax-* class on the same element loses the tie. Every such rule is
+   scoped under .nav to reach (0,2,0). Do not "simplify" .nav .nav__cta back
+   to .nav__cta. */
+
+.wrap {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+/* ---- Nav ---- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--surface-page) 85%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.nav__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  height: 60px;
+}
+.nav__wordmark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  letter-spacing: -0.04em;
+  color: var(--violet-600);
+  text-decoration: none;
+  line-height: 1;
+}
+.nav__links {
+  display: none;
+  gap: var(--space-lg);
+  margin-left: var(--space-xs);
+}
+.nav__links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+.nav__links a:hover { color: var(--text-brand); }
+.nav .nav__cta { display: none; margin-left: auto; }
+.nav__toggle { margin-left: auto; }
+
+/* Hamburger: three geometric bars — the icon set has no menu glyph and the
+   readme permits minimal strokes for micro-utility chrome. */
+.nav__bars {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 18px;
+}
+.nav__bars span {
+  display: block;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+}
+
+@media (min-width: 1025px) {
+  .nav__row { height: 64px; }
+  .nav__links { display: flex; }
+  .nav .nav__cta { display: inline-flex; }
+  .nav .nav__toggle { display: none; }
+}
+
+/* ---- NavSheet ---- */
+.sheet__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--overlay);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 101;
+  background: var(--surface-page);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-md) var(--gutter) var(--space-2xl);
+  overflow-y: auto;
+}
+.sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+.sheet__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: var(--space-xl) 0;
+}
+.sheet__links a {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.nav .sheet__close {
+  font-size: var(--text-xl);
+  line-height: 1;
+}
+
+/* ---- Footer ---- */
+.footer {
+  background: var(--surface-inverse);
+  color: var(--text-inverse);
+  padding: var(--space-3xl) 0 var(--space-2xl);
+  margin-top: var(--space-4xl);
+}
+.footer__grid {
+  display: grid;
+  gap: var(--space-xl);
+}
+.footer__wordmark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-2xl);
+  letter-spacing: -0.04em;
+  color: var(--text-inverse);
+  text-decoration: none;
+}
+.footer__tag {
+  font-family: var(--font-hand);
+  font-size: var(--text-lg);
+  color: var(--text-inverse-secondary);
+  transform: rotate(-1.5deg);
+  display: inline-block;
+  margin-top: var(--space-xs);
+}
+.footer__col h4 {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-inverse-secondary);
+  margin: 0 0 var(--space-sm);
+}
+.footer__col a {
+  display: block;
+  color: var(--text-inverse);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  padding: 6px 0;
+}
+.footer__col a:hover { color: var(--butter-300); }
+.footer__legal {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-md);
+  border-top: 1px solid color-mix(in srgb, var(--text-inverse) 15%, transparent);
+  font-size: var(--text-xs);
+  color: var(--text-inverse-secondary);
+}
+@media (min-width: 641px) {
+  .footer__grid { grid-template-columns: 1.4fr 1fr 1fr; }
+}

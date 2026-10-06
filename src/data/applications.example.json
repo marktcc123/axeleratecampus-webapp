@@ -1,0 +1,57 @@
+[
+  {
+    "missionSlug": "dermabell-campus-launch",
+    "brand": "Axelerate Beauty",
+    "title": "Dermabell salon ambassador",
+    "payUsd": 50,
+    "status": "applied",
+    "appliedAt": "2026-08-24",
+    "brief": "Pitch Dermabell's AI Skin Analyzer and 40-minute express K-facial to local salons, hand over the training pack, and log every visit."
+  },
+  {
+    "missionSlug": "solra-unboxing-reel",
+    "brand": "Solra",
+    "title": "Solra — unboxing reel",
+    "payUsd": 25,
+    "status": "paid",
+    "appliedAt": "2026-08-20",
+    "brief": "Film a 30–60 second unboxing of the Solra 12-pack and post it to your feed. Keep the first 3 seconds on the product and tag @solra."
+  },
+  {
+    "missionSlug": "vera-friday-popup-door",
+    "brand": "Vera",
+    "title": "Vera — Friday pop-up door",
+    "payUsd": 40,
+    "status": "applied",
+    "appliedAt": "2026-08-18",
+    "brief": "Work the door at Vera's Friday pop-up: scan tickets, hand out wristbands, keep the line moving."
+  },
+  {
+    "missionSlug": "loop-dorm-demo-night",
+    "brand": "Loop",
+    "title": "Loop — dorm demo night",
+    "payUsd": 65,
+    "status": "applied",
+    "appliedAt": "2026-08-15",
+    "brief": "Host a demo night in your dorm with Loop's starter kit. Invite 10+, run the walkthrough, log the headcount."
+  },
+  {
+    "missionSlug": "halo-sampling-table",
+    "brand": "Halo",
+    "title": "Halo — sampling table",
+    "payUsd": 30,
+    "status": "submitted",
+    "appliedAt": "2026-08-12",
+    "brief": "Run a Halo sampling table in the student center: hand out minis, chat people up, log reactions."
+  },
+  {
+    "missionSlug": "klar-study-break-booth",
+    "brand": "Klar",
+    "title": "Klar — study-break booth",
+    "payUsd": 22,
+    "status": "paid",
+    "appliedAt": "2026-08-10",
+    "brief": "Set up Klar's study-break booth during finals week: cold brew, flashcard giveaways, and a sign-up sheet.",
+    "format": "field"
+  }
+]

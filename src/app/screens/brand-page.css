@@ -1,0 +1,35 @@
+/* The brand page: the mission page's construction at a shorter cover.
+   margin-top -16px: the page escapes the column's top padding so the cover is
+   the screen's top edge; the cover then bleeds the gutters. */
+.bp { margin-top: -16px; position: relative; }
+.bp__cover { position: relative; margin: 0 calc(var(--shell-pad) * -1); }
+/* The name and what it has, on the photo: each line on its own block of
+   colour, box-decoration-break: clone so a wrapped name gets a block per line
+   — gigs-detail.css's .gd__lines, reused. Ink on --accent-yellow is 16.65:1. */
+.bp__lines {
+  position: absolute; left: 12px; right: 12px; bottom: 14px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+}
+.bp__lines span {
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  background: var(--accent-yellow); color: var(--ink-900); padding: 2px 8px;
+}
+.bp__caps {
+  margin: 0; font-family: var(--font-label); font-size: var(--text-xs); font-weight: 700;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase; line-height: 1.6;
+}
+.bp__title {
+  margin: 0; font-family: var(--font-title); font-weight: 600; font-size: var(--text-xl);
+  line-height: 1.45; letter-spacing: 0.01em; text-transform: uppercase;
+}
+/* The lists sit on the page's white, 16px under the cover. */
+.bp__body { padding-top: 16px; }
+/* The brand's own words, on the mission page's body rung (.gd__prose). */
+.bp__blurb { margin: 0 0 4px; font-size: var(--text-sm); line-height: 1.6; color: var(--gray-700); }
+.bp__site {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 44px; margin: 12px 0 6px; padding: 0 16px;
+  border-radius: var(--radius-pill); background: var(--ink-900); color: var(--gray-0);
+  font-family: var(--font-label); font-size: var(--text-xs); font-weight: 700;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase; text-decoration: none;
+}

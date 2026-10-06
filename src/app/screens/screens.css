@@ -1,0 +1,94 @@
+/* Screen titles take --font-title (DynaPuff, uppercase) — the role the design
+   gives it. Me is the exception: its h1 is a name, not a screen title. */
+.scr__h1 {
+  margin: 0 0 6px;
+  font-family: var(--font-title);
+  font-weight: 600;
+  /* 21px, the same as the board's section headings (.gb__h2 "Active quests"),
+     which is what the owner asked these to match. It went to 17 with the
+     wordmark and the sub-screen titles and came back up: a tab screen's title
+     and a section heading inside one are the same rank, and Me's name and the
+     sub-screen headers stay at 17. */
+  font-size: var(--text-xl);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+.scr__lede { margin: 0 0 20px; font-size: var(--text-sm); line-height: 1.55; color: var(--text-secondary); }
+.scr__list { display: flex; flex-direction: column; gap: 12px; }
+.scr__row-top { display: flex; align-items: baseline; gap: 8px; }
+.scr__row-title {
+  margin: 0; font-family: var(--font-display); font-weight: 700; font-size: var(--text-sm);
+  letter-spacing: -0.01em; color: var(--text-primary);
+}
+.scr__row-pay {
+  margin-left: auto; font-family: var(--font-display); font-weight: 800; font-size: var(--text-lg);
+  letter-spacing: var(--tracking-tight); font-variant-numeric: tabular-nums; color: var(--text-primary);
+}
+.scr__row-meta {
+  margin-top: 4px; font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 500;
+  letter-spacing: .04em; color: var(--gray-600);
+}
+.scr__row-link { text-decoration: none; color: inherit; display: block; }
+.scr__level-name {
+  margin: 0; font-family: var(--font-display); font-weight: 800; font-size: var(--text-lg);
+  letter-spacing: var(--tracking-tight); color: var(--text-primary);
+}
+.scr__level-gate {
+  margin: 6px 0 10px; font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--gray-600);
+}
+.scr__perks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.scr__perk { font-size: var(--text-sm); line-height: 1.5; color: var(--gray-700); display: flex; gap: 8px; align-items: flex-start; }
+.scr__away { font-family: var(--font-hand); font-size: var(--text-sm); color: var(--gray-600); margin-top: 10px; }
+.scr [data-state='locked'] .scr__level-name { color: var(--text-secondary); }
+
+/* Footer links on the Me tab — the only route to verification and legal. */
+.scr__footer {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--gray-100);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+/* Standalone nav links, so they carry a full target. The type stays 11px;
+   only the hit area grows. */
+/* Signing out is the one destructive thing in this row, so it is the one
+   coloured thing. --accent-coral is 2.63:1 on the panel, so the red ramp
+   carries it instead: --red-600 clears 4.5 at this size. */
+/* (0,2,0): `.scr__footer a` below is (0,1,1) and would otherwise win the
+   colour back. Same rule the rest of this codebase follows against the
+   design system's injected styles. */
+.scr__footer .scr__footer-out { color: var(--red-600); }
+.scr__footer .scr__footer-out:hover { color: var(--red-500); }
+
+.scr__footer a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* min-width too: "Terms" is only 40px of type. */
+  min-width: 44px;
+  min-height: 44px;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+.scr__footer a:hover { color: var(--text-brand); }
+
+/* The one way into Syndicate, now that the hub menu does not list it. */
+.scr__syn { margin-top: 24px; }
+.scr__syn a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-brand);
+}

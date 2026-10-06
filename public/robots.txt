@@ -1,0 +1,31 @@
+# Public profiles are reachable by link and are not for indexing.
+#
+# The page is /u/<handle>. /user/<handle> is the path it had until 2026-09-08
+# and now only redirects there; it stays listed because it still answers, and
+# a listed redirect costs nothing. tests/unit/robots.test.js derives the first
+# Disallow from App.jsx — every route whose component calls useNoIndex() must
+# appear here — because this file sat on the old path for two weeks after the
+# page moved, guarding a redirect while the page itself stood open.
+#
+# The Disallow is the only half of "do not index" this repo can enforce. The
+# route also sets <meta name="robots" content="noindex"> while it is mounted,
+# but the two do not cover for each other — they defeat each other: a crawler
+# that obeys the lines below never fetches the page, so it never reads that
+# tag, and it would not read an X-Robots-Tag header either.
+#
+# The Disallow stays because it is the half that works. Dropped, a crawler
+# fetches the page and finds a meta tag injected by JavaScript, which anything
+# that does not run JavaScript ignores — trading a URL someone can list for the
+# full indexing of a student's name, campus and level. URL-only is the smaller
+# exposure, and the only one avoidable without server config.
+#
+# For a real deployment that is ONE change, not two: add an
+# X-Robots-Tag: noindex response header for /u/* AND remove the Disallow
+# lines below, in the same deploy. The header is only read by a crawler that
+# fetches the page, and the Disallow is what stops it fetching, so either half
+# on its own leaves the page less protected than it is right now.
+#
+# None of this is access control. Anyone holding the link reads the page.
+User-agent: *
+Disallow: /u/
+Disallow: /user/

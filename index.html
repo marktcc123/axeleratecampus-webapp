@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Axelerate — tell us what you want. Let brands compete for you. The marketplace for demand." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      The design system pulls this same URL through an @import inside
+      tokens/fonts.css. Nested there, the browser cannot discover it until it
+      has fetched and parsed the app stylesheet, which serialises the request
+      and makes first paint depend on when that parse finishes.
+
+      Measured on /gigs, five runs per arm after a discarded warm-up:
+
+                       @import only            declared here
+        fast           LCP 284ms (140-584)     LCP 136ms (132-140)
+        3G + CPU x4    LCP 952ms (836-1232)    LCP 840ms (836-884)
+
+      Faster at the median and far steadier: the spread collapses because the
+      request no longer waits on a parse it cannot predict.
+
+      Keep this byte-identical to the @import in
+      axelerate-design-system/tokens/fonts.css. Same URL means one request;
+      a drifted one means the fonts are fetched twice.
+    -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=DynaPuff:wght@400..700&family=Lacquer&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Gabarito:wght@400..900&display=swap"
+    />
+    <title>Axelerate — The Marketplace for Demand</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

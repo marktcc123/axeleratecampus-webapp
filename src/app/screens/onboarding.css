@@ -1,0 +1,194 @@
+/* The four screens before the gate. Colours are tokens only; every size names
+   a rung (3xs/xs/sm/lg/xl/2xl), no number is written here.
+
+   A full-height column: the pips and Skip at the top, the copy in the middle,
+   one button on the bottom edge. The middle is what changes between screens,
+   so the two fixed rows never move under the reader's thumb. */
+.ob {
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface-page);
+  font-family: var(--font-body);
+}
+
+.ob__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ob__pips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 6px;
+}
+.ob__pip {
+  width: 22px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--gray-200);
+}
+.ob__pip[data-on] { background: var(--violet-600); }
+
+/* An <a> is content-box here, so the 44px floor is padding: a min-height would
+   stack on top of it, the bug this repo has hit four times. The negative block
+   margin then stops that target pushing the pips down the page. */
+.ob__skip {
+  margin: -13px 0 -13px auto;
+  padding: 13px 4px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+/* The copy sits low rather than centred: on a tall phone a block pinned to the
+   middle floats, and the demo puts it about two thirds down. `auto` above and
+   a smaller share below does that at any height. */
+.ob__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 12vh;
+}
+
+.ob__h1 {
+  margin: 0;
+  /* --font-title, the rounded face the section headings use, not --font-display:
+     the demo sets these four headlines in it, and it is what "AVAILABLE NOW"
+     and "TO UNLOCK NEXT" are set in — so the intro and the app read as one
+     voice rather than as a landing page bolted to a product. */
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: var(--text-2xl);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+.ob__lede {
+  margin: 14px 0 0;
+  /* --text-sm, not --text-md: the app screens commit to the five-rung ladder
+     (tests/unit/type-scale.test.js), and md is the wide-measure prose alternate
+     rather than a step on it. */
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-secondary);
+  max-width: 34ch;
+}
+
+/* Screen 2 — what a mission can be, and what that one pays. */
+.ob__kinds { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.ob__kind {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-hand);
+  background: var(--surface-quiet);
+}
+.ob__kind-t { font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); }
+.ob__kind-p {
+  font-family: var(--font-label);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+/* Screen 3 — the four things, term and gloss. A <dl>, because that is what a
+   list of terms and their meanings is. */
+.ob__pairs { margin: 20px 0 0; }
+.ob__pair { display: flex; gap: 16px; padding: 7px 0; }
+.ob__pair-t {
+  flex: none;
+  width: 92px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.ob__pair-d { margin: 0; font-size: var(--text-sm); line-height: 1.4; color: var(--text-secondary); }
+/* Credits come from the shop, not from the mission, so a rule separates them
+   from the three above rather than a heading naming the difference twice. */
+.ob__pair--credits { margin-top: 8px; padding-top: 15px; border-top: 1px dashed var(--gray-300); }
+.ob__pair--credits .ob__pair-t { color: var(--violet-600); }
+
+.ob__flow {
+  margin: 18px 0 0;
+  padding: 13px 16px;
+  border-radius: var(--radius-hand);
+  background: var(--violet-50);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--violet-700);
+}
+/* Dashed and unfilled: the system's own mark for something not yours yet, and
+   here for something that arrives by a different road. */
+.ob__flow--credits {
+  margin-top: 10px;
+  background: none;
+  border: 1px dashed var(--gray-300);
+  color: var(--text-secondary);
+}
+.ob__arrow { padding: 0 2px; }
+
+/* Screen 4 — what a level opens. Wrapping tags, because the list has no order
+   and a column would imply one. */
+.ob__tags { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.ob__tag {
+  padding: 10px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--violet-50);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--violet-700);
+}
+
+/* One button, the width of the column, on the bottom edge. Violet 600 is the
+   one hue in this palette that carries white text (6.48:1). 48px, the height
+   of the system's --lg button: the gate that follows these screens uses that
+   button, and one flow should not carry two heights of the same control. */
+.ob__foot { flex: none; }
+.ob__next {
+  width: 100%;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--violet-600);
+  color: var(--text-inverse);
+  font-family: var(--font-label);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-paper);
+}
+.ob__next:hover { box-shadow: var(--shadow-paper-lg, var(--shadow-paper)); }
+
+/* A phone in landscape, or a desktop window: the column stops growing and the
+   copy stops sitting two thirds down a screen it no longer fills. */
+@media (min-width: 560px) {
+  .ob { align-items: center; }
+  .ob__top, .ob__body, .ob__foot { width: 100%; max-width: 520px; }
+  .ob__body { justify-content: center; padding-bottom: 0; }
+}

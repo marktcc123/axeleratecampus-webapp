@@ -1,0 +1,992 @@
+{
+  "stats": {
+    "total_users": 1284,
+    "verified_users": 1107,
+    "active_today": 213
+  },
+  "campuses": [
+    {
+      "id": "cmp1",
+      "name": "UCLA",
+      "primary_color": "#2774AE",
+      "logo_url": "",
+      "student_count": 412
+    },
+    {
+      "id": "cmp2",
+      "name": "Cornell Tech",
+      "primary_color": "#B31B1B",
+      "logo_url": "",
+      "student_count": 188
+    },
+    {
+      "id": "cmp3",
+      "name": "NYU",
+      "primary_color": "#57068C",
+      "logo_url": "",
+      "student_count": 331
+    },
+    {
+      "id": "cmp4",
+      "name": "UT Austin",
+      "primary_color": "#BF5700",
+      "logo_url": "",
+      "student_count": 246
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord1",
+      "order_no": "AX-1042",
+      "user_id": "u_8841",
+      "full_name": "Maya Ortiz",
+      "shipping_email": "maya.o@example.com",
+      "status": "shipped",
+      "cash_paid": 24,
+      "credits_used": 800,
+      "created_at": "2026-08-24",
+      "needs": "shipping",
+      "items": [
+        {
+          "name": "The Five Minute Journal",
+          "brand": "Intelligent Change",
+          "quantity": 1,
+          "price": 32,
+          "product_id": "p1"
+        }
+      ],
+      "phone": "555-0188",
+      "shipping_address": {
+        "line1": "120 Hoyt St",
+        "line2": "Apt 4B",
+        "city": "Brooklyn",
+        "state": "NY",
+        "zip": "11201"
+      }
+    },
+    {
+      "id": "ord2",
+      "order_no": "AX-1037",
+      "user_id": "u_2190",
+      "full_name": "Devon Park",
+      "shipping_email": "devon.p@example.com",
+      "status": "shipped",
+      "cash_paid": 39,
+      "credits_used": 0,
+      "created_at": "2026-08-21",
+      "needs": "return",
+      "items": [
+        {
+          "name": "Nautilus towels",
+          "brand": "Italic",
+          "quantity": 1,
+          "price": 39,
+          "product_id": "p3"
+        }
+      ],
+      "phone": "555-0142",
+      "shipping_address": {
+        "line1": "2400 Nueces St",
+        "line2": "Room 311",
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78705"
+      },
+      "request_reason": "Wrong colour — I ordered the natural set and got striped."
+    },
+    {
+      "id": "ord3",
+      "order_no": "AX-1051",
+      "user_id": "u_7734",
+      "full_name": "Priya Raman",
+      "shipping_email": "priya.r@example.com",
+      "status": "placed",
+      "cash_paid": 15.22,
+      "credits_used": 1200,
+      "created_at": "2026-08-29",
+      "needs": "cancellation",
+      "items": [
+        {
+          "name": "BiBi star print stripe combo top",
+          "brand": "Trendsi",
+          "quantity": 1,
+          "price": 27.22,
+          "product_id": "p6"
+        }
+      ],
+      "phone": "555-0167",
+      "shipping_address": {
+        "line1": "2 West Loop Rd",
+        "line2": "",
+        "city": "New York",
+        "state": "NY",
+        "zip": "10044"
+      },
+      "request_reason": "Ordered twice by mistake — please cancel this one."
+    },
+    {
+      "id": "ord4",
+      "order_no": "AX-1055",
+      "user_id": "u_5512",
+      "full_name": "Jonah Reed",
+      "shipping_email": "jonah.r@example.com",
+      "status": "placed",
+      "cash_paid": 62,
+      "credits_used": 0,
+      "created_at": "2026-08-30",
+      "needs": "shipping",
+      "items": [
+        {
+          "name": "Shadmoor towels",
+          "brand": "Italic",
+          "quantity": 2,
+          "price": 31,
+          "product_id": "p4"
+        }
+      ],
+      "phone": "555-0121",
+      "shipping_address": {
+        "line1": "330 De Neve Dr",
+        "line2": "Rieber Hall 512",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zip": "90024"
+      }
+    }
+  ],
+  "ugc_submissions": [
+    {
+      "id": "ugc1",
+      "user_id": "u_8841",
+      "full_name": "Maya Ortiz",
+      "avatar_url": "",
+      "platform": "Instagram",
+      "ugc_link": "https://example.com/ugc/solra-reel-8841",
+      "notes": "Posted Thursday night, tagged @solra.",
+      "status": "submitted",
+      "reward_cash": 25,
+      "reward_credits": 0,
+      "xp_reward": 80,
+      "created_at": "2026-08-28",
+      "mission_slug": "solra-unboxing-reel"
+    },
+    {
+      "id": "ugc2",
+      "user_id": "u_2190",
+      "full_name": "Devon Park",
+      "avatar_url": "",
+      "platform": "TikTok",
+      "ugc_link": "https://example.com/ugc/notely-quad-2190",
+      "notes": "",
+      "status": "pending",
+      "reward_cash": 18,
+      "reward_credits": 600,
+      "xp_reward": 60,
+      "created_at": "2026-08-29",
+      "mission_slug": "notely-chalk-the-quad"
+    },
+    {
+      "id": "ugc3",
+      "user_id": "u_7734",
+      "full_name": "Priya Raman",
+      "avatar_url": "",
+      "platform": "Instagram",
+      "ugc_link": "https://example.com/ugc/klar-booth-7734",
+      "notes": "Three stories, one static.",
+      "status": "submitted",
+      "reward_cash": 0,
+      "reward_credits": 2400,
+      "xp_reward": 100,
+      "created_at": "2026-08-30",
+      "mission_slug": "loop-dorm-demo-night"
+    },
+    {
+      "id": "ugc4",
+      "user_id": "u_5512",
+      "full_name": "Jonah Reed",
+      "avatar_url": "",
+      "platform": "TikTok",
+      "ugc_link": "",
+      "notes": "Link to follow.",
+      "status": "pending",
+      "reward_cash": 40,
+      "reward_credits": 0,
+      "xp_reward": 120,
+      "created_at": "2026-08-31",
+      "mission_slug": "vera-friday-popup-door"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rev1",
+      "user_id": "u_8841",
+      "full_name": "Maya Ortiz",
+      "rating": 5,
+      "body": "Two weeks in and it is the only habit that stuck. The prompts are short enough that I actually do them.",
+      "created_at": "2026-08-30",
+      "status": "pending",
+      "product_id": "p1"
+    },
+    {
+      "id": "rev2",
+      "user_id": "u_2190",
+      "full_name": "Devon Park",
+      "rating": 2,
+      "body": "Thinner than the photos suggested, and one already has a loose thread.",
+      "created_at": "2026-08-29",
+      "status": "pending",
+      "product_id": "p3"
+    },
+    {
+      "id": "rev3",
+      "user_id": "u_7734",
+      "full_name": "Priya Raman",
+      "rating": 5,
+      "body": "Tastes exactly like the description. Ordering two more tins before the drop ends.",
+      "created_at": "2026-08-27",
+      "status": "approved",
+      "product_id": "p2"
+    },
+    {
+      "id": "rev4",
+      "user_id": "u_5512",
+      "full_name": "Jonah Reed",
+      "rating": 1,
+      "body": "The colour in person is nothing like the listing photo.",
+      "created_at": "2026-08-26",
+      "status": "rejected",
+      "reject_reason": "Photo-accuracy complaint — routed to merchandising instead of published.",
+      "product_id": "p4"
+    }
+  ],
+  "gig_applications": [
+    {
+      "id": "gig1",
+      "user_id": "u_3301",
+      "full_name": "Alex Chen",
+      "phone": "555-0114",
+      "email": "alex.c@example.com",
+      "location": "Warehouse 12, Brooklyn",
+      "gig_date": "2026-09-04",
+      "reward_cash": 40,
+      "reward_credits": 0,
+      "status": "pending",
+      "mission_slug": "vera-friday-popup-door"
+    },
+    {
+      "id": "gig2",
+      "user_id": "u_9027",
+      "full_name": "Sam Whitfield",
+      "phone": "555-0188",
+      "email": "sam.w@example.com",
+      "location": "Royce Quad, UCLA",
+      "gig_date": "2026-09-02",
+      "reward_cash": 18,
+      "reward_credits": 600,
+      "status": "pending",
+      "mission_slug": "notely-chalk-the-quad"
+    },
+    {
+      "id": "gig3",
+      "user_id": "u_4419",
+      "full_name": "Nina Adeyemi",
+      "phone": "555-0132",
+      "email": "nina.a@example.com",
+      "location": "Olin lobby",
+      "gig_date": "2026-08-27",
+      "reward_cash": 30,
+      "reward_credits": 0,
+      "status": "approved",
+      "mission_slug": "loop-dorm-demo-night"
+    }
+  ],
+  "event_applications": [
+    {
+      "id": "eva1",
+      "user_id": "u_8841",
+      "full_name": "Maya Ortiz",
+      "campus": "Cornell Tech",
+      "tier": "Trusted",
+      "status": "pending",
+      "event_id": "ev5"
+    },
+    {
+      "id": "eva2",
+      "user_id": "u_3301",
+      "full_name": "Alex Chen",
+      "campus": "UCLA",
+      "tier": "Contributor",
+      "status": "pending",
+      "event_id": "ev1"
+    },
+    {
+      "id": "eva3",
+      "user_id": "u_9027",
+      "full_name": "Sam Whitfield",
+      "campus": "UCLA",
+      "tier": "Explorer",
+      "status": "pending",
+      "event_id": "ev1"
+    },
+    {
+      "id": "eva4",
+      "user_id": "u_7734",
+      "full_name": "Priya Raman",
+      "campus": "NYU",
+      "tier": "Insider",
+      "status": "approved",
+      "event_id": "ev3"
+    }
+  ],
+  "w9_submissions": [
+    {
+      "id": "w91",
+      "user_id": "u_8841",
+      "full_name": "Maya Ortiz",
+      "w9_submitted_at": "2026-08-26",
+      "verified": false
+    },
+    {
+      "id": "w92",
+      "user_id": "u_2190",
+      "full_name": "Devon Park",
+      "w9_submitted_at": "2026-08-19",
+      "verified": true
+    },
+    {
+      "id": "w93",
+      "user_id": "u_4419",
+      "full_name": "Nina Adeyemi",
+      "w9_submitted_at": "2026-08-30",
+      "verified": false
+    }
+  ],
+  "withdrawals": [
+    {
+      "id": "wd1",
+      "user_id": "u_2190",
+      "full_name": "Devon Park",
+      "amount": 180,
+      "fee": 3.6,
+      "net_amount": 176.4,
+      "method": "ACH",
+      "account_info": "•••• 4471",
+      "status": "pending"
+    },
+    {
+      "id": "wd2",
+      "user_id": "u_8841",
+      "full_name": "Maya Ortiz",
+      "amount": 95,
+      "fee": 1.9,
+      "net_amount": 93.1,
+      "method": "PayPal",
+      "account_info": "maya.o@example.com",
+      "status": "pending"
+    },
+    {
+      "id": "wd3",
+      "user_id": "u_4419",
+      "full_name": "Nina Adeyemi",
+      "amount": 240,
+      "fee": 4.8,
+      "net_amount": 235.2,
+      "method": "ACH",
+      "account_info": "•••• 9002",
+      "status": "completed"
+    }
+  ],
+  "career_claims": [
+    {
+      "id": "clm1",
+      "user_id": "u_8841",
+      "full_name": "Maya Ortiz",
+      "reward_summary": "Insider — 12 missions cleared, 4 brands",
+      "reward_key": "insider_certificate",
+      "claimed_at": "2026-08-29",
+      "certificate_name": "",
+      "status": "pending"
+    },
+    {
+      "id": "clm2",
+      "user_id": "u_3301",
+      "full_name": "Alex Chen",
+      "reward_summary": "Contributor — 6 missions cleared",
+      "reward_key": "contributor_certificate",
+      "claimed_at": "2026-08-30",
+      "certificate_name": "",
+      "status": "pending"
+    }
+  ],
+  "career_roles": [
+    {
+      "id": "rol1",
+      "name": "Campus lead",
+      "updated_at": "2026-08-20"
+    },
+    {
+      "id": "rol2",
+      "name": "Field crew captain",
+      "updated_at": "2026-08-12"
+    },
+    {
+      "id": "rol3",
+      "name": "Content reviewer",
+      "updated_at": "2026-07-30"
+    }
+  ],
+  "career_pathways": [
+    {
+      "id": "pth1",
+      "title": "Field operations",
+      "blurb": "Run campus gigs, then run the crew that runs them."
+    },
+    {
+      "id": "pth2",
+      "title": "Creator partnerships",
+      "blurb": "Brief brands, review the work, sign the next cohort."
+    }
+  ],
+  "daily_totals": [
+    {
+      "date": "2026-06-03",
+      "cash_paid": 162.18,
+      "credits_used": 5612,
+      "active_users": 143
+    },
+    {
+      "date": "2026-06-04",
+      "cash_paid": 138.01,
+      "credits_used": 5781,
+      "active_users": 135
+    },
+    {
+      "date": "2026-06-05",
+      "cash_paid": 137.3,
+      "credits_used": 5848,
+      "active_users": 140
+    },
+    {
+      "date": "2026-06-06",
+      "cash_paid": 30.11,
+      "credits_used": 1354,
+      "active_users": 64
+    },
+    {
+      "date": "2026-06-07",
+      "cash_paid": 73.56,
+      "credits_used": 3062,
+      "active_users": 52
+    },
+    {
+      "date": "2026-06-08",
+      "cash_paid": 137.36,
+      "credits_used": 5028,
+      "active_users": 117
+    },
+    {
+      "date": "2026-06-09",
+      "cash_paid": 160.57,
+      "credits_used": 7635,
+      "active_users": 118
+    },
+    {
+      "date": "2026-06-10",
+      "cash_paid": 198.48,
+      "credits_used": 9388,
+      "active_users": 145
+    },
+    {
+      "date": "2026-06-11",
+      "cash_paid": 164.73,
+      "credits_used": 7415,
+      "active_users": 100
+    },
+    {
+      "date": "2026-06-12",
+      "cash_paid": 135.59,
+      "credits_used": 5289,
+      "active_users": 130
+    },
+    {
+      "date": "2026-06-13",
+      "cash_paid": 61.06,
+      "credits_used": 2743,
+      "active_users": 65
+    },
+    {
+      "date": "2026-06-14",
+      "cash_paid": 54.7,
+      "credits_used": 2435,
+      "active_users": 95
+    },
+    {
+      "date": "2026-06-15",
+      "cash_paid": 168.19,
+      "credits_used": 8042,
+      "active_users": 137
+    },
+    {
+      "date": "2026-06-16",
+      "cash_paid": 141.89,
+      "credits_used": 5990,
+      "active_users": 117
+    },
+    {
+      "date": "2026-06-17",
+      "cash_paid": 135.04,
+      "credits_used": 5644,
+      "active_users": 147
+    },
+    {
+      "date": "2026-06-18",
+      "cash_paid": 165.32,
+      "credits_used": 7320,
+      "active_users": 141
+    },
+    {
+      "date": "2026-06-19",
+      "cash_paid": 185.63,
+      "credits_used": 7060,
+      "active_users": 118
+    },
+    {
+      "date": "2026-06-20",
+      "cash_paid": 113.57,
+      "credits_used": 4686,
+      "active_users": 91
+    },
+    {
+      "date": "2026-06-21",
+      "cash_paid": 47.63,
+      "credits_used": 1847,
+      "active_users": 58
+    },
+    {
+      "date": "2026-06-22",
+      "cash_paid": 192.22,
+      "credits_used": 8566,
+      "active_users": 142
+    },
+    {
+      "date": "2026-06-23",
+      "cash_paid": 217.44,
+      "credits_used": 9712,
+      "active_users": 140
+    },
+    {
+      "date": "2026-06-24",
+      "cash_paid": 202.25,
+      "credits_used": 7779,
+      "active_users": 168
+    },
+    {
+      "date": "2026-06-25",
+      "cash_paid": 166.39,
+      "credits_used": 7681,
+      "active_users": 140
+    },
+    {
+      "date": "2026-06-26",
+      "cash_paid": 155.29,
+      "credits_used": 7196,
+      "active_users": 168
+    },
+    {
+      "date": "2026-06-27",
+      "cash_paid": 135.91,
+      "credits_used": 5994,
+      "active_users": 44
+    },
+    {
+      "date": "2026-06-28",
+      "cash_paid": 53.8,
+      "credits_used": 2466,
+      "active_users": 49
+    },
+    {
+      "date": "2026-06-29",
+      "cash_paid": 224.77,
+      "credits_used": 8219,
+      "active_users": 154
+    },
+    {
+      "date": "2026-06-30",
+      "cash_paid": 196.98,
+      "credits_used": 8054,
+      "active_users": 156
+    },
+    {
+      "date": "2026-07-01",
+      "cash_paid": 132.34,
+      "credits_used": 5150,
+      "active_users": 172
+    },
+    {
+      "date": "2026-07-02",
+      "cash_paid": 160.92,
+      "credits_used": 5580,
+      "active_users": 141
+    },
+    {
+      "date": "2026-07-03",
+      "cash_paid": 250.4,
+      "credits_used": 9792,
+      "active_users": 137
+    },
+    {
+      "date": "2026-07-04",
+      "cash_paid": 92.59,
+      "credits_used": 3531,
+      "active_users": 79
+    },
+    {
+      "date": "2026-07-05",
+      "cash_paid": 92.74,
+      "credits_used": 3636,
+      "active_users": 83
+    },
+    {
+      "date": "2026-07-06",
+      "cash_paid": 175.87,
+      "credits_used": 8301,
+      "active_users": 126
+    },
+    {
+      "date": "2026-07-07",
+      "cash_paid": 162.58,
+      "credits_used": 6639,
+      "active_users": 167
+    },
+    {
+      "date": "2026-07-08",
+      "cash_paid": 168.63,
+      "credits_used": 5806,
+      "active_users": 144
+    },
+    {
+      "date": "2026-07-09",
+      "cash_paid": 252.35,
+      "credits_used": 9532,
+      "active_users": 145
+    },
+    {
+      "date": "2026-07-10",
+      "cash_paid": 162.4,
+      "credits_used": 6816,
+      "active_users": 133
+    },
+    {
+      "date": "2026-07-11",
+      "cash_paid": 162.47,
+      "credits_used": 7778,
+      "active_users": 80
+    },
+    {
+      "date": "2026-07-12",
+      "cash_paid": 104.23,
+      "credits_used": 3738,
+      "active_users": 60
+    },
+    {
+      "date": "2026-07-13",
+      "cash_paid": 175.84,
+      "credits_used": 7179,
+      "active_users": 185
+    },
+    {
+      "date": "2026-07-14",
+      "cash_paid": 209.15,
+      "credits_used": 7166,
+      "active_users": 144
+    },
+    {
+      "date": "2026-07-15",
+      "cash_paid": 165.06,
+      "credits_used": 7612,
+      "active_users": 167
+    },
+    {
+      "date": "2026-07-16",
+      "cash_paid": 162.45,
+      "credits_used": 7068,
+      "active_users": 181
+    },
+    {
+      "date": "2026-07-17",
+      "cash_paid": 260.77,
+      "credits_used": 10152,
+      "active_users": 167
+    },
+    {
+      "date": "2026-07-18",
+      "cash_paid": 82.65,
+      "credits_used": 3153,
+      "active_users": 83
+    },
+    {
+      "date": "2026-07-19",
+      "cash_paid": 76.7,
+      "credits_used": 3246,
+      "active_users": 61
+    },
+    {
+      "date": "2026-07-20",
+      "cash_paid": 291.16,
+      "credits_used": 10894,
+      "active_users": 195
+    },
+    {
+      "date": "2026-07-21",
+      "cash_paid": 277.09,
+      "credits_used": 10561,
+      "active_users": 187
+    },
+    {
+      "date": "2026-07-22",
+      "cash_paid": 197.3,
+      "credits_used": 6908,
+      "active_users": 202
+    },
+    {
+      "date": "2026-07-23",
+      "cash_paid": 298.32,
+      "credits_used": 10722,
+      "active_users": 196
+    },
+    {
+      "date": "2026-07-24",
+      "cash_paid": 262.24,
+      "credits_used": 12455,
+      "active_users": 194
+    },
+    {
+      "date": "2026-07-25",
+      "cash_paid": 134.59,
+      "credits_used": 4646,
+      "active_users": 112
+    },
+    {
+      "date": "2026-07-26",
+      "cash_paid": 156.55,
+      "credits_used": 7033,
+      "active_users": 109
+    },
+    {
+      "date": "2026-07-27",
+      "cash_paid": 183.99,
+      "credits_used": 8557,
+      "active_users": 186
+    },
+    {
+      "date": "2026-07-28",
+      "cash_paid": 177.89,
+      "credits_used": 6135,
+      "active_users": 156
+    },
+    {
+      "date": "2026-07-29",
+      "cash_paid": 215.55,
+      "credits_used": 9876,
+      "active_users": 189
+    },
+    {
+      "date": "2026-07-30",
+      "cash_paid": 294.01,
+      "credits_used": 10938,
+      "active_users": 159
+    },
+    {
+      "date": "2026-07-31",
+      "cash_paid": 208.87,
+      "credits_used": 8989,
+      "active_users": 187
+    },
+    {
+      "date": "2026-08-01",
+      "cash_paid": 181.6,
+      "credits_used": 6582,
+      "active_users": 104
+    },
+    {
+      "date": "2026-08-02",
+      "cash_paid": 71.7,
+      "credits_used": 2772,
+      "active_users": 112
+    },
+    {
+      "date": "2026-08-03",
+      "cash_paid": 315.71,
+      "credits_used": 11953,
+      "active_users": 205
+    },
+    {
+      "date": "2026-08-04",
+      "cash_paid": 263.35,
+      "credits_used": 11445,
+      "active_users": 175
+    },
+    {
+      "date": "2026-08-05",
+      "cash_paid": 324.92,
+      "credits_used": 11957,
+      "active_users": 176
+    },
+    {
+      "date": "2026-08-06",
+      "cash_paid": 238.91,
+      "credits_used": 10299,
+      "active_users": 163
+    },
+    {
+      "date": "2026-08-07",
+      "cash_paid": 309.95,
+      "credits_used": 13487,
+      "active_users": 196
+    },
+    {
+      "date": "2026-08-08",
+      "cash_paid": 52,
+      "credits_used": 2460,
+      "active_users": 110
+    },
+    {
+      "date": "2026-08-09",
+      "cash_paid": 194.15,
+      "credits_used": 9174,
+      "active_users": 65
+    },
+    {
+      "date": "2026-08-10",
+      "cash_paid": 289.65,
+      "credits_used": 10880,
+      "active_users": 181
+    },
+    {
+      "date": "2026-08-11",
+      "cash_paid": 283.64,
+      "credits_used": 10389,
+      "active_users": 201
+    },
+    {
+      "date": "2026-08-12",
+      "cash_paid": 245.78,
+      "credits_used": 10868,
+      "active_users": 179
+    },
+    {
+      "date": "2026-08-13",
+      "cash_paid": 274.37,
+      "credits_used": 11831,
+      "active_users": 187
+    },
+    {
+      "date": "2026-08-14",
+      "cash_paid": 235.11,
+      "credits_used": 9819,
+      "active_users": 226
+    },
+    {
+      "date": "2026-08-15",
+      "cash_paid": 206.99,
+      "credits_used": 8063,
+      "active_users": 102
+    },
+    {
+      "date": "2026-08-16",
+      "cash_paid": 217.33,
+      "credits_used": 9611,
+      "active_users": 114
+    },
+    {
+      "date": "2026-08-17",
+      "cash_paid": 254.9,
+      "credits_used": 11597,
+      "active_users": 220
+    },
+    {
+      "date": "2026-08-18",
+      "cash_paid": 296.85,
+      "credits_used": 14192,
+      "active_users": 204
+    },
+    {
+      "date": "2026-08-19",
+      "cash_paid": 298.58,
+      "credits_used": 11710,
+      "active_users": 199
+    },
+    {
+      "date": "2026-08-20",
+      "cash_paid": 207.64,
+      "credits_used": 8606,
+      "active_users": 210
+    },
+    {
+      "date": "2026-08-21",
+      "cash_paid": 204.83,
+      "credits_used": 7511,
+      "active_users": 188
+    },
+    {
+      "date": "2026-08-22",
+      "cash_paid": 140.3,
+      "credits_used": 6125,
+      "active_users": 116
+    },
+    {
+      "date": "2026-08-23",
+      "cash_paid": 172.71,
+      "credits_used": 6320,
+      "active_users": 90
+    },
+    {
+      "date": "2026-08-24",
+      "cash_paid": 363.38,
+      "credits_used": 13611,
+      "active_users": 237
+    },
+    {
+      "date": "2026-08-25",
+      "cash_paid": 277.58,
+      "credits_used": 12941,
+      "active_users": 216
+    },
+    {
+      "date": "2026-08-26",
+      "cash_paid": 372.54,
+      "credits_used": 16247,
+      "active_users": 234
+    },
+    {
+      "date": "2026-08-27",
+      "cash_paid": 211.19,
+      "credits_used": 8450,
+      "active_users": 233
+    },
+    {
+      "date": "2026-08-28",
+      "cash_paid": 222.77,
+      "credits_used": 10669,
+      "active_users": 207
+    },
+    {
+      "date": "2026-08-29",
+      "cash_paid": 96.84,
+      "credits_used": 4147,
+      "active_users": 125
+    },
+    {
+      "date": "2026-08-30",
+      "cash_paid": 109.08,
+      "credits_used": 4877,
+      "active_users": 99
+    },
+    {
+      "date": "2026-08-31",
+      "cash_paid": 375.44,
+      "credits_used": 15672,
+      "active_users": 230
+    }
+  ]
+}

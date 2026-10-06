@@ -1,0 +1,149 @@
+[
+  {
+    "id": "ev1",
+    "kind": "IRL",
+    "place": "Student union",
+    "title": "Founder AMA — Axelerate Beauty",
+    "seatsLeft": 8,
+    "photo": "AMA stage shot",
+    "date": "2026-09-08",
+    "time": "6–7pm",
+    "venue": "Student union, room 2B",
+    "guests": [
+      "marktao",
+      "mayaortiz",
+      "alexchen",
+      "samwhitfield"
+    ],
+    "blurb": "Forty minutes with the founder of Axelerate Beauty on what a brand actually wants from a campus creator, then open questions.",
+    "cover": "event-panel-mic"
+  },
+  {
+    "id": "ev2",
+    "kind": "IRL",
+    "place": "Dorm commons",
+    "title": "Demo night — 6 startups, 1 mic",
+    "seatsLeft": 22,
+    "photo": "Demo night crowd",
+    "date": "2026-09-11",
+    "time": "7–9pm",
+    "venue": "Dorm commons, Hedrick",
+    "guests": [
+      "devonpark",
+      "priyaraman",
+      "jonahreed"
+    ],
+    "blurb": "Six student startups, one mic, five minutes each. Stay for the pizza and the arguing afterwards.",
+    "cover": "event-demo-table"
+  },
+  {
+    "id": "ev3",
+    "kind": "IRL",
+    "place": "Olin lobby",
+    "title": "Solra sampling shift — sunrise slot",
+    "seatsLeft": 14,
+    "photo": "Booth shot",
+    "date": "2026-09-15",
+    "time": "8–11am",
+    "venue": "Olin lobby",
+    "guests": [
+      "mayaortiz",
+      "ninaadeyemi",
+      "marktao",
+      "priyaraman",
+      "alexchen",
+      "devonpark",
+      "samwhitfield"
+    ],
+    "blurb": "Hand out Solra samples to the morning rush. Two hours, coffee provided, and you keep what is left in the box.",
+    "cover": "event-shift-crate"
+  },
+  {
+    "id": "ev4",
+    "kind": "Online",
+    "place": "Zoom",
+    "title": "Brief clinic — how to pitch a reel",
+    "seatsLeft": 40,
+    "photo": "Clinic screen shot",
+    "date": "2026-09-17",
+    "time": "12–1pm",
+    "venue": "Zoom",
+    "guests": [
+      "alexchen",
+      "jonahreed"
+    ],
+    "blurb": "Bring a draft. We read it back, say what a brand would cut, and you leave with a reel worth posting.",
+    "cover": "event-demo-table"
+  },
+  {
+    "id": "ev5",
+    "kind": "IRL",
+    "place": "Warehouse 12",
+    "title": "Loop warehouse set — crew call",
+    "seatsLeft": 6,
+    "photo": "Pop-up door shot",
+    "date": "2026-09-19",
+    "time": "6–9pm",
+    "venue": "Warehouse 12, Brooklyn",
+    "guests": [
+      "marktao",
+      "ninaadeyemi",
+      "devonpark"
+    ],
+    "blurb": "Work the door at Loop's warehouse set: scan tickets, hand out wristbands, keep the line moving.",
+    "cover": "event-shift-crate"
+  },
+  {
+    "id": "ev6",
+    "kind": "IRL",
+    "place": "Tata Hall rooftop",
+    "title": "Brand night — 4 founders, open floor",
+    "seatsLeft": 31,
+    "photo": "Rooftop shot",
+    "date": "2026-09-24",
+    "time": "7pm",
+    "venue": "Tata Hall rooftop",
+    "guests": [
+      "mayaortiz",
+      "priyaraman",
+      "samwhitfield",
+      "alexchen",
+      "ninaadeyemi"
+    ],
+    "blurb": "Four founders, an open floor and no panel. Come with a question you actually want answered.",
+    "cover": "event-panel-mic"
+  },
+  {
+    "id": "ev7",
+    "kind": "Online",
+    "place": "Discord",
+    "title": "Office hours with a campus lead",
+    "seatsLeft": 50,
+    "photo": "Screen share shot",
+    "date": "2026-09-26",
+    "time": "4–5pm",
+    "venue": "Discord",
+    "guests": [
+      "jonahreed"
+    ],
+    "blurb": "Drop in with anything: a mission you are stuck on, a brief you cannot read, or how the levels work.",
+    "cover": "event-desk-hours"
+  },
+  {
+    "id": "ev8",
+    "kind": "IRL",
+    "place": "Royce quad",
+    "title": "Notely chalk crew — morning shift",
+    "seatsLeft": 0,
+    "photo": "Quad chalk shot",
+    "date": "2026-09-29",
+    "time": "7–9am",
+    "venue": "Royce quad",
+    "guests": [
+      "devonpark",
+      "marktao"
+    ],
+    "blurb": "Chalk three Notely drops across the quad before the campus wakes up. Stencils provided.",
+    "cover": "event-shift-crate"
+  }
+]

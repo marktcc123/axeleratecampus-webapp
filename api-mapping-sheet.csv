@@ -1,0 +1,104 @@
+id,section,method,endpoint,purpose,routes,current_source,key_fields,old_api,notes
+A01,Auth / Gate,POST,/auth/signup/otp,注册：校验 .edu 邮箱并发送 OTP,/verify,src/lib/join.js → submitJoin,"email, name, campus",,未来接 Supabase signInWithOtp
+A02,Auth / Gate,POST,/auth/login/otp,登录：已有学生仅用邮箱发 OTP,/login · /login/code,src/lib/join.js → submitLogin,email,,与注册同一 seam
+A03,Auth / Gate,POST,/auth/verify-otp,校验 6 位验证码并建立会话,/login/code,src/lib/join.js → verifyCode,"email, code",,v1 任意 6 位通过
+A04,Auth / Gate,POST,/auth/logout,结束会话,账户抽屉 → /login,src/app/AppHeader.jsx,无,,仅导航；未清 session stores
+A05,Auth / Gate,DELETE,/me/account,删除账户,/app/me/profilesetting,src/app/screens/Settings.jsx,无,,按钮无 handler
+A06,Auth / Gate,PATCH,/me/preferences/firstrun,记录是否看过 intro / 账户菜单,/ · /onboarding,src/app/firstrun.js,"intro, accountMenu",,localStorage ax.firstrun
+A07,Auth / Gate,POST,/admin/session/unlock,Admin 控制台预览锁（非安全）,/app/me/admin/*,src/app/admin/gate.jsx,password,,"sessionStorage；默认 campus-lead"
+A08,Profile / Me,GET,/me/profile,读当前用户姓名/头像/公开 handle,Header · Me · Settings · EventDetail,src/app/profile.jsx → useProfile,"name, avatarUrl, handle, publicHandle",,session 默认名来自 hub.settings
+A09,Profile / Me,PATCH,/me/profile,更新姓名或头像,/verify · /app/me/profilesetting,src/app/profile.jsx → setProfile,"name, avatarFile",,头像为 createObjectURL
+A10,Profile / Me,GET,/me/account,读账户只读字段（姓名/学校/邮箱）,/app/me/profilesetting,hub.example.json → settings.account,"name, school, email",,静态；不与 Verify 同步
+A11,Profile / Me,GET,/me/stats,学生等级/XP/完成数快照,Me · Unlock · Earn 锁定态,src/app/me.js → ME,"level, xp, creditPts, cashUsd, missionsDone",,硬编码常量
+A12,Profile / Me,GET,/levels,等级阶梯定义（gate + perks）,/app/unlock · /app/unlock/levels,src/data/levels.example.json + LEVEL_XP,"level, name, gate, perks[]",,
+A13,Profile / Me,GET,/me/dashboard,Me Hub 聚合（等级条/钱包/Upcoming）,/app/me,Me.jsx 组合 ME+levels+wallet+events,混合,,客户端拼装
+M01,Missions / Earn,GET,/missions,任务板列表（筛选/Featured）,/app/earn · /app/discover · About,content.jsx + missions.example.json,"slug, title, brandId, format, payUsd, minLevel, spots, tags",,
+M02,Missions / Earn,GET,/missions/:slug,单个任务详情,/app/earn/:slug,content.jsx → missionBySlug,同上 + desc/steps/perkBullets,,
+M03,Missions / Earn,POST,/missions/:slug/applications,申请任务（Apply 表单）,/app/earn/:slug,src/app/parts/ApplySheet.jsx,profile + availability,,UI 写明 Nothing was sent
+M04,Missions / Earn,GET,/me/applications,我的申请/任务进度,/app/me/missions · Career · PublicProfile,src/data/applications.example.json,"missionSlug, status, appliedAt, brief",,
+M05,Missions / Earn,GET,/quests,Quest 挑战列表,/app/earn?quests=all,src/data/quests.example.json,"tab, title, desc, reward",,无进度写入
+M06,Missions / Earn,GET,/brands,品牌目录,/app/earn/brands/:slug · Admin Brands,content.jsx + brands.example.json,"id, name, role, blurb, cover",,
+M07,Missions / Earn,GET,/brands/:id,品牌页：该品牌 missions + products,/app/earn/brands/:slug,BrandPage.jsx 客户端 join,missions[] + products[],,
+E01,Events,GET,/events,开放活动列表,/app/discover · /app/earn/events/:id,content.jsx + events.example.json,"id, title, date, venue, seatsLeft, guests[]",,
+E02,Events,GET,/events/:id,单个开放活动,/app/earn/events/:id,content.jsx → eventById,同上 + blurb/cover,,
+E03,Events,POST,/events/:id/rsvp,占座并生成 pass,/app/earn/events/:id,rsvp.jsx → attend + AttendSheet,"name, message",,session Map
+E04,Events,GET,/me/event-rsvps/:eventId,该活动是否已 RSVP,EventDetail · Events · Header Upcoming,rsvp.jsx → isGoing/rsvpFor,ticket 对象,,
+E05,Events,GET,/me/tickets,我的活动票/通行证,/app/me/tickets · /app/me/tickets/:date,hub.events + rsvp.tickets,"title, date, status, cover, eventId",,fixture + session 合并
+E06,Events,POST,/events/:id/waitlist,满座时加入 waitlist,/app/earn/events/:id,EventDetail.jsx local state,eventId,,仅本地 state
+S01,Shop / Discover,GET,/shop/products,商品目录,/app/discover · Cart · Orders · Admin Shop,content.jsx + shop.example.json,"id, brandId, title, priceUsd, cashbackPct, stock",,
+S02,Shop / Discover,GET,/shop/products/:id,单个商品（含 weekly drop 项）,/app/discover/:id,content.jsx → productById,同上 + desc/reviews/sizes,,
+S03,Shop / Discover,GET,/shop/drop,本周 drop 倒计时与锁定商品,/app/discover · PerkDetail,shop.example.json → drop,"opensAt, items[]",,
+C01,Cart / Checkout,GET,/me/cart,读购物车行与小计,Cart · TabBar 角标,src/app/cart.jsx,lines keyed productId::size,,session
+C02,Cart / Checkout,PUT,/me/cart,加购/改数量/清空,Discover · PerkDetail · Cart,cart.jsx → add/bump/clear,"productId, size, qty",,
+C03,Cart / Checkout,POST,/shop/orders,钱包支付下单（扣 cash/credit）,/app/cart,Cart.jsx + wallet.spend,"method=wallet, creditPts, shippingAddress, lineItems[]",,不追加 hub.orders
+C04,Cart / Checkout,POST,/shop/checkout-sessions,卡支付：换 Shopify checkout URL,/app/cart method=card,src/lib/shop.js → goToShopCheckout,"items, subtotalUsd",,固定示例 URL；无 fetch
+C05,Cart / Checkout,GET,/me/shipping-address,读配送地址,Settings · CheckoutSheet,src/app/address.jsx + hub.settings.address,"line1, line2, city, state, zip",,
+C06,Cart / Checkout,PATCH,/me/shipping-address,保存配送地址,Settings · CheckoutSheet,address.jsx → saveAddress,同上,,session
+C07,Cart / Checkout,POST,/shop/gifts,送礼下单并生成分享链接,/app/discover/:id,GiftSheet.jsx,"productId, creditPts, recipient",,UI 写明 Nothing was charged
+O01,Orders / Reviews,GET,/me/orders,我的订单列表,/app/me/orders,hub.example.json → orders[],"id, no, status, paid, steps, tracking",,与 cart checkout 不同步
+O02,Orders / Reviews,GET,/me/orders/:id,订单详情/物流,/app/me/orders/:id,OrderReceipt.jsx,同上,,
+O03,Orders / Reviews,POST,/shop/products/:productId/reviews,已送达订单提交评价,/app/me/orders,reviews.jsx → addReview + ReviewSheet,"rating, body",,session；Admin 另有审核队列
+O04,Orders / Reviews,GET,/me/orders/reviewable-products,可评价商品资格,Orders,reviews.jsx → canReview,productId[],,客户端 derived
+O05,Orders / Reviews,POST,/me/orders/:id/return-requests,学生申请退货（UI 未做）,无学生入口,admin.example.json orders.needs=return,request_reason,,仅 Admin 队列暗示
+O06,Orders / Reviews,POST,/me/orders/:id/cancellation-requests,学生申请取消（UI 未做）,无学生入口,admin.example.json orders.needs=cancellation,request_reason,,仅 Admin 队列暗示
+W01,Wallet / Payouts,GET,/me/wallet,余额 + 月分组流水,/app/me/wallet · Me · checkout,wallet.jsx + hub.ledger,"cashUsd, creditPts, ledger[], methods[], w9Verified",,
+W02,Wallet / Payouts,POST,/me/wallet/withdrawals,提现,/app/me/wallet,wallet.jsx → withdraw + WithdrawSheet,"amountUsd, methodId, speed, legalName",,session 扣 cash 写 ledger
+W03,Wallet / Payouts,POST,/me/wallet/payout-methods,添加提现方式,WithdrawSheet,wallet.jsx → addMethod,"kind=Venmo|PayPal|Bank, detail",,
+W04,Wallet / Payouts,GET,/me/tax/w9,W-9 状态（门槛 $600）,WithdrawSheet,wallet.jsx → w9Verified / needsW9,w9Verified,,与 Admin W-9 队列不同步
+W05,Wallet / Payouts,POST,/me/tax/w9,学生提交 W-9（学生 UI 未做）,Admin /withdrawals,admin.example.json → w9_submissions,税务表单,,仅运营 fixture
+N01,Inbox,GET,/me/inbox,通知收件箱,/app/me/inbox · Header 铃铛,hub.inbox + inbox.jsx,"id, group, text, meta, to, unread",,内容静态；已读 session
+N02,Inbox,POST,/me/inbox/mark-all-read,全部标已读,/app/me/inbox,inbox.jsx → markAllRead,ids,,session Set
+I01,Invite,GET,/me/invite,邀请码与统计,/app/me/invite,hub.example.json → invite,"code, perInvite, used, friends[]",,
+I02,Invite,POST,/me/invite/redemptions,兑换他人邀请码,/app/me/invite,Invite.jsx form,code,,文案 Saved for launch
+I03,Invite,GET,/referrals/resolve,解析分享链接 ?ref=,/?ref=CODE,Invite.jsx 构造 link；Welcome 未读,ref,,落地页未处理
+X01,Career / Syndicate / Co-creations,GET,/me/syndicate,Syndicate 进度与解锁,/app/me/syndicate,hub.syndicate + ME.xp,"needXp, unlocks[]",,
+X02,Career / Syndicate / Co-creations,GET,/me/co-creations,共创 brief 列表,/app/me/co-creations,hub.cocreations,"title, meta, cta",,CTA 无 action
+X03,Career / Syndicate / Co-creations,GET,/me/career/progress,职业路径进度 deck,/app/me/career,hub.career + applications paid 计数,"proofAt, brands[], laneRewards",,
+X04,Career / Syndicate / Co-creations,POST,/me/career/certificate-claims,申请证书（学生 UI 未做）,无学生入口,admin career_claims,claim 行,,仅 Admin 审核
+P01,Public Profile,GET,/users/:handle/public-profile,公开学生页,/u/:handle,people.example.json 或 session self,"handle, name, campus, level, verified",,整包 people JSON 进 bundle
+P02,Public Profile,GET,/users,人员目录（嘉宾/going/好友）,GuestGrid · GigsDetail · Invite,people.example.json,"handle, name, campus, level, xp",,
+L01,Legal / Static,GET,/legal/:kind,法律文档结构,/legal/:kind,src/pages/legal-content.js,headings only,,仅标题草稿
+AC1,Admin · Catalogue,GET,/admin/brands,运营读品牌,/app/me/admin/brands,content.jsx brands,同 /brands,,
+AC2,Admin · Catalogue,POST,/admin/brands,新增品牌,/app/me/admin/brands,content.jsx → addBrand,"name, role, blurb, cover",,id=slugify(name)
+AC3,Admin · Catalogue,PATCH,/admin/brands/:id,更新品牌,/app/me/admin/brands,content.jsx → updateBrand,同上；id 不随改名移动,,
+AC4,Admin · Catalogue,DELETE,/admin/brands/:id,删除品牌（有任务/商品则拒）,/app/me/admin/brands,content.jsx → removeBrand,id,,
+AC5,Admin · Catalogue,GET,/admin/missions,运营读任务,/app/me/admin/missions,content.jsx missions,同 /missions,,
+AC6,Admin · Catalogue,POST,/admin/missions,新增任务,/app/me/admin/missions,content.jsx → addMission,"title, brandId, format, payUsd, xp, deadline, spots",,
+AC7,Admin · Catalogue,PATCH,/admin/missions/:slug,更新任务,/app/me/admin/missions,content.jsx → updateMission,同上,,
+AC8,Admin · Catalogue,DELETE,/admin/missions/:slug,删除任务,/app/me/admin/missions,content.jsx → removeMission,slug,,
+AC9,Admin · Catalogue,GET,/admin/events,运营读开放活动,/app/me/admin/events,content.jsx events,同 /events,,
+ACA,Admin · Catalogue,POST,/admin/events,新增活动,/app/me/admin/events,content.jsx → addEvent,"title, date, venue, seatsLeft, guests, blurb",,
+ACB,Admin · Catalogue,PATCH,/admin/events/:id,更新活动,/app/me/admin/events,content.jsx → updateEvent,同上,,
+ACC,Admin · Catalogue,DELETE,/admin/events/:id,删除活动,/app/me/admin/events,content.jsx → removeEvent,id,,
+ACD,Admin · Catalogue,GET,/admin/shop/products,运营读商品,/app/me/admin/shop,content.jsx products,同 /shop/products,,
+ACE,Admin · Catalogue,POST,/admin/shop/products,新增商品,/app/me/admin/shop,content.jsx → addProduct,商品字段,,
+ACF,Admin · Catalogue,PATCH,/admin/shop/products/:id,更新商品,/app/me/admin/shop,content.jsx → updateProduct,商品字段,,
+ACG,Admin · Catalogue,DELETE,/admin/shop/products/:id,删除商品,/app/me/admin/shop,content.jsx → removeProduct,id,,
+ACH,Admin · Catalogue,PATCH,/admin/brands/:id/cashback-rate,批量改该品牌所有商品 cashback,/app/me/admin/cashback,Cashback.jsx loop updateProduct,cashbackPct,,
+ACI,Admin · Catalogue,GET,/admin/campuses,学校列表,/app/me/admin/campuses,admin store campuses,"name, primary_color, logo_url, student_count",,
+ACJ,Admin · Catalogue,POST,/admin/campuses,新增学校,/app/me/admin/campuses,store.jsx → addCampus,同上,,
+ACK,Admin · Catalogue,PATCH,/admin/campuses/:id,更新学校,/app/me/admin/campuses,store.jsx → updateCampus,同上,,
+ACL,Admin · Catalogue,DELETE,/admin/campuses/:id,删除学校,/app/me/admin/campuses,store.jsx → removeCampus,id,,
+AQ1,Admin · Queues,GET,/admin/analytics,分析快照（用户/日活/校区）,/app/me/admin/analytics,admin.example.json stats/daily_totals/campuses,"stats, daily_totals[], campuses[]",,
+AQ2,Admin · Queues,GET,/admin/orders,订单运维队列,/app/me/admin/tasks,admin.example.json → orders,needs=return|cancellation|ship,,
+AQ3,Admin · Queues,PATCH,/admin/orders/:id/approve-return,批准退货,/app/me/admin/tasks,store.jsx → approveReturn,status=returned,,
+AQ4,Admin · Queues,PATCH,/admin/orders/:id/decline-return,拒绝退货,/app/me/admin/tasks,store.jsx → declineReturn,decline_reason,,
+AQ5,Admin · Queues,PATCH,/admin/orders/:id/approve-cancellation,批准取消,/app/me/admin/tasks,store.jsx → approveCancellation,status=cancelled,,
+AQ6,Admin · Queues,PATCH,/admin/orders/:id/decline-cancellation,拒绝取消,/app/me/admin/tasks,store.jsx → declineCancellation,decline_reason,,
+AQ7,Admin · Queues,PATCH,/admin/orders/:id/ship,标记已发货,/app/me/admin/tasks,store.jsx → markShipped,"carrier, number",,
+AQ8,Admin · Queues,GET,/admin/ugc-submissions,UGC 审核队列,/app/me/admin/ugc,admin.example.json → ugc_submissions,"ugc_link, mission_slug, reward_*, status",,学生提交 UI 未做
+AQ9,Admin · Queues,PATCH,/admin/ugc-submissions/:id,通过或拒绝 UGC,/app/me/admin/ugc,approveUgc / rejectUgc,"status, reject_reason",,
+AQA,Admin · Queues,GET,/admin/product-reviews,商品评价审核队列,/app/me/admin/reviews,admin.example.json → reviews,"rating, body, product_id, status",,与学生 session review 分离
+AQB,Admin · Queues,PATCH,/admin/product-reviews/:id,通过或拒绝评价,/app/me/admin/reviews,approveReview / rejectReview,"status, reject_reason",,
+AQC,Admin · Queues,GET,/admin/gig-applications,线下 gig 申请队列,/app/me/admin/gigs,admin.example.json → gig_applications,"mission_slug, phone, gig_date, status",,
+AQD,Admin · Queues,PATCH,/admin/gig-applications/:id,通过/拒绝/完成 gig,/app/me/admin/gigs,approveGig / rejectGig / completeGig,"status, reject_reason",,
+AQE,Admin · Queues,GET,/admin/event-applications,活动报名运营队列,/app/me/admin/events,admin.example.json → event_applications,"event_id, status",,
+AQF,Admin · Queues,PATCH,/admin/event-applications/:id,通过或拒绝活动报名,/app/me/admin/events,approveEventApp / declineEventApp,"status, reject_reason",,
+AQG,Admin · Queues,GET,/admin/withdrawals,提现运营队列,/app/me/admin/withdrawals,admin.example.json → withdrawals,status pending/completed,,
+AQH,Admin · Queues,PATCH,/admin/withdrawals/:id,完成或拒绝打款,/app/me/admin/withdrawals,completePayout / rejectPayout,"status, reject_reason",,
+AQI,Admin · Queues,GET,/admin/w9-submissions,W-9 审核队列,/app/me/admin/withdrawals,admin.example.json → w9_submissions,verified,,
+AQJ,Admin · Queues,PATCH,/admin/w9-submissions/:id,标记 W-9 已核验,/app/me/admin/withdrawals,store.jsx → verifyW9,verified=true,,
+AQK,Admin · Queues,GET,/admin/career-claims,证书领取队列,/app/me/admin/career,admin.example.json → career_claims,"status, certificate_name",,
+AQL,Admin · Queues,PATCH,/admin/career-claims/:id,通过/拒绝/写证书名,/app/me/admin/career,approveClaim / rejectClaim / setClaimCertificate,"status, certificate_name, reject_reason",,
+AQM,Admin · Queues,PATCH,/admin/career-roles/:id,保存职业角色名,/app/me/admin/career,store.jsx → saveRole,name,,
+AQN,Admin · Queues,PATCH,/admin/career-pathways/:id,保存职业路径配置,/app/me/admin/career,store.jsx → savePathway,pathway fields,,

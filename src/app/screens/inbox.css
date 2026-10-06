@@ -1,0 +1,76 @@
+/* /me/inbox — what happened, newest first. */
+
+.ib__mark {
+  min-height: 44px;
+  margin: -8px -2px;
+  padding: 4px 2px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  color: var(--text-brand);
+}
+.ib__mark:hover { color: var(--violet-500); }
+
+.ib__list { list-style: none; margin: 0; padding: 0; }
+.ib { border-top: 1.5px solid var(--gray-100); }
+.ib:first-child { border-top: 0; }
+.ib__link {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* One tinted disc per source, so the list is scannable by colour before it is
+   read. The tints are the four the tab bar already uses plus lime, which
+   keeps the app's colour vocabulary closed. */
+.ib__ico {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--ink-900);
+}
+.ib__ico--lavender { background: var(--accent-lavender-soft); color: var(--violet-700); }
+.ib__ico--yellow { background: var(--accent-yellow-soft); }
+.ib__ico--blush { background: var(--accent-blush-soft); }
+.ib__ico--orange { background: var(--accent-orange-soft); }
+.ib__ico--coral { background: var(--accent-coral-soft); }
+
+.ib__mid { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.ib__text {
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.ib__meta {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+/* Read rows drop the weight, not the colour: greying them out would make the
+   list look half-broken. */
+.ib[data-unread='false'] .ib__text { font-weight: 400; }
+
+.ib__dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--violet-600);
+}
+
+.ib__link:hover .ib__text { color: var(--text-brand); }

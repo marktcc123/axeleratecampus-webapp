@@ -1,0 +1,776 @@
+/* Perks shop. The Perks tab used to be the five-level ladder; the design moved
+ * the shop here and the ladder now lives at /me/levels.
+ */
+.shop__head { margin-top: var(--shop-section-gap); display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+
+/* Friday night drop — a yellow bar over a quiet body, one unit.
+   No `overflow: hidden` on the section any more: the two halves round their
+   own outer corners instead, which lets the sparkle bleed off the bar. */
+.drop {
+  position: relative;
+  /* One of four sections now (2026-09-17): same opening gap as its siblings. */
+  margin-top: var(--shop-section-gap);
+}
+/* No box any more, at the owner's request: the yellow bar and the cream body
+   under it are gone and the drop reads as a section of the page. What is left
+   is a heading row — the drawn bolt beside the title, at full strength now
+   that it is not a watermark on a tint. */
+.drop__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink-900);
+}
+/* The page-title face and size, the same as "Perks shop" below it and the
+   board's section headings — the two headings on this screen read as one pair.
+   */
+/* Every section on this page opens on the same gap, so Events, Brands, the
+   drop and the shop grid read as four things of equal weight rather than a
+   hierarchy the spacing invented. Change it here, it changes for all four. */
+:where(.shop) { --shop-section-gap: 40px; }
+.shop__events { margin-top: var(--shop-section-gap); }
+/* The first section takes no top margin of its own: `.ah` already carries
+   12px under the app bar, and that is the whole gap Earn's own first section
+   sits on. Adding the section gap here stacked a second offset on top of it
+   (they collapse, so it read as 40px against Earn's 12) and Discover started
+   lower than every other tab. The gap BETWEEN sections is unaffected. */
+.shop > section:first-of-type { margin-top: 0; }
+.shop__brands { margin-top: var(--shop-section-gap); }
+/* The Brands head: the heading and the search glyph on one line (owner,
+   2026-09-23), the shop's own tools row beside the word instead of under it.
+   The heading keeps its width; the search group takes the rest, so the field
+   that grows out of the glyph stops at the word. The row is the glyph's 44px,
+   the heading centred on it. */
+.shop__brands-head { display: flex; align-items: center; gap: 12px; }
+.shop__brands-head .shop__brands-title { flex: none; }
+.shop__brands-head .shop__tools { flex: 1; min-width: 0; }
+/* The row's empty state is not in a grid: a block with the same words. */
+.shop__empty--row { padding: 20px 0 4px; }
+
+/* Events, moved here from the board 2026-09-17. A row card: square photo bled into the
+   card's own padding on three sides, then the text column beside it with the
+   seat count pinned to its bottom. */
+/* Events sit ABOVE the missions board now: they are dated and they sell out, so
+   they are the thing that goes stale if you scroll past it. */
+
+/* Two to a view, the rest to the right. scroll-padding, not padding, holds the
+   first card on the gutter — padding does not inset a snapport, so mandatory
+   snapping would scroll the row by exactly the padding and park card one
+   against the viewport edge (the same trap .qd hit). */
+.shop__ev-list {
+  margin: 10px -16px 0;
+  padding: 3px 16px 6px;
+  list-style: none;
+  /* Two rows, filling downward then rightward. A flex row could not do this
+     without wrapping, which wraps the WRONG way for a horizontal scroller. */
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  /* 64%: a horizontal card needs room for a photo AND a column of copy beside
+     it, which 40% (137px) could not give. A view holds one whole column and
+     most of the next, so the cut-off column still says "keep going". */
+  /* Deliberately the quest carousel's own width and gap (parts.css .qd__card is
+     78% capped at 340, .qd gaps 12), so an event column and a quest card share
+     an edge and the second column starts exactly where the second quest does.
+     Both rows bleed with the same -16px margin and 16px padding, so matching
+     these two values is all the alignment takes. Change one, change both. */
+  grid-auto-columns: min(78%, 340px);
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 16px;
+}
+.shop__ev-list::-webkit-scrollbar { display: none; }
+.shop__ev-list > li { min-width: 0; scroll-snap-align: start; }
+
+/* Back to a row: photo left, copy right, which is what the board drew before
+   the carousel. No height: 100% — it sized the card against the li while the li
+   sized against the row, and the card came out 245px inside a 213px li, which
+   overflow-x: auto then clipped (it makes overflow-y auto too) and cut
+   "8 seats left" in half. */
+/* height: 100% so both cards in a row fill the row's height. Without it the
+   shorter card stopped at its own content and the visual gap between rows read
+   as 26px in one column and 8px in the other, because an auto grid row is as
+   tall as its tallest card. Safe here in a way it was not in the old flex row:
+   a grid row is sized by content first, so there is no circular chain. */
+.ev-c {
+  display: flex;
+  flex-direction: row;
+  gap: 11px;
+  align-items: center;
+  /* border-box before height: this was a div, and height: 100% is 100% of the
+     row as CONTENT height with the card's own 8px+8px of padding stacked on
+     top, pushing it 16px into the next row. Fourth time this bit that day:
+     min-height and height on a content-box element both stack on padding.
+     Still load-bearing now that the card is an <a> — an anchor is content-box
+     by UA default too, so removing this would reopen the same bug. */
+  box-sizing: border-box;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.ev-c__photo {
+  /* 72px, not the old 96: the column is narrower than a full-width row was, and
+     96 left the copy nowhere to go. No negative margins — they existed only to
+     pull the photo out to a card's padding, and there is no card now. */
+  width: 72px;
+  flex: none;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.ev-c__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 2px 0;
+}
+.ev-c__caps {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.ev-c__title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+/* A pale pill rather than a line of violet type. The column is already
+   align-items: flex-start, so the pill hugs its own text. Violet 700 on violet
+   100 measures 6.9:1, which clears AA at this 10px size; the sold-out state
+   drops to grey because "no seats left" is not the good news the brand hue
+   promises. `margin: auto 0 0` still pins it to the bottom of the column. */
+/* Plain text, not a pill (owner, 2026-09-08): date and time in dark grey with
+   the clock, no label case. Gray 700 on the card's white clears AA at --text-xs.
+   `margin: auto 0 0` still pins it to the bottom of the column. */
+.ev-c__when {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin: auto 0 0;
+  padding: 0;
+  color: var(--gray-700);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+.ev-c .ev-c__when-ico { flex: none; }
+
+.drop__title,
+.shop__brands-title {
+  margin: 0;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: var(--text-xl);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+.drop__body { margin-top: 12px; }
+/* A caps line names what the clock counts to. Centred over the clock, and it
+   is the first thing in the body now — the lede above it is gone. */
+.drop__until {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+/* The clock is sized off the piece it sits on (.dp is a container), so
+   it fits the square piece at any width: at 390 the piece is ~268px and the
+   eight digits, their gaps and the unit gaps come to ~226; at 320 it is ~216
+   against ~191. The px values are the fallback where cqw is unknown. */
+.drop__clock { margin-top: 8px; display: flex; justify-content: center; gap: 8px; gap: 3.5cqw; }
+.drop__unit { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.drop__digits { display: flex; gap: 3px; }
+.drop__digit {
+  position: relative;
+  width: 23px; width: 8.6cqw;
+  height: 33px; height: 12.5cqw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-hand-sm);
+  background: var(--gray-0);
+  box-shadow: var(--shadow-paper);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-900);
+}
+@media (max-width: 359px) { .drop__digit { font-size: var(--text-sm); } }
+/* The flip-clock seam through each digit. */
+.drop__seam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--ink-900);
+  opacity: 0.16;
+}
+.drop__label {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+/* Over a photograph the unit labels get their own paper, the way the digits
+   already have theirs. Grey caps straight onto a photo has no contrast anyone
+   can promise — this one is a photograph of cream towels today and could be
+   anything next week. */
+.dp__clock .drop__label {
+  padding: 1px 7px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-0);
+  color: var(--ink-900);
+}
+
+
+.shop__count {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* No paper ground under the products any more, at the owner's request. It was
+   a full-bleed cream panel that ran off the bottom of the screen and needed
+   .shop's min-height, a negative bottom margin cancelling the column's tab-bar
+   clearance, and padding putting it back inside the panel where it was
+   coloured. The cards sit on the page now, so all of that goes with it. */
+.shop__grid {
+  margin: 12px 0 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+
+/* Product card */
+.pi { position: relative; height: 100%; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+/* The photo bleeds to the card's top and both sides; only the bottom keeps its
+   padding, for the text. The DS Card's pad-sm is 16px, so the photo cancels it
+   on three edges — and `width: auto`, not 100%: with an explicit 100% the
+   negative margins shift the box left instead of widening it, leaving a 32px
+   gap down the right.
+   The card clips because its radius is hand-drawn and irregular
+   (14/17/13/18 over 17/14/18/13); matching that on the photo would mean
+   copying four pairs of values the design system is free to change. Scoped
+   under .perk-card so it beats the DS's own rule without naming .ax-card. */
+.perk-card .pi { overflow: hidden; }
+.perk-card .pi__photo {
+  position: relative;
+  /* The Card is a flex COLUMN with align-items: flex-start, so an item's width
+     is content-based and `width: auto` collapsed this to 103px whatever the
+     card measured. align-self on the photo alone stretches it across the cross
+     axis without touching how the brand/title lines align.
+     No negative margins any more: the card carries no padding for them to
+     cancel, so the photo already meets its edges. */
+  align-self: stretch;
+  width: auto;
+  aspect-ratio: 1;
+}
+.perk-card[data-sold-out='true'] .pi__photo { opacity: 0.55; }
+.pi__flag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-0);
+  color: var(--ink-900);
+  box-shadow: var(--shadow-paper);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pi__brand {
+  /* 8px on top of .pi's own 8px gap, so the photo has room to end before the
+     copy starts — the card carries no padding now, and at 8px flat the brand
+     line sat right on the photo's edge. Shorthand, because a `margin-top`
+     before a `margin` shorthand is silently discarded by it. */
+  margin: 8px 10px 0;   /* 10px sides: the copy sits in from the card's edge (owner, 2026-09-09); the photo still meets it */
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.pi__title {
+  margin: 0 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  min-height: 36px;
+  color: var(--text-primary);
+  /* Two lines, then ellipsis — the titles run long and the grid is 2-up. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* No column reserved on the right any more: the bag moved off the card's
+   corner into .pi__acts, so the price and the cashback get the full width and
+   "20% credit" stops clipping at 320px. */
+.pi__earn {
+  margin: auto 0 0;
+  padding: 4px 10px 0;
+  /* The Card is a flex column with align-items: flex-start, so this row sized
+     to its content and simply ran past the card's edge — with the card now
+     clipping, a long price would have chopped the cashback mid-glyph instead
+     of ellipsising it. Stretching the row to the card's width is what gives
+     flex something to shrink against. */
+  align-self: stretch;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  /* Wraps again, and this time on purpose. It was pinned to one line when the
+     label read "20% credit" and fitted beside every fixture price; "credit
+     back" is four characters longer and at 320px it ran off the card — as a
+     pill it cannot ellipsise gracefully the way bare type could, so a clipped
+     "10% CREDIT BA…" was the alternative. */
+  flex-wrap: wrap;
+}
+.pi__price {
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.pi__from {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  letter-spacing: 0;
+  margin-right: 4px;
+  color: var(--text-secondary);
+}
+.pi[data-sold-out='true'] .pi__price { color: var(--text-secondary); }
+.pi__back {
+  flex: none;
+  margin-top: 2px;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  /* Coral, and a label rather than a line of type, as asked. -soft, not the
+     accent: ink on #FCD9D1 measures 13.9:1, where the full coral gives white
+     3.45 and ink 6.9 — and this is 10px, which needs 4.5. */
+  background: var(--accent-coral-soft);
+  color: var(--ink-900);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.pi__stock {
+  margin: 0 10px;
+  padding-right: 46px;
+  min-height: 13px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+/* (0,2,0): the button also carries ax-btn, injected after this sheet. */
+.shop .pi__cta { margin-top: 8px; }
+
+/* What is in this week's drop, under a rule. */
+/* No rule above it any more: it divided the lede from the "This week" heading,
+   and both are gone. */
+.drop__peek { margin-top: 18px; }
+/* Three across, not two. This is a preview of what is coming, not the shop
+   itself — the pieces only have to be recognisable, and at two across they
+   were competing with the real product cards further down the screen. */
+/* One piece per view. The stage is the positioning context for the clock; the
+   reel snaps, so a half-scrolled state is transient.
+   The photo's ratio lives here because two things need it: the photo itself
+   and the clock laid over it, whose box mirrors it so its foot lands on the
+   photo's bottom edge at any width. 4:3, not the square it opened as — at 1:1
+   one piece filled most of the screen. */
+/* Square at the old height (owner, 2026-09-08): the 4:3 piece was 75% of the
+   stage tall, so the square keeps that as its side — 75% of the stage wide —
+   and the next piece shows in the remaining quarter, which is what says
+   "there is more" without a caption. --dp-w is shared with the clock's box so
+   the two cannot drift apart. */
+.drop__stage { position: relative; margin-top: 12px; --dp-ratio: 1; --dp-w: 66%; }
+.drop__reel {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.drop__reel::-webkit-scrollbar { display: none; }
+.dp {
+  position: relative;
+  flex: 0 0 var(--dp-w, 100%);
+  container-type: inline-size;
+  scroll-snap-align: start;
+  box-sizing: border-box;
+  background: var(--gray-0);
+  border-radius: 14px 17px 13px 18px / 17px 14px 18px 13px;
+  box-shadow: var(--shadow-paper);
+  overflow: hidden;
+}
+/* The whole piece is one link (2026-09-21); it inherits the card's ink and
+   the system's a:hover is held off at (0,2,0). */
+.dp .dp__link { display: block; color: inherit; text-decoration: none; }
+.dp .dp__link:hover { color: inherit; }
+.dp__photo { width: 100%; aspect-ratio: var(--dp-ratio, 1); }
+
+/* The name on the piece, each line on its own block of colour. `inline` plus
+   box-decoration-break: clone is what puts a block behind every line of a
+   wrapped title instead of one ragged rectangle behind the whole run, and the
+   padding then belongs to each line too. Ink on --accent-yellow measures
+   16.65:1, so the block is what makes text on a photograph legible whatever
+   the photograph turns out to be. */
+.dp__lines {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+.dp__lines span {
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  background: var(--accent-yellow);
+  color: var(--ink-900);
+  padding: 2px 7px;
+}
+
+/* The clock, on every piece, so it travels with the photo (owner, 2026-09-08)
+   instead of sitting fixed over the stage. The piece is the container the
+   digits size themselves from (cqw), and pointer-events: none lets a drag
+   that starts on the digits still scroll the reel. */
+.dp__clock {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12px;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.drop__dots { margin-top: 10px; display: flex; justify-content: center; gap: 6px; }
+.drop__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gray-300);
+}
+.drop__dot.is-on { background: var(--ink-900); }
+.dp__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  line-height: 1.5;
+}
+.dp__earn {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  line-height: 1.7;
+  font-variant-numeric: tabular-nums;
+}
+.dp__from {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+
+/* Product card. Hover raises the shadow and nothing else — the design also
+   lifts, tilts and recolours the bag; the owner asked for shadow alone. That
+   now comes from Card's own variant="flat" interactive="shadow", so nothing
+   here reaches into .ax-card. */
+.perk-card { position: relative; min-width: 0; }
+/* The card is one link. It carries no underline or link colour — the
+   card's own type is the treatment. */
+.perk-card__hit { display: block; height: 100%; text-decoration: none; color: inherit; }
+.perk-card .pi { height: 100%; box-sizing: border-box; }
+
+/* The bag button, bottom-right of the card. */
+/* The button is 44px so it clears the touch floor; the circle you can see is
+   the design's 38px. WCAG 2.5.8 sizes the target, not the ink, so the extra
+   3px all round is transparent. Offsets are 5px, which lands that 38px circle
+   8px inside the card. */
+/* The row lives on .perk-card, not inside the Card, because the Card is
+   wrapped in the product Link and a <button> may not sit inside an <a>. It is
+   absolutely positioned so the card's own height reserves the space (see the
+   padding-bottom below) rather than the row pushing the grid around. */
+.pi__acts {
+  position: absolute;
+  /* Flush with the card's edges, which is where the brand, title and price
+     lines sit now that the card has no padding. This was 16px to match the
+     Card's own pad-sm, and 5px before that — the bag sticker's corner inset
+     from when it hung off the card alone. */
+  /* 10px in from the card's edges (owner, 2026-09-09: padding round Gift it and
+     the bag), the same inset the copy above takes. */
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;   /* air between Gift it and the bag (owner, 2026-09-09) */
+}
+/* 62 = the row's 44px, its 10px inset from the card's foot, and 8px of air
+   above it. The card carries no padding of its own — the owner asked for the
+   inner frame off, so the photo meets its edges — and this is the one place
+   that still has to reserve height, because the action row is absolutely
+   positioned. */
+.perk-card .pi { padding-bottom: 62px; }
+/* Not the design system's secondary Button: that draws a 4px --gray-300 ring,
+   which is the grey hairline the owner has turned down twice, and its 14.5px
+   label plus 18px side padding needs 131px where a 320px card has 56.
+   This is the system's own sticker language instead — paper ground, the card's
+   hand-drawn radius, and a hard offset shadow, since --shadow-paper (2px 3px 0)
+   is the only kind of shadow here. The label sits on the card's own 10px caps
+   scale rather than importing the button scale, which is also what makes it
+   fit beside a 44px bag at 320px. */
+.perk-card .pi__gift {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  box-sizing: border-box;
+  padding: 0 8px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  isolation: isolate;
+  background: none;
+  color: var(--ink-900);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* 44px stays the hit area; the pill that gets DRAWN is 36px, the same trick the
+   bag uses to show a 38px disc inside its own 44px target. Shrinking the button
+   itself would have taken the touch floor with it.
+   Paper fill and no edge: the ink ring it wore read too loud beside the bag's
+   solid disc, so the pill is the app's own quiet paper tone on the card's white
+   instead — the tone is the edge, and the shadow is gone with the ring. Ink on
+   --surface-quiet measures 15.9:1, well clear of AA at this 10px size. */
+.perk-card .pi__gift::before {
+  content: '';
+  position: absolute;
+  inset: 4px 0;
+  z-index: -1;
+  /* --radius-pill (999px), not a literal 99: on a 36px pill both clamp to the
+     same half-height curve, and the token is what the rest of the app uses for
+     a fully rounded shape. --radius-hand's irregular corners read as a card
+     here rather than a control. */
+  border-radius: var(--radius-pill);
+  background: var(--surface-quiet);
+}
+.perk-card .pi__gift-t { position: relative; }
+.perk-card .pi__gift:active { transform: translate(1px, 1px); }
+@media (prefers-reduced-motion: reduce) {
+  .perk-card .pi__gift:active { transform: none; }
+}
+.perk-card .cart-go {
+  /* relative, not static: this button's ink circle is an absolutely positioned
+     ::before with inset:3px, and with the button unpositioned that circle
+     resolved against .pi__acts instead — one dark ellipse across the whole row,
+     covering the gift button. The geometry all measured correctly; only a
+     screenshot showed it. */
+  position: relative;
+  flex: none;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  background: none;
+  color: var(--gray-0);
+}
+/* Same badge the page-level cart button wears, on the card's own bag: it tells
+   you this product is already in without opening anything. Sits above the ink
+   disc the ::before draws, so it needs the higher z-index. */
+.perk-card .cart-go__n {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--violet-600);
+  color: var(--gray-0);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 0 0 2px var(--gray-0);
+}
+.perk-card .cart-go::before {
+  content: '';
+  position: absolute;
+  inset: 5px;   /* a 34px disc in the 44px box (owner, 2026-09-09): filled ink reads bigger than the outlined pill beside it, so it is drawn smaller to look the same size */
+  border-radius: 50%;
+  background: var(--ink-900);
+  box-shadow: var(--sticker-cut);
+}
+.perk-card .cart-go__ico { position: relative; z-index: 1; }
+.perk-card .cart-go:active::before { transform: scale(0.97); }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Card drops its own transition under reduced motion; only the bag is ours. */
+  .perk-card .cart-go:active::before { transform: none; }
+}
+
+/* Empty result. Spans the grid so it does not sit in one card's cell. */
+.shop__empty { grid-column: 1 / -1; padding: 28px 0 8px; text-align: center; }
+.shop__empty-title { margin: 0; font-size: var(--text-sm); color: var(--text-secondary); }
+.shop .shop__empty-clear {
+  display: inline-flex; align-items: center; min-height: 44px; margin-top: 4px; padding: 0 10px;
+  border: none; background: none; cursor: pointer;
+  font-family: var(--font-label); font-size: var(--text-xs); font-weight: 700;
+  color: var(--violet-600); text-decoration: underline; text-underline-offset: 3px;
+}
+
+.shop__tool-n {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; margin-left: 2px;
+  border-radius: var(--radius-pill); background: var(--ink-900); color: var(--gray-0);
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700; font-variant-numeric: tabular-nums;
+}
+
+/* The panel under the shop's folder tabs — the board's .gb__panel, declaration
+   for declaration (gigs-board.css), so the two cannot drift apart in shape:
+   full-bleed sideways (-16px escapes the column's gutter, the padding puts the
+   content back), the tabs' -10px bites in from above, closed corners, cream
+   against white as the only edge. No `flex: 1` — the shop is not a flex column. */
+.shop__panel {
+  position: relative;
+  z-index: 1;
+  margin: 0 -16px;
+  overflow-x: clip;
+  background: var(--surface-quiet);
+  border-radius: 22px 22px 0 0 / 18px 18px 0 0;
+  padding: 16px 16px 28px;
+}
+/* To the very bottom (owner, 2026-09-08): the panel is the last thing on the
+   screen, and .app__col's 112px of tab-bar clearance showed as a white strip
+   under its closed corners. The corners open and this paints the same cream
+   through the clearance — paint, not box, so the panel's own bottom (what the
+   occlusion guard measures) stays where the content ends. overflow-x: clip on
+   the panel leaves the vertical axis visible, so nothing cuts it off. */
+.shop__panel::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: calc(112px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface-quiet);
+}
+/* The tools row on the panel: Filter as a glyph with its word and count, no
+   pill (owner, 2026-09-08: the outlined pill was the design they did not
+   like); the search glyph at the far right. Both 44px boxes. */
+.shop__tools { display: flex; align-items: center; gap: 10px; margin: 0; }
+.shop .shop__tool {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 6px 0 0;
+  border: none; border-radius: var(--radius-pill); background: none; cursor: pointer; box-shadow: none;
+  font-family: var(--font-label); font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.02em; color: var(--ink-900);
+}
+.shop .shop__tool--icon { width: 44px; padding: 0; justify-content: center; flex: none; }
+/* Search grows out of the glyph. The group takes the row's remaining width and
+   is a two-column grid: the field's column animates 0fr → 1fr (fr transitions:
+   Chrome 107+, Safari 16+; older browsers simply snap), so the field starts
+   under the glyph and runs leftwards to the Filter word. Closed it is 0 wide,
+   invisible, out of the tab order (tabIndex -1 in the JSX), and the visibility
+   transition keeps it hidden until the width has actually collapsed. */
+.shop__search {
+  /* justify-content: end packs the tracks against the group's right edge, so
+     the glyph sits at the far right while the field's track is 0 wide (a grid
+     packs to the start otherwise, and the glyph shipped beside Filter). */
+  display: grid; grid-template-columns: 0fr 44px; justify-content: end; align-items: center;
+  flex: 1; min-width: 0; margin-left: auto;
+  /* The glyph's *drawing* sits on the right content edge, level with the cards
+     (owner, 2026-09-08): its 44px box is 22px wider than the 22px mark, so the
+     whole group hangs 11px into the panel's padding and the mark lands on the
+     line — the Filter glyph on the left already does. */
+  margin-right: -11px;
+  transition: grid-template-columns 0.24s ease;
+}
+.shop__search--open { grid-template-columns: 1fr 44px; }
+/* The field is the system's Input (styled by the system — nothing here reaches
+   into .ax-*); this class lands on its wrapper and only does the reveal:
+   clipped to the animating track, invisible until it has width, and the
+   visibility transition keeps it hidden until the width has collapsed. */
+.shop .shop__search-in {
+  grid-column: 1; grid-row: 1; min-width: 0; overflow: hidden; margin-right: 4px;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.18s ease, visibility 0s linear 0.24s;
+}
+.shop .shop__search--open .shop__search-in { opacity: 1; visibility: visible; transition: opacity 0.18s ease 0.08s, visibility 0s; }
+.shop .shop__search .shop__tool--icon { grid-column: 2; grid-row: 1; }

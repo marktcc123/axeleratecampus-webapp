@@ -1,0 +1,201 @@
+.gb__head { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+.gb__wordmark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  letter-spacing: -0.04em;
+  color: var(--violet-600);
+}
+.gb .gb__icon-btn {
+  width: 44px; height: 44px; margin: -8px -6px -8px 0;
+  display: flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer; background: none; color: var(--ink-900);
+}
+.gb__avatar {
+  width: 36px; height: 36px; border-radius: 50%; overflow: hidden;
+  box-shadow: var(--sticker-cut), var(--shadow-paper); flex: none;
+}
+.gb__h2 {
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: var(--text-xl);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin: 0;
+}
+/* 40 between sections, against 8-12 inside them. The three blocks are three
+   subjects — what to do this week, what is on, what pays — and the inside of
+   each got tighter, so the outside has to grow or the whole board reads as one
+   list. */
+.gb__missions-h { margin-top: 40px; }
+/* The panel the folder tabs sit on. Asymmetric radius, as drawn. */
+/* Anchored to the floor. The panel is the last thing on the screen and the
+   design runs it off the bottom edge, so it grows to fill whatever height is
+   left and its own padding carries its colour behind the tab bar. Without
+   this a short page left a white band under the cream, and the panel read as
+   a card that had stopped rather than the ground the screen stands on.
+
+   The negative bottom margin cancels .app__col's 112px of tab-bar clearance;
+   the padding puts back 104px of it inside the panel, where it is coloured. */
+.gb { min-height: calc(100vh - 40px); display: flex; flex-direction: column; }
+
+.gb__panel {
+  position: relative;
+  z-index: 1;
+  /* No top margin: the folder tabs above carry margin-bottom: -10px so the
+     selected one bites into this panel. 14px here left a white strip between
+     them and broke the folder metaphor.
+     Full-bleed sideways: -16px escapes the column's gutter so the cream band
+     runs edge to edge, and the padding puts the content back on the gutter.
+     It used to carry a -112px bottom margin so the band ran off the bottom of
+     the screen, which only worked while it was the last thing on the board.
+     Events sat under it for a while, so the panel closed on four corners;
+     Missions is the last section again and the ::after below carries the
+     cream through the shell's bottom padding to the screen's edge. */
+  margin: 0 -16px;
+  /* Clips the resting card arrow, which sits 26px out and fully transparent
+     until hover. The hovered one lands at -6px, inside the padding. */
+  overflow-x: clip;
+  background: var(--surface-quiet);
+  border-radius: 22px 22px 0 0 / 18px 18px 0 0;
+  /* No shadow. The design draws one here, but the panel runs edge to edge, so
+     the shadow only ever shows along its top lip and reads as a stray line
+     under the tabs rather than as depth. The cream against white is the edge. */
+  padding: 16px 16px 28px;
+  flex: 1;
+}
+/* To the very bottom (owner, 2026-09-08): the panel is the last thing on the
+   screen, and .app__col's 112px of tab-bar clearance showed as a white strip
+   under its closed corners. The corners open and this paints the same cream
+   through the clearance — paint, not box, so the panel's own bottom (what the
+   occlusion guard measures) stays where the content ends. overflow-x: clip on
+   the panel leaves the vertical axis visible, so nothing cuts it off. */
+.gb__panel::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: calc(112px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface-quiet);
+}
+.gb__grid { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+/* Screen-reader-only count. The tabpanel's contents swap on every filter
+   change; without this nothing announces the new result count. */
+.gb__count {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* Replaces .gb__grid on the same tabpanel when nothing matches, so the
+   element keeps its id and aria wiring and only its layout changes. */
+.gb__empty {
+  margin-top: 16px;
+  padding: 30px 16px 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+.gb__empty-h {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+.gb__empty-p {
+  margin: 0;
+  max-width: 30ch;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+/* (0,2,0): the button also carries ax-btn, which the design system injects
+   after this stylesheet. See src/components/shell.css for the full rule. */
+.gb .gb__empty-btn { margin-top: 10px; }
+
+/* The full list, inside the dialog. The rows are the current examples.
+   There is no quest table, so nothing here is a live reward. */
+.qa__soon {
+  margin: 0 0 4px;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.qa { list-style: none; margin: 0; padding: 0; }
+.qa__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1.5px solid var(--gray-100);
+}
+.qa__row:last-child { border-bottom: none; }
+.qa__dot { width: 10px; height: 10px; flex: none; margin-top: 6px; border-radius: 50%; }
+.qa__mid { flex: 1; min-width: 0; }
+.qa__tab {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.qa__title { margin: 3px 0 0; font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); }
+.qa__desc { margin: 3px 0 0; font-size: var(--text-xs); line-height: 1.45; color: var(--gray-700); }
+.qa__reward {
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-brand);
+}
+
+
+/* Featured sits under Upcoming (2026-09-21) at the same distance the Missions
+   heading keeps under Featured; when Upcoming renders nothing, the section is
+   first and the app bar's own 12px is the gap. */
+
+/* The push to Discover between the third and fourth rows: white paper on the
+   panel's cream, the question in bold and the way on under it, the arrow on
+   the right — the same object Me's "Continue building" card is. No shadow
+   (owner, 2026-09-21: the white blocks lose theirs). */
+.gb .gb__push {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  align-items: center;
+  padding: 16px 14px;
+  border-radius: var(--radius-hand-sm);
+  background: var(--gray-0);
+  text-decoration: none;
+  color: var(--text-primary);
+}
+.gb__push-t { grid-column: 1; font-size: var(--text-sm); font-weight: 700; line-height: 1.4; }
+.gb__push-go {
+  grid-column: 1;
+  margin-top: 6px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--coral-700);
+}
+.gb__push-arrow { grid-column: 2; grid-row: 1 / 3; color: var(--ink-900); }

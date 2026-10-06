@@ -1,0 +1,233 @@
+/* Shared shell for the eight Me sub-screens.
+
+   The header — back control, kicker, title, handwritten aside, lede — is the
+   design system's ScreenHeader now (components/navigation/ScreenHeader.jsx).
+   Eight screens drawing it identically is what made it a component. What is
+   left below is the row list those screens are actually made of. */
+
+/* ── The colour-band family ───────────────────────────────────────────────
+   Five sub-screens put the header on a full-bleed colour band. The band
+   bleeds through the shell's 16px gutter with negative margins, so it needs
+   its own inner padding to put the header back where the white family has it.
+
+   --sh-ink / --sh-muted / --sh-note are ScreenHeader's own overrides. Setting
+   them here is what recolours the chevron and title for a dark ground without
+   any app rule naming an ax-* class. */
+.sub--banded { margin-top: -16px; }
+.sub__band {
+  position: relative;
+  overflow: hidden;
+  margin: 0 calc(var(--shell-pad, 16px) * -1);
+  padding: 16px var(--shell-pad, 16px) 26px;
+}
+.sub__band-inner { position: relative; }
+.sub__band-doodle {
+  position: absolute;
+  top: -30px;
+  right: -22px;
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+/* The watermark is the screen's subject, sunk into the band rather than
+   drawn on it: low opacity, rotated, and bleeding off two edges. */
+.sub__band-mark {
+  position: absolute;
+  left: -34px;
+  bottom: -46px;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+.sub__body { padding-top: 4px; }
+.sub--banded .sub__lede { margin-top: 8px; }
+
+/* Per-band palette. The doodle takes its colour from the band's own
+   --band-doodle so one rule can tint the mask. */
+/* Measured, not eyeballed. The design draws four of these five bands with
+   text that does not clear AA on its own ground. The other three notes step
+   one or two rungs down the violet ramp:
+
+     lilac  note  violet-700 4.03 → violet-800 5.22
+     yellow note  violet-600 4.22 → violet-700 5.49
+     cyan   note  violet-700 4.06 → violet-800 5.26
+     violet note  butter-300 4.73 — already clear, left alone
+
+   Coral is the exception, and it is the owner's call rather than a measurement.
+   This block used to record the opposite: white on the old coral (#FF6B4A) was
+   2.82:1, under even the large-text bar, so coral carried ink at 6.52:1. The
+   coral is #F2542D now and the owner asked for white on 2026-09-02. Where that
+   leaves it:
+
+     coral title  21px/600, large text, needs 3:1 — white 3.45 clears it
+     coral note   14px/400, needs 4.5:1 — white 3.45 does NOT, and cannot:
+                  the ground sits at luminance 0.254 and white needs 0.183 or
+                  below, so no weight or opacity rescues it. Ink was 5.32 and
+                  butter-300 only 2.63, so white is the best of what was asked
+                  for rather than the best available.
+
+   rgb(242,84,45) is in the contrast sweep's EXEMPT_GROUNDS for exactly this,
+   beside the two pinks. Every other band here is swept on every route. */
+.sub__band--lavender  { background: var(--accent-lavender); --sh-ink: var(--ink-900); --sh-note: var(--violet-800); }
+.sub__band--yellow { background: var(--accent-yellow); --sh-ink: var(--ink-900); --sh-note: var(--violet-700); }
+.sub__band--violet { background: var(--violet-600); --sh-ink: var(--gray-0); --sh-note: var(--butter-300); }
+.sub__band--coral  { background: var(--accent-coral); --sh-ink: var(--gray-0); --sh-note: var(--gray-0); }
+.sub__band--blush   { background: var(--accent-blush); --sh-ink: var(--ink-900); --sh-note: var(--violet-800); }
+.sub__band--pink    { background: var(--accent-pink); --sh-ink: var(--ink-900); --sh-note: var(--violet-800); }
+.sub__band--orange  { background: var(--accent-orange); --sh-ink: var(--ink-900); --sh-note: var(--violet-800); }
+/* Ink, for the tracker: white type as on violet, the note in butter as on
+   violet — the two dark bands share one treatment. */
+.sub__band--ink     { background: var(--ink-900); --sh-ink: var(--gray-0); --sh-note: var(--butter-300); }
+/* The wallet glyph off the right corner too — behind the title it ate the word. */
+.sub__band--orange .sub__band-mark { left: auto; right: -34px; bottom: -14px; transform: rotate(10deg); }   /* higher (owner, 2026-09-09) */
+/* My orders' bag hangs off the band's right corner, not the left under the
+   title (owner, 2026-09-09), tilted the other way to match. */
+.sub__band--pink .sub__band-mark { left: auto; right: -34px; transform: rotate(12deg); }
+
+.sub__band--lavender  .sub__band-doodle { background: var(--butter-400); opacity: 0.95; }
+.sub__band--yellow .sub__band-doodle { background: var(--violet-600); opacity: 0.85; }
+.sub__band--violet .sub__band-doodle { background: var(--butter-400); opacity: 0.9; }
+.sub__band--coral  .sub__band-doodle { background: var(--butter-400); opacity: 0.95; }
+.sub__band--blush   .sub__band-doodle { background: var(--ink-900); opacity: 0.8; }
+.sub__band--ink     .sub__band-doodle { background: var(--butter-400); opacity: 0.9; }
+
+.sub__band--lavender  .sub__band-mark { color: var(--ink-900); opacity: 0.09; }
+.sub__band--yellow .sub__band-mark { color: var(--ink-900); opacity: 0.09; }
+.sub__band--violet .sub__band-mark { color: var(--gray-0); opacity: 0.12; }
+/* The checklist off the right corner, where the bag and the wallet hang. */
+.sub__band--ink .sub__band-mark { left: auto; right: -30px; bottom: -40px; transform: rotate(10deg); color: var(--gray-0); opacity: 0.12; }
+.sub__band--coral  .sub__band-mark { color: var(--ink-900); opacity: 0.10; }
+/* Career's rocket: top right where the arrow was, a deeper pink than the band
+   rather than a grey wash (owner, 2026-09-09). color-mix pulls the accent pink
+   a quarter of the way to ink; browsers without it fall back to the pink. */
+.sub__band--blush   .sub__band-mark {
+  left: auto; right: -28px; bottom: auto; top: -34px; transform: rotate(14deg);
+  color: var(--accent-pink); color: color-mix(in oklab, var(--accent-pink) 72%, var(--ink-900)); opacity: 1;
+}
+/* Pink and orange had no mark colour of their own and drew the glyph in full
+   ink (owner, 2026-09-09: "change the wallet's colour"): sunk like the rest. */
+.sub__band--pink .sub__band-mark, .sub__band--orange .sub__band-mark { color: var(--ink-900); opacity: 0.09; }
+
+/* A band gives the header a whole colour field to hold, so the title stands
+   further off the back row than it does on a white page. */
+.sub--banded { --sh-gap: 34px; }
+
+/* A section label inside a sub-screen. */
+/* 34 up from 24 (owner, 2026-09-08): at 24 the sections read as one run. */
+.sub__label {
+  margin: 34px 0 6px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* The list shape most of these screens are made of: a row with a leading
+   block, a title and meta in the middle, and a figure or status on the right. */
+.sub__list { list-style: none; margin: 0; padding: 0; }
+.sub__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* border-box: min-height applies to the CONTENT box, so without this the
+     56px intent plus 24px of padding rendered an 81px row. me-hub.css records
+     the same fix for .set__row; these two were missed. */
+  box-sizing: border-box;
+  min-height: 56px;
+  padding: 12px 2px;
+  border-bottom: 1.5px solid var(--gray-200);
+}
+.sub__row:last-child { border-bottom: none; }
+.sub__row-mid { flex: 1; min-width: 0; }
+.sub__row-title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+.sub__row-meta {
+  margin: 3px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+.sub__row-fig {
+  flex: none;
+  text-align: right;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.sub__row-fig--out { color: var(--text-secondary); }
+.sub__row-xp {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-brand);
+}
+
+/* The optional action at the end of the back row (Wallet's Withdraw). */
+.sub__action { margin-left: auto; }
+
+/* One rung down with .scr__h1 and the wordmark. It sits inside ScreenHeader's
+   own h1, which stays at --text-xl and keeps its face, tracking and colour. */
+.sub__title { font-size: var(--text-lg); }
+
+/* ── The compact header (Settings, 2026-09-21) ────────────────────────────
+   Back, title, and an equal-width end slot in one row, so the title's centre is
+   the row's centre. The back control is 44px on both axes with the chevron
+   small inside it, and pulled 14px into the gutter the way ScreenHeader's is,
+   so the chevron sits where every other sub-screen's does. */
+.sub__bar {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  /* Into BOTH gutters by the same 14px: pulled into the left one alone, the
+     title's centre sat 7px left of the screen's. */
+  margin: -8px -14px 18px;
+  width: calc(100% + 28px);
+}
+.sub__bar-back {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.sub__bar-chev {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+/* The face is ScreenHeader's own h1 face, restated here because this h1 is not
+   that one: --font-title, semibold, tracked and uppercase, so the compact
+   header speaks in the same voice as the stacked one on every other sub-screen.
+   .sub__title inside it still steps the size down one rung, as it does there. */
+.sub__bar-h1 {
+  margin: 0;
+  min-width: 0;
+  text-align: center;
+  font-family: var(--font-title);
+  font-weight: var(--weight-semibold, 600);
+  font-size: var(--text-xl);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+.sub__bar-end { width: 44px; height: 44px; }

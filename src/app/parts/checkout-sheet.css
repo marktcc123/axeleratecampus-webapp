@@ -1,0 +1,255 @@
+/* Checkout sheet. Same overlay + bottom-sheet geometry as the gift and review
+   sheets (the app's one dialog pattern), with its own classes because this one
+   carries a stack of option rows and, on its last step, an address form. */
+.cos__overlay { position: fixed; inset: 0; z-index: 100; background: var(--overlay); }
+.cos {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  z-index: 101;
+  width: 100%;
+  max-width: 520px;
+  box-sizing: border-box;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--surface-card);
+  border-radius: 18px 22px 0 0 / 22px 18px 0 0;
+  box-shadow: var(--shadow-paper-lg);
+  padding: 10px 18px calc(20px + env(safe-area-inset-bottom, 0px));
+}
+.cos__grab {
+  width: 42px;
+  height: 4px;
+  margin: 0 auto 6px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-200);
+}
+
+/* The header carries the total on every step, so the amount never leaves the
+   screen while the questions about how to pay it are being answered. */
+.cos__top { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.cos .cos__back {
+  width: 44px;
+  height: 44px;
+  margin-left: -12px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--ink-900);
+}
+.cos__chev {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+.cos__total { flex: 1; margin: 0; display: flex; align-items: baseline; gap: 8px; }
+.cos__total-lab {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.cos__total-fig {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-900);
+}
+.cos__step {
+  margin: 0;
+  flex: none;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.cos__h {
+  margin: 14px 0 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+/* One option per row: a title, what it holds, and a chevron. */
+.cos__opts { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.cos__opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 64px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: var(--radius-hand);
+  background: var(--surface-quiet);
+  text-align: left;
+  cursor: pointer;
+}
+.cos__opt:disabled { cursor: not-allowed; opacity: 0.55; }
+.cos__opt-mid { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.cos__opt-t {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.cos__opt-d { font-size: var(--text-xs); line-height: 1.4; color: var(--gray-700); }
+.cos__opt-chev {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid var(--text-secondary);
+  border-right: 2px solid var(--text-secondary);
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+.cos__opt:disabled .cos__opt-chev { visibility: hidden; }
+.cos__opt:active:not(:disabled) { transform: translate(1px, 1px); }
+@media (prefers-reduced-motion: reduce) {
+  .cos__opt:active:not(:disabled) { transform: none; }
+}
+
+/* The address step. */
+.cos__need { margin: 10px 0 14px; font-size: var(--text-sm); line-height: 1.5; color: var(--gray-700); }
+.cos__saved {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: var(--radius-hand);
+  background: var(--surface-quiet);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+.cos .cos__change {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 2px;
+  padding: 0 2px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--violet-600);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cos__place { margin-top: 18px; }
+
+/* The cash / credit split. */
+.cos__bals { margin-top: 14px; display: flex; gap: 16px; flex-wrap: wrap; }
+.cos__bal { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cos__bal-lab {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.cos__bal-fig {
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.cos__slider-row { margin-top: 10px; display: flex; align-items: center; gap: 10px; }
+/* 44px of height for the track's touch target, with the track drawn thin
+   inside it — the same split the gift sheet's credit slider uses, and for the
+   same reason: the e2e touch-floor sweep measures the control's own box. */
+.cos .cos__slider {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  background: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+.cos .cos__slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-200);
+}
+.cos .cos__slider::-moz-range-track {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--gray-200);
+}
+.cos .cos__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -8px;
+  border-radius: 50%;
+  background: var(--violet-600);
+  box-shadow: var(--sticker-cut);
+}
+.cos .cos__slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: var(--violet-600);
+  box-shadow: var(--sticker-cut);
+}
+.cos .cos__max {
+  flex: none;
+  min-height: 44px;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--gray-100);
+  cursor: pointer;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+.cos .cos__max:disabled { opacity: 0.5; cursor: not-allowed; }
+.cos__split {
+  margin: 2px 0 0;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+.cos__floor {
+  margin: 6px 0 0;
+  font-family: var(--font-hand);
+  font-size: var(--text-sm);
+  line-height: 1.25;
+  color: var(--violet-600);
+}

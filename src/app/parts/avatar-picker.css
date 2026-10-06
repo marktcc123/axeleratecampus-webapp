@@ -1,0 +1,26 @@
+/* The avatar disc as a control. 74px — the size Me draws the profile picture
+   at, so what you pick is what you get. Disc, badge and input share one 74px
+   stack so the badge sits on the disc's corner however the picker is aligned;
+   the input covers the stack at the stack's own size, opacity 0 rather than
+   display:none so it stays in the tab order and keeps a box the touch sweep can
+   measure. */
+.avp { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.avp__stack { position: relative; display: block; width: 74px; height: 74px; }
+.avp .avp__disc { box-shadow: inset 0 0 0 1.5px rgba(23, 16, 41, 0.08); }
+.avp .avp__ico { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: var(--text-secondary); }
+/* Ink disc, white glyph, the sticker keyline — a badge, not a button: the
+   input over the whole stack is what takes the tap. */
+.avp__badge {
+  position: absolute; right: -3px; bottom: -3px; width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center; border-radius: 50%;
+  background: var(--ink-900); color: var(--gray-0); box-shadow: var(--sticker-cut), var(--shadow-paper);
+}
+.avp .avp__file { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; opacity: 0; cursor: pointer; }
+.avp:focus-within .avp__disc { box-shadow: 0 0 0 2px var(--violet-600); }
+.avp__line {
+  margin: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-secondary);
+}
+.avp[data-has-photo='true'] .avp__line { color: var(--violet-600); text-transform: none; letter-spacing: 0; }
+.avp__line--error { color: var(--danger-fg); text-transform: none; letter-spacing: 0; }

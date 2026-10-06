@@ -1,0 +1,96 @@
+/* /me/events — ticket stubs. */
+
+.ev__list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.ev__link { display: block; text-decoration: none; color: inherit; }
+
+/* The notch. Two radial gradients punch a hole at the tear line through the
+   top and bottom edges at once, which is why they intersect rather than
+   stack: source-in keeps only what both masks agree is opaque. 92px matches
+   the date block's width, so the notch lands exactly on the seam. */
+.ev__stub {
+  display: flex;
+  align-items: stretch;
+  background: var(--surface-quiet);
+  border-radius: var(--radius-hand);
+  -webkit-mask:
+    radial-gradient(circle at 92px 0, transparent 8px, #000 8.5px),
+    radial-gradient(circle at 92px 100%, transparent 8px, #000 8.5px);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(circle at 92px 0, transparent 8px, #000 8.5px),
+    radial-gradient(circle at 92px 100%, transparent 8px, #000 8.5px);
+  mask-composite: intersect;
+}
+
+.ev__date {
+  width: 92px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 18px 0;
+  border-right: 1.5px dashed var(--gray-300);
+}
+.ev__when {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.ev__day {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-2xl);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+/* The one place the type goes below the system's floor on purpose: it is a
+   ticket's small print, and it is decoration beside a date that already says
+   everything. Tracked wide so it still reads as words. */
+
+.ev__mid { flex: 1; min-width: 0; padding: 14px 16px; display: flex; flex-direction: column; gap: 5px; }
+.ev__top { display: flex; align-items: baseline; gap: 8px; }
+.ev__title {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.ev__meta {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.ev__done {
+  flex: none;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.ev[data-past='true'] .ev__day,
+.ev[data-past='true'] .ev__title { color: var(--gray-600); }
+
+.ev__none { margin: 12px 0 0; font-size: var(--text-sm); color: var(--text-secondary); }
+
+/* Hover raises the stub off the page; nothing moves and nothing recolours. */
+.ev__link .ev__stub { transition: box-shadow var(--dur-med) var(--ease-launch); }
+.ev__link:hover .ev__stub,
+.ev__link:focus-visible .ev__stub { box-shadow: var(--shadow-paper-lg); }
+@media (prefers-reduced-motion: reduce) {
+  .ev__link .ev__stub { transition: none; }
+}

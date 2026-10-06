@@ -1,0 +1,10 @@
+[
+  { "handle": "marktao", "name": "Mark Tao", "campus": "UCLA", "level": 3, "levelName": "Insider", "xp": 2400, "xpToNext": 3600, "verified": true },
+  { "handle": "mayaortiz", "name": "Maya Ortiz", "campus": "Cornell Tech", "level": 4, "levelName": "Trusted", "xp": 4120, "xpToNext": 6000, "verified": true },
+  { "handle": "devonpark", "name": "Devon Park", "campus": "NYU", "level": 2, "levelName": "Contributor", "xp": 980, "xpToNext": 1800, "verified": true },
+  { "handle": "priyaraman", "name": "Priya Raman", "campus": "NYU", "level": 3, "levelName": "Insider", "xp": 2050, "xpToNext": 3600, "verified": true },
+  { "handle": "alexchen", "name": "Alex Chen", "campus": "UCLA", "level": 2, "levelName": "Contributor", "xp": 1240, "xpToNext": 1800, "verified": true },
+  { "handle": "samwhitfield", "name": "Sam Whitfield", "campus": "UCLA", "level": 1, "levelName": "Explorer", "xp": 320, "xpToNext": 800, "verified": false },
+  { "handle": "ninaadeyemi", "name": "Nina Adeyemi", "campus": "UT Austin", "level": 4, "levelName": "Trusted", "xp": 5210, "xpToNext": 6000, "verified": true },
+  { "handle": "jonahreed", "name": "Jonah Reed", "campus": "UT Austin", "level": 1, "levelName": "Explorer", "xp": 140, "xpToNext": 800, "verified": false }
+]

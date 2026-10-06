@@ -1,0 +1,431 @@
+{
+  "payout": {
+    "method": "Venmo",
+    "handle": "@your-handle",
+    "speed": "instant"
+  },
+  "ledger": [
+    {
+      "month": "August",
+      "rows": [
+        {
+          "title": "Perks shop order — The Five Minute Journal",
+          "meta": "Aug 24 · shop",
+          "usd": -20,
+          "pts": -1200,
+          "xp": 0
+        },
+        {
+          "title": "Vera — Friday pop-up",
+          "meta": "Aug 22 · mission payout",
+          "usd": 40,
+          "xp": 120
+        },
+        {
+          "title": "Solra — unboxing reel",
+          "meta": "Aug 20 · mission payout",
+          "usd": 25,
+          "xp": 80,
+          "pts": 500
+        },
+        {
+          "title": "Withdrawal to Venmo",
+          "meta": "Aug 12 · instant",
+          "usd": -50,
+          "xp": 0
+        },
+        {
+          "title": "Southern Gothic — cashback landed",
+          "meta": "Aug 9 · shop credit",
+          "usd": 0,
+          "pts": 141,
+          "xp": 0
+        }
+      ]
+    },
+    {
+      "month": "July",
+      "rows": [
+        {
+          "title": "Klar — study-break booth",
+          "meta": "Jul 30 · mission payout",
+          "usd": 22,
+          "xp": 70
+        }
+      ]
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord4",
+      "no": "AX-1051",
+      "brand": "Solra",
+      "name": "Solra sparkling yuzu — 12-pack",
+      "date": "Sep 22",
+      "priceUsd": 24,
+      "status": "packed",
+      "productId": "p7",
+      "photo": "Twelve cans in the box",
+      "cover": "product-solra-can",
+      "note": "+ $2.40 credit when it ships",
+      "paid": {
+        "cashUsd": 24,
+        "creditPts": 0
+      },
+      "steps": [
+        {
+          "label": "Ordered",
+          "date": "Sep 22",
+          "done": true
+        },
+        {
+          "label": "Packed",
+          "date": "Sep 22",
+          "done": true
+        },
+        {
+          "label": "Shipped",
+          "date": "—",
+          "done": false
+        },
+        {
+          "label": "Delivered",
+          "date": "—",
+          "done": false
+        }
+      ]
+    },
+    {
+      "id": "ord1",
+      "no": "AX-1042",
+      "brand": "Intelligent Change",
+      "name": "The Five Minute Journal",
+      "date": "Aug 24",
+      "priceUsd": 32,
+      "status": "shipped",
+      "productId": "p1",
+      "photo": "Journal shot",
+      "note": "+ $3.20 credit when it ships",
+      "steps": [
+        {
+          "label": "Ordered",
+          "date": "Aug 24",
+          "done": true
+        },
+        {
+          "label": "Packed",
+          "date": "Aug 25",
+          "done": true
+        },
+        {
+          "label": "Shipped",
+          "date": "Aug 26",
+          "done": true
+        },
+        {
+          "label": "Delivered",
+          "date": "—",
+          "done": false
+        }
+      ],
+      "paid": {
+        "cashUsd": 20,
+        "creditPts": 1200
+      },
+      "tracking": {
+        "carrier": "UPS",
+        "number": "1Z999AA10123456784"
+      }
+    },
+    {
+      "id": "ord2",
+      "no": "AX-1037",
+      "brand": "Italic",
+      "name": "Nautilus towels",
+      "date": "Aug 21",
+      "priceUsd": 39,
+      "status": "shipped",
+      "productId": "p3",
+      "photo": "Towel shot",
+      "note": "+ $3.90 credit when it lands",
+      "steps": [
+        {
+          "label": "Ordered",
+          "date": "Aug 21",
+          "done": true
+        },
+        {
+          "label": "Packed",
+          "date": "Aug 22",
+          "done": true
+        },
+        {
+          "label": "Shipped",
+          "date": "Aug 23",
+          "done": true
+        },
+        {
+          "label": "Delivered",
+          "date": "—",
+          "done": false
+        }
+      ],
+      "cover": "product-towel-stack",
+      "paid": {
+        "cashUsd": 39,
+        "creditPts": 0
+      },
+      "tracking": {
+        "carrier": "USPS",
+        "number": "9400111899223197428490"
+      }
+    },
+    {
+      "id": "ord3",
+      "no": "AX-1019",
+      "brand": "August Uncommon Tea",
+      "name": "Southern Gothic — peach bourbon black",
+      "date": "Aug 3",
+      "priceUsd": 14.09,
+      "status": "delivered",
+      "productId": "p2",
+      "photo": "Tea tin shot",
+      "note": "+ $1.41 credit, landed",
+      "steps": [
+        {
+          "label": "Ordered",
+          "date": "Aug 3",
+          "done": true
+        },
+        {
+          "label": "Packed",
+          "date": "Aug 4",
+          "done": true
+        },
+        {
+          "label": "Shipped",
+          "date": "Aug 6",
+          "done": true
+        },
+        {
+          "label": "Delivered",
+          "date": "Aug 9",
+          "done": true
+        }
+      ],
+      "paid": {
+        "cashUsd": 14.09,
+        "creditPts": 0
+      },
+      "tracking": {
+        "carrier": "USPS",
+        "number": "9400111899223197428506"
+      }
+    }
+  ],
+  "syndicate": {
+    "needXp": 6000,
+    "unlocks": [
+      "$100+ missions from national brands",
+      "First dibs on every Friday drop",
+      "Direct lines to brand founders",
+      "Syndicate dinner, once a month"
+    ]
+  },
+  "cocreations": [
+    {
+      "title": "Solra — name the summer flavor",
+      "meta": "Voting closes Sep 2 · +150 XP for the winning name",
+      "cta": "Cast your vote"
+    },
+    {
+      "title": "Notely — design the sticker pack",
+      "meta": "Submissions close Sep 5 · $100 + your name on the pack",
+      "cta": "Submit art"
+    }
+  ],
+  "events": [
+    {
+      "title": "Loop warehouse set — crew call",
+      "meta": "Warehouse 12, Brooklyn · 6–9pm",
+      "status": "crew",
+      "past": false,
+      "date": "2026-09-19",
+      "eventId": "ev5",
+      "cover": "event-shift-crate"
+    },
+    {
+      "title": "Brand night — 4 founders, open floor",
+      "meta": "Tata Hall rooftop · 7pm",
+      "status": "going",
+      "past": false,
+      "date": "2026-09-24",
+      "eventId": "ev6",
+      "cover": "event-panel-mic"
+    },
+    {
+      "title": "Klar study-break booth",
+      "meta": "Olin lobby · finals week",
+      "status": "done",
+      "past": true,
+      "date": "2026-08-12",
+      "cover": "event-shift-crate"
+    }
+  ],
+  "invite": {
+    "code": "YOURCODE-24",
+    "perInvite": 200,
+    "total": 5,
+    "used": 3,
+    "steps": [
+      "Send your code to a friend",
+      "They clear their first mission",
+      "You both bank +200 XP and 200 credit"
+    ],
+    "perInviteCredits": 200,
+    "friends": [
+      {
+        "handle": "marktao",
+        "on": "2026-08-18",
+        "status": "earned"
+      },
+      {
+        "handle": "mayaortiz",
+        "on": "2026-08-22",
+        "status": "earned"
+      },
+      {
+        "handle": "devonpark",
+        "on": "2026-08-28",
+        "status": "pending"
+      }
+    ]
+  },
+  "settings": {
+    "account": [
+      {
+        "label": "Name",
+        "value": "Your name"
+      },
+      {
+        "label": "School",
+        "value": "Your campus"
+      },
+      {
+        "label": "Email",
+        "value": "you@campus.edu"
+      }
+    ],
+    "address": {
+      "line1": "",
+      "line2": "",
+      "city": "",
+      "state": "",
+      "zip": ""
+    },
+    "version": "axelerate · v2.4.1"
+  },
+  "calendarMonth": "2026-08",
+  "inbox": [
+    {
+      "id": "n1",
+      "group": "new",
+      "icon": "bag-line",
+      "tint": "lavender",
+      "text": "Vera pop-up paid out — $40 cash + 120 XP hit your wallet",
+      "meta": "2h ago · wallet",
+      "to": "/app/me/wallet",
+      "unread": true
+    },
+    {
+      "id": "n2",
+      "group": "new",
+      "icon": "flag-line",
+      "tint": "yellow",
+      "text": "Solra reel approved. Nice work.",
+      "meta": "5h ago · missions",
+      "to": "/app/me/missions",
+      "unread": true
+    },
+    {
+      "id": "n3",
+      "group": "new",
+      "icon": "zap",
+      "tint": "blush",
+      "text": "This week's drop: Nautilus towels and the Five Minute Journal",
+      "meta": "1d ago · perks",
+      "to": "/app/discover",
+      "unread": true
+    },
+    {
+      "id": "n4",
+      "group": "earlier",
+      "icon": "calendar",
+      "tint": "orange",
+      "text": "You're on door crew Friday — Warehouse 12, be there 5:45pm",
+      "meta": "3d ago · events",
+      "to": "/app/me/tickets",
+      "unread": false
+    },
+    {
+      "id": "n5",
+      "group": "earlier",
+      "icon": "user",
+      "tint": "coral",
+      "text": "Priya used your invite code — you both bank 200 XP when she clears her first mission",
+      "meta": "1w ago · invites",
+      "to": "/app/me/invite",
+      "unread": false
+    }
+  ],
+  "admin": {
+    "account": [
+      {
+        "label": "Role",
+        "value": "Campus lead"
+      },
+      {
+        "label": "Campus",
+        "value": "Your campus"
+      },
+      {
+        "label": "Admin email",
+        "value": "you@campus.edu"
+      },
+      {
+        "label": "Added",
+        "value": "Aug 2026"
+      }
+    ]
+  },
+  "career": {
+    "proofAt": 3,
+    "laneAt": 5,
+    "proof": {
+      "title": "Axelerate internship proof",
+      "desc": "Request your platform-wide proof. Ops reviews it, attaches the signed PDF, and it is yours to download.",
+      "counts": "Any paid mission counts."
+    },
+    "laneRewards": [
+      {
+        "title": "Brand track certificate",
+        "desc": "Partner-specific internship proof for this brand."
+      },
+      {
+        "title": "Referral lane",
+        "desc": "An internal referral — the brand confirms it, and you get the intro."
+      }
+    ],
+    "brands": [
+      {
+        "name": "Dermabell",
+        "finished": 1
+      },
+      {
+        "name": "Tech & gaming gear",
+        "finished": 0
+      }
+    ],
+    "laneCounts": "Any paid mission with this brand counts."
+  }
+}

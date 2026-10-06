@@ -1,0 +1,56 @@
+[
+  {
+    "tab": "formats",
+    "title": "Three formats",
+    "desc": "Post a reel, a story and a static this week",
+    "reward": "+120 XP",
+    "color": "accent-yellow",
+    "ink": true,
+    "doodle": "sparkle-butter"
+  },
+  {
+    "tab": "brand",
+    "title": "Brand regular",
+    "desc": "Run 3 missions with the same brand",
+    "reward": "+200 XP",
+    "color": "accent-coral",
+    "ink": false,
+    "doodle": "circle-violet"
+  },
+  {
+    "tab": "run",
+    "title": "4-week run",
+    "desc": "Clear 1+ mission every week, 4 weeks straight",
+    "reward": "+1 freeze",
+    "color": "accent-pink",
+    "ink": false,
+    "doodle": "underline-butter"
+  },
+  {
+    "tab": "campus",
+    "title": "Campus five",
+    "desc": "Bring five classmates onto the platform",
+    "reward": "+150 XP",
+    "color": "accent-lavender",
+    "ink": true,
+    "doodle": "arrow-violet"
+  },
+  {
+    "tab": "early",
+    "title": "First in line",
+    "desc": "Claim a mission within an hour of it landing",
+    "reward": "+80 XP",
+    "color": "accent-blush",
+    "ink": true,
+    "doodle": "sparkle-volt"
+  },
+  {
+    "tab": "proof",
+    "title": "Proof on time",
+    "desc": "File proof the same day for three missions running",
+    "reward": "+90 XP",
+    "color": "accent-orange",
+    "ink": true,
+    "doodle": "underline-volt"
+  }
+]

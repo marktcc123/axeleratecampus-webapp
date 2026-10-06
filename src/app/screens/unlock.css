@@ -1,0 +1,298 @@
+/* /app/unlock — the motive page. It answers "what does progressing get me",
+   and its defence against reading as a coupon centre is the order: standing,
+   then distance, then what the distance buys.
+
+   The whole ladder is one deck you swipe, your own rung first. Only that card
+   carries a full accent (owner, 2026-09-18): what is yours is solid, and every
+   rung you have not reached is the same palette drained to its -soft variant.
+   Colour is the thing that says which side of the line a card is on.
+
+   Every size names a rung (3xs/xs/sm/lg/xl/2xl); no number is written here. */
+
+/* The page's one heading now that the band headings are gone. */
+.ul__h2 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: var(--text-xl);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+/* ─── the deck ───────────────────────────────────────────────────────────
+   The quest carousel's mechanics, because a student who has swiped one row
+   should recognise the other: one card at a time, the row bleeding to the
+   viewport edge so the next card is visibly cut off and the row reads as
+   scrollable.
+
+   scroll-padding-left, not padding alone: snapping aligns to the SNAPPORT,
+   which padding does not inset, so `mandatory` scrolls the container by exactly
+   the padding and parks the first card flush against the viewport edge. That
+   is the trap .qd records, and this row would hit it the same way. */
+/* First on the page, so no top margin: `.ah` already carries 12px under the
+   app bar, which is the gap Earn, Discover and Me all open on, and a second
+   one here would drop this tab lower than its siblings. */
+.ul__deck { margin-top: 0; }
+.ud {
+  /* Positioned so a card's offsetParent is the deck: Unlock.jsx reads
+     offsetLeft off that to open the deck on the rung you are standing on. */
+  position: relative;
+  margin: 0 -16px;
+  padding: 3px 16px 8px;
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  scroll-padding-left: 16px;
+}
+.ud::-webkit-scrollbar { display: none; }
+.ud__card {
+  scroll-snap-align: start;
+  position: relative;
+  overflow: hidden;
+  flex: none;
+  width: 78%;
+  max-width: 340px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 18px 20px;
+  border-radius: var(--radius-hand);
+  color: var(--ink-900);
+  /* No floor: the held card carries a bar and its figures, and `stretch` on
+     the row gives every other card that height. */
+}
+/* The bar and its figures sit on the card's bottom edge, so the cards past it
+   — which have neither — end on their name where this one starts its bar. */
+.ud__standing { margin-top: auto; }
+.ud__fig {
+  margin: 9px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+/* R8's unit: the distance in the thing the student actually controls. */
+.ud__away {
+  margin: 3px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+/* The doodle bleeds behind the copy, so every text node takes a stacking
+   context of its own rather than relying on source order. */
+.ud__card > :not(.doodle) { position: relative; }
+.ud__card .doodle { opacity: 0.22; }
+.ud__tab {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+.ud__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-xl);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+/* One hue per rung, and no two rungs share one (Unlock.jsx's LEVEL_HUE). Each
+   card names its hue; the state decides the strength. */
+.ud__card--yellow { --rung: var(--accent-yellow); --rung-soft: var(--accent-yellow-soft); }
+.ud__card--coral { --rung: var(--accent-coral); --rung-soft: var(--accent-coral-soft); }
+.ud__card--pink { --rung: var(--accent-pink); --rung-soft: var(--accent-pink-soft); }
+.ud__card--orange { --rung: var(--accent-orange); --rung-soft: var(--accent-orange-soft); }
+.ud__card--blush { --rung: var(--accent-blush); --rung-soft: var(--accent-blush-soft); }
+
+/* Every rung but the one you are on is drained to its -soft variant, which the
+   design system defines as that hue at 22% over white (owner, 2026-09-18): the
+   card you are standing on is the only full accent on the screen. */
+.ud__card { background: var(--rung-soft); }
+.ud__card[data-state="held"] { background: var(--rung); }
+
+/* White type on the held card at the owner's instruction (2026-09-18) — and
+   only where the hue actually carries it. The token file's own rule is "white
+   text on coral, pink and violet; ink on the rest", and measured that is
+   coral 3.45:1 and pink 3.46:1 against white, over the 3:1 large text needs
+   and under the 4.5:1 the small lines need. The owner took that trade on coral
+   knowingly, having seen and rejected a coral deepened to 5.13:1 for reading
+   as a warning. Yellow, orange and blush carry white at 1.54, 2.34 and 1.88,
+   which is not a trade — it is illegible — so those rungs keep ink. */
+.ud__card--coral[data-state="held"],
+.ud__card--pink[data-state="held"] { color: var(--text-inverse); }
+/* Nothing on the held card is dimmed, which is the one thing that does help
+   it: the deck's 0.7 caps line measures 2.38:1 on coral. At full strength
+   every line is at the ground's own ratio, and size and letterspacing do the
+   separating instead. */
+.ud__card[data-state="held"] .ud__tab { opacity: 1; }
+
+
+/* ─── the gate ───────────────────────────────────────────────────────────── */
+.ul__gate { margin: 34px 0 12px; }
+.ul__gate-list { list-style: none; margin: 14px 0 0; padding: 0; }
+.ul__gate-list li {
+  display: flex;
+  gap: 10px;
+  padding: 5px 0;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+/* One 13px slot, whichever mark lands in it, so a ticked row and an open one
+   start their text on the same edge. */
+.ul__gate-mark { flex: none; width: 13px; height: 13px; margin-top: 3px; }
+/* Still open: the hollow mark, drawn rather than typed so it cannot be read
+   out as punctuation. The side margins centre the 6px dot in the tick's slot
+   without changing the dot itself. */
+.ul__gate-mark--open {
+  box-sizing: border-box;
+  width: 6px;
+  height: 6px;
+  margin: 7px 3.5px 0;
+  border: 1.5px solid var(--gray-400);
+  border-radius: 50%;
+}
+/* Cleared. The tick means exactly one thing on this screen — a requirement you
+   have met — which is why no perk anywhere on the page wears one. */
+.ul__gate-list li[data-state="met"] .ul__gate-mark { color: var(--violet-600); }
+/* The way back to the board, under the list (owner, 2026-09-21, variant B
+   of six): the words in the display face with the board's yellow highlighter
+   behind them — mission-tile.css .mt__pay's swipe, the same bar, tilt and
+   text-over-bar layering. A 44px line, ink whatever the hover (the system's
+   a:hover would recolour it: the two-class rule holds). Ink on yellow 11.97:1. */
+.ul__gate .ul__find {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 12px;
+  padding: 0 2px;
+  text-decoration: none;
+  color: var(--ink-900);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: -0.01em;
+}
+.ul__gate .ul__find:hover { color: var(--ink-900); }
+.ul__find-t { position: relative; display: inline-block; padding: 0 6px; }
+.ul__find-t::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 28%;
+  height: 56%;
+  border-radius: 3px;
+  background: var(--accent-yellow);
+  rotate: -1.5deg;
+}
+.ul__find-w { position: relative; }
+
+/* ─── what you hold ──────────────────────────────────────────────────────
+   Drawn, not listed (owner, 2026-09-18): a marked icon beside its name, two to
+   a row. Two fixed tracks rather than auto-fit, because the row count is the
+   point — a perk that wrapped alone onto a fifth row would read as the odd one
+   out rather than as the ninth of nine.
+
+   Reading across rather than down (owner, 2026-09-18) is what buys the labels
+   their width: at three to a row a tile had about 90px and "Student-exclusive
+   shop" broke over three lines. Beside its mark it has roughly 115 and takes
+   two. */
+.ul__now { margin-top: 34px; }
+.ul__grid {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 12px;
+}
+.ul__tile {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+/* The rung's hue on the chip at its -soft strength (owner, 2026-09-18: the
+   full accents read too heavy at this size), ink on the glyph.
+
+   The glyph cannot take the hue instead: measured, each accent against its own
+   -soft ground is 1.39 to 2.68:1, under the 3:1 a meaningful graphic needs, so
+   three of the five rungs would have gone invisible. Ink on -soft is 13.99 to
+   16.65:1, and the colour is carried by the disc, which is large enough not to
+   need a ratio at all. */
+.ul__chip {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+.ul__chip--yellow { background: var(--accent-yellow-soft); }
+.ul__chip--coral { background: var(--accent-coral-soft); }
+.ul__chip--pink { background: var(--accent-pink-soft); }
+.ul__chip--orange { background: var(--accent-orange-soft); }
+.ul__chip--blush { background: var(--accent-blush-soft); }
+.ul__tile-icon { flex: none; color: var(--ink-900); }
+.ul__tile-t {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  line-height: 1.35;
+  color: var(--text-primary);
+  /* "Student-exclusive" has nowhere to break inside a ~90px track and would
+     otherwise push its own tile wider than the track it sits in. */
+  overflow-wrap: anywhere;
+}
+
+/* ─── section heads ──────────────────────────────────────────────────────
+   Heading left, reference right, baselines aligned — the row Me and the board
+   already use for a group and its "view all". It wraps rather than squeezes:
+   at 320 the two together are wider than the column, and a heading that
+   shrinks to keep a link beside it is the worse trade. */
+.ul__sechead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 10px;
+  flex-wrap: wrap;
+}
+/* --text-3xs is the rung, which is .hub__viewall's: it is what this app sets a
+   link beside a heading in, and at any larger size this one does not fit
+   beside a display heading in a 288px column.
+
+   min-height, not padding, for the 44px floor: there is no vertical padding
+   here for it to stack on, which is the one shape where min-height is right in
+   this file. The negative block margin then stops that target INFLATING a
+   baseline-aligned row — the same trick .hub__viewall and .gb__viewall use. */
+.ul__ladder {
+  margin-left: auto;
+  margin-block: -12px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--violet-600);
+  text-decoration: none;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.ul__ladder:hover { text-decoration: underline; }

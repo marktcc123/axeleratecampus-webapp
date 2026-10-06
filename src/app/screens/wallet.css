@@ -1,0 +1,144 @@
+/* Wallet. The two figures reuse Me's split so the same numbers read the same
+ * way in both places.
+ */
+/* The cash figure runs larger here than on the hub: this screen exists for
+   that one number. */
+/* A wider cash column than the hub's 1.12fr, so the figure and a 44px pill
+   share a line at 390px. At 320 they do not, and the row wraps. */
+.wal__figs { grid-template-columns: 1.45fr 1fr; }
+
+/* The figure and its action on one line. `flex-wrap` because at 320px the
+   cash cell is 150px and "$133" plus a pill does not always fit — it drops the
+   button under the figure rather than squeezing it. */
+.wal__cash {
+  /* The figure, then Withdraw under it (owner, 2026-09-09) — a column, not a
+     row beside the number. */
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+  /* No top margin: the cash figure sits on the same line as the credits figure
+     beside it (owner, 2026-09-09) — the 10px here dropped it below. */
+}
+/* Withdraw as a quiet text control (owner, 2026-09-09): violet caps, underlined,
+   the Orders screen's review-link voice. 44px tall for the thumb; the negative
+   block margin keeps that box from pushing the figure block taller. Under the
+   minimum it greys and loses its underline. */
+.wal__acts { display: flex; flex-direction: column; align-items: flex-start; margin: -4px 0 -6px; }
+.wal__cash .wal__out {
+  flex: none; display: inline-flex; align-items: center; min-height: 44px; margin: 0; padding: 0 2px;
+  border: none; background: none; cursor: pointer;
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700; letter-spacing: var(--tracking-caps); text-transform: uppercase;
+  color: var(--violet-600); text-decoration: underline; text-underline-offset: 3px;
+}
+.wal__cash .wal__out:disabled { color: var(--gray-400); text-decoration: none; cursor: default; }
+.wal__file {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.w9line {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 14px; font-size: var(--text-xs); line-height: 1.4; color: var(--text-secondary);
+}
+.w9line label {
+  position: relative; flex: none; display: inline-flex; align-items: center; min-height: 44px;
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase;
+  color: var(--violet-600); text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+p.wal__w9 {
+  margin: 16px 0 0;
+  max-width: 36rem;
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+.wal__fig {
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+/* The two asides are the margin voice, tilted off the baseline. Credits get
+   the quieter grey because cash leads (R1). */
+.wal__aside {
+  margin-top: 12px;
+  font-family: var(--font-hand);
+  font-size: var(--text-sm);
+  line-height: 1.25;
+  color: var(--violet-600);
+  transform: rotate(-1.5deg);
+  transform-origin: left center;
+}
+/* --gray-500 is 4.23:1 on white, just under the 4.5 this size needs. */
+.wal__aside--quiet { color: var(--gray-600); }
+
+.wal__h2 {
+  margin: 30px 0 0;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: var(--text-lg);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.wal__unit {
+  margin-left: 4px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
+.wal__month {
+  margin: 18px 0 2px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.wal__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* border-box: min-height applies to the CONTENT box, so without this the
+     56px intent plus 24px of padding rendered an 81px row. me-hub.css records
+     the same fix for .set__row; these two were missed. */
+  box-sizing: border-box;
+  min-height: 56px;
+  padding: 12px 2px;
+  border-bottom: 1.5px solid var(--gray-100);
+}
+.wal__row:last-child { border-bottom: none; }
+.wal__mark {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--surface-quiet);
+  color: var(--ink-900);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+}
+/* Money out is the only row that is not a brand, so it is the only grey one. */
+.wal__mark[data-kind='in'] { background: var(--accent-lavender-soft); color: var(--violet-700); }
+.wal__row:nth-of-type(2n) .wal__mark[data-kind='in'] { background: var(--accent-blush-soft); color: var(--ink-900); }
+.wal__row:nth-of-type(3n) .wal__mark[data-kind='in'] { background: var(--accent-yellow-soft); color: var(--ink-900); }
+.wal__mark[data-kind='out'] { background: var(--gray-100); color: var(--gray-700); }
+.wal__row-title { margin: 0; font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+
+/* Points under a cash figure: the XP line's shape, in secondary rather than
+   the brand violet, so the two small lines under one figure read as two facts. */
+.wal__pts { color: var(--text-secondary); }
+
+/* A withdrawal that has not landed yet: the badge under its figure. */
+.wal__pending { display: block; margin-top: 4px; }
+.wal__row[data-pending='true'] .wal__row-title { color: var(--text-secondary); }

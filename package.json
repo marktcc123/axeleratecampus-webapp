@@ -1,0 +1,37 @@
+{
+  "name": "axelerate-website-h5",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "checkout": "node server/checkout.mjs",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:guards": "playwright test -g @guard",
+    "test:e2e:setup": "playwright install chromium"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.1",
+    "axelerate-design-system": "github:cakkrie/axelerate-design-system#809f31e",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.6",
+    "@vitejs/plugin-react": "^6.1.0",
+    "jsdom": "^30.0.1",
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
+  }
+}

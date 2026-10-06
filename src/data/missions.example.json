@@ -1,0 +1,509 @@
+[
+  {
+    "slug": "solra-unboxing-reel",
+    "title": "Solra — unboxing reel on your feed",
+    "brandId": "solra",
+    "campus": "Cornell Tech",
+    "payUsd": 25,
+    "tier": 1,
+    "tierName": "Explorer",
+    "minLevel": 1,
+    "hours": 0.75,
+    "format": "content",
+    "skills": [
+      "Content creation"
+    ],
+    "xp": 80,
+    "tags": [
+      {
+        "tone": "blush",
+        "icon": "play",
+        "label": "Digital"
+      },
+      {
+        "tone": "lavender",
+        "icon": "star",
+        "label": "K-beauty"
+      }
+    ],
+    "meta": "45 min · flexible this week",
+    "photoLabel": "Solra product shot",
+    "desc": "Film a 30–60 second unboxing of the Solra 12-pack and post it to your feed. Keep the first 3 seconds on the product and tag @solra.",
+    "steps": [
+      "Pick up the 12-pack at the campus desk",
+      "Film and post your reel",
+      "Drop the link in your dashboard"
+    ],
+    "creditPts": 500,
+    "spots": {
+      "taken": 4,
+      "total": 12
+    },
+    "deadline": "This week",
+    "perkBullets": [
+      {
+        "icon": "coffee-cup-2",
+        "lead": "Keep the pack:",
+        "text": "the 12-pack you film with is yours, on top of the $25."
+      },
+      {
+        "icon": "zap",
+        "lead": "One sitting:",
+        "text": "most students film, post and log inside 45 minutes."
+      },
+      {
+        "icon": "star",
+        "lead": "Credit lands fast:",
+        "text": "500 credit · $5 in shop, as soon as your link is logged."
+      }
+    ],
+    "support": [
+      "New to content missions? Hold the first 3 seconds on the product and tag @solra — that is the whole brief.",
+      "Anything unclear, message the campus desk before you film. Reshoots are not paid twice."
+    ],
+    "cover": "mission-solra-reel",
+    "detailCover": "mission-solra-unbox",
+    "deadlineOn": "2026-09-06",
+    "going": [
+      "marktao",
+      "mayaortiz",
+      "devonpark",
+      "priyaraman"
+    ]
+  },
+  {
+    "slug": "notely-chalk-the-quad",
+    "title": "Notely — chalk the quad before the drop",
+    "brandId": "notely",
+    "campus": "Cornell Tech",
+    "payUsd": 18,
+    "tier": 1,
+    "tierName": "Explorer",
+    "minLevel": 1,
+    "hours": 1,
+    "format": "field",
+    "skills": [
+      "Field work"
+    ],
+    "xp": 60,
+    "tags": [
+      {
+        "tone": "yellow",
+        "icon": "pin",
+        "label": "Physical"
+      }
+    ],
+    "meta": "1 hr · before Thursday",
+    "photoLabel": "Quad chalk spot",
+    "desc": "Chalk three Notely drops across the quad the evening before launch. Snap each spot in daylight the next morning.",
+    "steps": [
+      "Grab the stencil kit at the desk",
+      "Chalk 3 spots on the quad",
+      "Photo-proof each one"
+    ],
+    "creditPts": 300,
+    "spots": {
+      "taken": 2,
+      "total": 6
+    },
+    "deadline": "Before Thursday",
+    "perkBullets": [
+      {
+        "icon": "pin",
+        "lead": "Pick your hour:",
+        "text": "any evening before Thursday works, as long as the photos land Friday morning."
+      },
+      {
+        "icon": "star",
+        "lead": "Credit rewards:",
+        "text": "300 credit · $3 in shop, once all three photos are logged."
+      }
+    ],
+    "support": [
+      "Chalk only on paving, never on grass or brick. The campus desk has the approved spots.",
+      "Rain in the forecast? Message the desk and the window moves with it."
+    ],
+    "cover": "mission-notely-chalk",
+    "detailCover": "mission-notely-quad",
+    "deadlineOn": "2026-09-03",
+    "going": [
+      "devonpark",
+      "priyaraman"
+    ]
+  },
+  {
+    "slug": "vera-friday-popup-door",
+    "title": "Vera — scan tickets at Friday's pop-up",
+    "brandId": "vera",
+    "campus": "Cornell Tech",
+    "payUsd": 40,
+    "tier": 2,
+    "tierName": "Contributor",
+    "minLevel": 1,
+    "hours": 3,
+    "format": "event",
+    "skills": [
+      "Event work"
+    ],
+    "xp": 120,
+    "tags": [
+      {
+        "tone": "yellow",
+        "icon": "pin",
+        "label": "Physical"
+      }
+    ],
+    "meta": "Fri 6–9pm · Warehouse 12",
+    "photoLabel": "Pop-up door photo",
+    "desc": "Work the door at Vera's Friday pop-up: scan tickets, hand out wristbands, keep the line moving.",
+    "steps": [
+      "Check in with the crew lead at 5:45pm",
+      "Scan tickets 6–9pm",
+      "Close out with the lead"
+    ],
+    "creditPts": 800,
+    "spots": {
+      "taken": 5,
+      "total": 8
+    },
+    "deadline": "Friday",
+    "perkBullets": [
+      {
+        "icon": "fire",
+        "lead": "You are on the door:",
+        "text": "the first face every guest meets, and the crew lead is watching for regulars."
+      },
+      {
+        "icon": "star",
+        "lead": "Credit rewards:",
+        "text": "800 credit · $8 in shop, paid out with the cash."
+      }
+    ],
+    "support": [
+      "Arrive 5:45pm. Doors at 6. Late check-in gives the slot to the standby.",
+      "The crew lead handles anyone without a ticket. You never have to argue with a guest."
+    ],
+    "cover": "mission-vera-popup",
+    "detailCover": "mission-vera-scan",
+    "deadlineOn": "2026-09-04",
+    "going": [
+      "alexchen",
+      "samwhitfield",
+      "ninaadeyemi",
+      "marktao",
+      "mayaortiz"
+    ]
+  },
+  {
+    "slug": "solra-dorm-fridge-drop",
+    "title": "Solra — stock the dorm fridge drop",
+    "brandId": "solra",
+    "campus": "UCLA",
+    "payUsd": 30,
+    "tier": 1,
+    "tierName": "Explorer",
+    "minLevel": 1,
+    "hours": 1.5,
+    "format": "field",
+    "skills": [
+      "Field work"
+    ],
+    "xp": 70,
+    "tags": [
+      {
+        "tone": "yellow",
+        "icon": "pin",
+        "label": "Physical"
+      }
+    ],
+    "meta": "1.5 hr · Hedrick commons, Saturday",
+    "photoLabel": "Fridge drop photo",
+    "desc": "Stock the Solra fridge in Hedrick's commons for Saturday's drop: unload the crate, front the cans, tape up the QR card.",
+    "steps": [
+      "Collect the crate and the QR card at the desk",
+      "Stock and front the fridge by 11am",
+      "Photo-proof the shelf and log the count"
+    ],
+    "creditPts": 400,
+    "spots": {
+      "taken": 2,
+      "total": 6
+    },
+    "deadline": "Saturday",
+    "perkBullets": [
+      {
+        "icon": "pin",
+        "lead": "One morning:",
+        "text": "the crate is waiting at the desk from 9, and the whole job is done before lunch."
+      },
+      {
+        "icon": "star",
+        "lead": "Credit rewards:",
+        "text": "400 credit · $4 in shop, paid out with the cash."
+      }
+    ],
+    "support": [
+      "Take a can for yourself — that is the brand's rule, not a favour.",
+      "A locked fridge or a missing crate is the desk's problem, not yours; message them and the clock stops."
+    ],
+    "cover": "mission-solra-unbox",
+    "detailCover": "product-solra-can",
+    "deadlineOn": "2026-09-26",
+    "going": [
+      "devonpark",
+      "priyaraman"
+    ]
+  },
+  {
+    "slug": "notely-study-hall-photo-set",
+    "title": "Notely — photo set at the study hall",
+    "brandId": "notely",
+    "campus": "Cornell Tech",
+    "payUsd": 35,
+    "tier": 2,
+    "tierName": "Contributor",
+    "minLevel": 2,
+    "hours": 2,
+    "format": "content",
+    "skills": [
+      "Content creation"
+    ],
+    "xp": 100,
+    "tags": [
+      {
+        "tone": "blush",
+        "icon": "play",
+        "label": "Digital"
+      }
+    ],
+    "meta": "2 hr · Bloomberg Center, any weekday",
+    "photoLabel": "Study hall photo",
+    "desc": "Shoot a 12-frame photo set of Notely journals in use at the study hall — hands, desks, margins — for the brand's campus feed.",
+    "steps": [
+      "Pick up two journals at the desk",
+      "Shoot 12 frames across two tables",
+      "Upload the set and name your favourite three"
+    ],
+    "creditPts": 600,
+    "spots": {
+      "taken": 3,
+      "total": 5
+    },
+    "deadline": "By Oct 2",
+    "perkBullets": [
+      {
+        "icon": "pin",
+        "lead": "Your hours:",
+        "text": "any weekday the study hall is open, as long as the set lands by 2 October."
+      },
+      {
+        "icon": "star",
+        "lead": "Credit rewards:",
+        "text": "600 credit · $6 in shop, once the set is approved."
+      }
+    ],
+    "support": [
+      "Phones are fine; Notely wants the study hall as it is, not a studio.",
+      "Ask before you shoot anyone's hands — the desk has a one-line release you can show them."
+    ],
+    "cover": "mission-notely-quad",
+    "detailCover": "product-journal",
+    "deadlineOn": "2026-10-02",
+    "going": [
+      "jonahreed",
+      "mayaortiz",
+      "alexchen"
+    ]
+  },
+  {
+    "slug": "august-tea-tasting-table",
+    "title": "August — run the tea tasting table",
+    "brandId": "august-uncommon-tea",
+    "campus": "UCLA",
+    "payUsd": 28,
+    "tier": 1,
+    "tierName": "Explorer",
+    "minLevel": 1,
+    "hours": 2,
+    "format": "field",
+    "skills": [
+      "Field work"
+    ],
+    "xp": 70,
+    "tags": [
+      {
+        "tone": "yellow",
+        "icon": "pin",
+        "label": "Physical"
+      }
+    ],
+    "meta": "2 hr · Kerckhoff patio, Thursday",
+    "photoLabel": "Tasting table photo",
+    "desc": "Pour and talk through four August blends at a tasting table on Kerckhoff patio, and log which one people ask to buy.",
+    "steps": [
+      "Set up the table and the four flasks by 12",
+      "Pour and talk until 2",
+      "Log the asks and pack down"
+    ],
+    "creditPts": 400,
+    "spots": {
+      "taken": 1,
+      "total": 4
+    },
+    "deadline": "Thursday",
+    "perkBullets": [
+      {
+        "icon": "pin",
+        "lead": "Two hours outdoors:",
+        "text": "the flasks come ready, the tasting cards come printed, you bring the talk."
+      },
+      {
+        "icon": "star",
+        "lead": "Credit rewards:",
+        "text": "400 credit · $4 in shop, paid out with the cash."
+      }
+    ],
+    "support": [
+      "Hot water is refilled by the patio cafe; you never leave the table.",
+      "Rain moves the table under the arcade — the desk will text you the spot."
+    ],
+    "cover": "event-demo-table",
+    "detailCover": "product-tea-tin",
+    "deadlineOn": "2026-09-24",
+    "going": [
+      "samwhitfield"
+    ]
+  },
+  {
+    "slug": "dermabell-campus-launch",
+    "title": "Dermabell salon ambassador",
+    "brandId": "axelerate-beauty",
+    "campus": "Cornell Tech",
+    "payUsd": 50,
+    "tier": 4,
+    "tierName": "Trusted",
+    "minLevel": 4,
+    "hours": 4,
+    "format": "field",
+    "skills": [
+      "Sales",
+      "Field work"
+    ],
+    "xp": 1000,
+    "tags": [
+      {
+        "tone": "yellow",
+        "icon": "pin",
+        "label": "Physical"
+      },
+      {
+        "tone": "lavender",
+        "icon": "star",
+        "label": "K-beauty"
+      }
+    ],
+    "meta": "Ongoing · 4 spots",
+    "photoLabel": "Salon or product shot",
+    "desc": "Axelerate Beauty is sparking a K-beauty clinical revolution across the US. We are the US operating partner for Dermabell, and we need students who can walk into a salon and open a door.",
+    "steps": [
+      "Target & scout: identify salons and med-spas near campus",
+      "Introduce the AI Skin Analyzer and the 40-minute express K-facial",
+      "Hand over the training materials and log the visit"
+    ],
+    "creditPts": 8000,
+    "spots": {
+      "taken": 3,
+      "total": 4
+    },
+    "deadline": "Ongoing",
+    "perkBullets": [
+      {
+        "icon": "crown",
+        "lead": "10% commission:",
+        "text": "on an initial order, on top of the $50. A clinical package runs about $10,000."
+      },
+      {
+        "icon": "star",
+        "lead": "Credit rewards:",
+        "text": "8,000 credit · $80 in shop, for valid field-visit logs and materials."
+      },
+      {
+        "icon": "trophy",
+        "lead": "Training included:",
+        "text": "the full Dermabell materials, yours to keep and reuse."
+      }
+    ],
+    "support": [
+      "You never cold-pitch alone. The brief names the salons and the opening line.",
+      "A visit counts once it is logged, whether or not the salon buys."
+    ],
+    "cover": "mission-dermabell-salon",
+    "detailCover": "mission-dermabell-shelf",
+    "deadlineOn": null,
+    "going": [
+      "ninaadeyemi",
+      "marktao",
+      "mayaortiz"
+    ]
+  },
+  {
+    "slug": "loop-dorm-demo-night",
+    "title": "Loop — host a dorm demo night",
+    "brandId": "loop",
+    "campus": "Cornell Tech",
+    "payUsd": 65,
+    "tier": 4,
+    "tierName": "Trusted",
+    "minLevel": 4,
+    "hours": 3,
+    "format": "event",
+    "skills": [
+      "Event work",
+      "Hosting"
+    ],
+    "xp": 220,
+    "tags": [
+      {
+        "tone": "yellow",
+        "icon": "pin",
+        "label": "Physical"
+      }
+    ],
+    "meta": "3 hr · your dorm, your night",
+    "photoLabel": "Demo night setup",
+    "desc": "Host a Loop demo night in your dorm common room. Loop ships the kit, you bring the room and the people.",
+    "steps": [
+      "Book the common room and pick your night",
+      "Run the demo for 10+ people",
+      "Log the headcount and three photos"
+    ],
+    "creditPts": 1200,
+    "spots": {
+      "taken": 1,
+      "total": 3
+    },
+    "deadline": "Your night",
+    "perkBullets": [
+      {
+        "icon": "crown",
+        "lead": "You pick the night:",
+        "text": "any evening that fills the room. Loop works around you."
+      },
+      {
+        "icon": "star",
+        "lead": "Credit rewards:",
+        "text": "1,200 credit · $12 in shop, once the headcount is logged."
+      }
+    ],
+    "support": [
+      "Loop ships the kit to the campus desk a week ahead. Nothing to buy.",
+      "Under 10 people on the night? Log it anyway and the desk reschedules."
+    ],
+    "cover": "mission-loop-demo",
+    "detailCover": "mission-loop-dorm",
+    "deadlineOn": null,
+    "going": [
+      "mayaortiz"
+    ]
+  }
+]

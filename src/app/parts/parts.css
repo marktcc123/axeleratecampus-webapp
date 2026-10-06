@@ -1,0 +1,195 @@
+/* Board parts. Colours are tokens; the quest card's fill is the only
+   dynamic value and arrives as a var() string, never a hex. */
+
+/* Active quests — a horizontal scroll-snap carousel. It was a fanned stack of
+   overlapping cards; the design moved to one card at a time so each quest gets
+   its full copy at 390px instead of a one-line strip. The negative margins let
+   the row bleed to the viewport edge while its content stays on the 16px
+   gutter, so a card is visibly cut off and the row reads as scrollable. */
+.qd {
+  /* 6, not 14: the cards belong to the heading above them, and 14 read as a
+     gap between two blocks rather than a label on one. */
+  margin-top: 6px;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  margin-left: -16px;
+  margin-right: -16px;
+  padding: 3px 16px 6px;
+  /* padding alone does not hold the first card on the gutter: scroll-snap
+     aligns to the SNAPPORT, which padding does not inset, so `mandatory`
+     scrolled the container by exactly the 16px of padding-left and parked the
+     first card flush against the viewport edge. scroll-padding insets the
+     snapport, so the card rests on the same gutter as the heading above it.
+     The right edge still bleeds, which is what makes the row read scrollable. */
+  scroll-padding-left: 16px;
+}
+.qd::-webkit-scrollbar { display: none; }
+.qd__card {
+  scroll-snap-align: start;
+  flex: none;
+  width: 78%;
+  max-width: 340px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: var(--radius-hand);
+  padding: 16px 18px 14px;
+  color: var(--gray-0);
+}
+/* Bled off a corner at low opacity, so it reads as ink on the tint rather
+   than a pasted sticker. The mask itself is the base .doodle rule. */
+.qd__card[data-ink='true'] { color: var(--ink-900); }
+.qd__card .doodle { opacity: 0.22; }
+.qd__tab, .qd__title, .qd__desc, .qd__reward { position: relative; margin: 0; }
+.qd__tab {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  /* Fully opaque. Any opacity blends the label toward the card and spends
+     contrast it has none to spare on the pink and coral grounds. */
+  opacity: 1;
+}
+.qd__title {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  /* Tight, not the 26px slot the 21px title used to occupy — the deck is
+     meant to be shorter now, so the smaller type gets to take its 5px. */
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.qd__desc {
+  margin-top: 4px;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  min-height: 36px;
+  opacity: 1; /* blending costs contrast the pink and coral grounds cannot afford */
+}
+.qd__reward {
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  /* -soft, not --accent-yellow: the solid yellow is 2.82:1 on the pink card,
+     under the 3:1 that 19px bold needs. -soft clears it on all three
+     grounds (5.87 violet / 3.90 pink / 16.65 ink). */
+  /* Inherited, not fixed. The card sets white on a deep ground and ink on a
+     pale one (data-ink); a hardcoded white put white type on accent-yellow,
+     where it measures 1.54:1 — invisible. */
+  color: inherit;
+}
+
+/* Format tabs — folder tabs that sit on the panel below. */
+.ft { display: flex; align-items: flex-end; gap: 4px; padding: 16px 4px 0; }
+.ft__tab {
+  position: relative;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  flex: none;
+  min-height: 44px;
+  /* Both axes, not just the height. A short label — "All", once the shop grew
+     a third collection on 2026-09-21 — measured 36px wide against the 44px
+     floor. min-width, not extra padding, so the tabs that are already wide
+     enough do not grow with it. */
+  min-width: 44px;
+  justify-content: center;
+  padding: 12px 10px 17px;
+  margin-bottom: -10px;
+  border-radius: 11px 14px 0 0 / 13px 10px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  letter-spacing: -0.01em;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  transition: background var(--dur-fast) var(--ease-launch), color var(--dur-fast) var(--ease-launch);
+}
+.ft__tab:hover { background: var(--gray-200); color: var(--text-primary); }
+.ft__tab[aria-selected='true'] {
+  padding: 13px 11px 20px;
+  background: var(--surface-quiet);
+  color: var(--text-primary);
+  z-index: 2;
+}
+.ft__n { display: none; }
+.ft__tab[aria-selected='true'] .ft__n {
+  display: inline;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-brand);
+}
+
+/* Filter chips — the design draws bare text with a butter scribble when
+   active, not a bordered pill. What it does not draw is a 44px target: as
+   text alone the chip measured 22px tall, half the floor, on a product that
+   only renders to phones.
+   Both hold at once. WCAG 2.5.8 sizes the *target*, not the ink: the chip
+   paints nothing but its own type, and the padding that reaches 44px is
+   transparent. */
+.fc { display: flex; gap: 18px; align-items: center; overflow-x: auto; scrollbar-width: none; padding: 0; margin: -8px -3px -6px; }
+.fc::-webkit-scrollbar { display: none; }
+.fc__chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  /* Width too: "$25+" is only 34px of type, and the floor is both dimensions.
+     The padding is transparent, so the chip still looks like bare text. */
+  min-width: 44px;
+  justify-content: center;
+  padding: 0 1px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: var(--gray-600);
+  transition: color var(--dur-fast) var(--ease-launch);
+}
+.fc__chip[aria-pressed='true'] {
+  font-weight: 700;
+  color: var(--text-primary);
+  /* Under the text, not at the bottom of the 44px box the target needs. */
+  background: var(--scribble-butter) left calc(50% + 9px) / 100% 6px no-repeat;
+}
+/* Pills (the filter sheet, owner 2026-09-09): quiet surface, ink when on; they
+   wrap rather than scroll, and keep the 44px floor. The shorthand background
+   also clears the text chips' scribble. */
+/* The pill DRAWN is 34px tall (owner, 2026-09-09: shorter); the button stays
+   44px for the thumb and the sweep, and the pill is a ::before inset 5px top
+   and bottom inside it. No row gap: the boxes' spare 5px above and below is
+   the 10px between rows of pills. */
+/* Tighter (owner, 2026-09-09): 4px between pills sideways; the buttons'
+   negative block margin lets the 44px boxes overlap by 6, which brings the drawn
+   pills to 4px apart in the column too. A tap still lands on the nearer pill. */
+.fc--pill { flex-wrap: wrap; gap: 0 4px; margin: 2px 0 0; overflow: visible; }
+.fc--pill .fc__chip {
+  position: relative; isolation: isolate; margin: -3px 0;
+  min-height: 44px; padding: 0 14px; background: none;
+  color: var(--text-primary); font-weight: 600;
+}
+.fc--pill .fc__chip::before {
+  content: ''; position: absolute; inset: 5px 0; z-index: -1;
+  border-radius: var(--radius-pill); background: var(--surface-quiet);
+}
+.fc--pill .fc__chip[aria-pressed='true'] { background: none; color: var(--gray-0); font-weight: 700; }
+.fc--pill .fc__chip[aria-pressed='true']::before { background: var(--ink-900); }

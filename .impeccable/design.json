@@ -1,0 +1,512 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-25T23:20:00.000Z",
+  "title": "Design System: Axelerate",
+  "extensions": {
+    "colorMeta": {
+      "brand-violet": {
+        "role": "primary",
+        "displayName": "Marker Violet",
+        "canonical": "#6E2BEE",
+        "tonalRamp": [
+          "#23094E",
+          "#39127E",
+          "#4816A4",
+          "#5A1BCF",
+          "#6E2BEE",
+          "#8A4FFC",
+          "#C2A4FF",
+          "#EDE5FF"
+        ]
+      },
+      "brand-violet-strong": {
+        "role": "primary",
+        "displayName": "Deep Violet",
+        "canonical": "#5A1BCF",
+        "tonalRamp": [
+          "#23094E",
+          "#39127E",
+          "#4816A4",
+          "#5A1BCF",
+          "#6E2BEE",
+          "#8A4FFC",
+          "#C2A4FF",
+          "#EDE5FF"
+        ]
+      },
+      "brand-violet-soft": {
+        "role": "primary",
+        "displayName": "Violet Wash",
+        "canonical": "#F6F3FF",
+        "tonalRamp": [
+          "#23094E",
+          "#39127E",
+          "#4816A4",
+          "#5A1BCF",
+          "#6E2BEE",
+          "#8A4FFC",
+          "#C2A4FF",
+          "#EDE5FF"
+        ]
+      },
+      "brand-butter": {
+        "role": "secondary",
+        "displayName": "Butter",
+        "canonical": "#FFC93C",
+        "tonalRamp": [
+          "#5C3F00",
+          "#8A5900",
+          "#B98A1C",
+          "#E5A800",
+          "#FFC93C",
+          "#F5DA93",
+          "#FAEBBE",
+          "#FDF6E2"
+        ]
+      },
+      "lilac": {
+        "role": "tertiary",
+        "displayName": "Lilac",
+        "canonical": "#C2A4FF",
+        "tonalRamp": [
+          "#23094E",
+          "#39127E",
+          "#4816A4",
+          "#5A1BCF",
+          "#6E2BEE",
+          "#8A4FFC",
+          "#C2A4FF",
+          "#EDE5FF"
+        ]
+      },
+      "lilac-soft": {
+        "role": "tertiary",
+        "displayName": "Lilac Wash",
+        "canonical": "#EDE5FF",
+        "tonalRamp": [
+          "#23094E",
+          "#39127E",
+          "#4816A4",
+          "#5A1BCF",
+          "#6E2BEE",
+          "#8A4FFC",
+          "#C2A4FF",
+          "#EDE5FF"
+        ]
+      },
+      "coral": {
+        "role": "tertiary",
+        "displayName": "Coral",
+        "canonical": "#FF6B4A",
+        "tonalRamp": [
+          "#3E0000",
+          "#690000",
+          "#8C0000",
+          "#AE1700",
+          "#D2401F",
+          "#FD6948",
+          "#FF906E",
+          "#FFD9CB"
+        ]
+      },
+      "cyan": {
+        "role": "tertiary",
+        "displayName": "Cyan",
+        "canonical": "#28C3EE",
+        "tonalRamp": [
+          "#001633",
+          "#003157",
+          "#004E75",
+          "#006B93",
+          "#008AB3",
+          "#00B0DA",
+          "#46D7FF",
+          "#C7F0FF"
+        ]
+      },
+      "lime": {
+        "role": "tertiary",
+        "displayName": "Lime",
+        "canonical": "#9BD22B",
+        "tonalRamp": [
+          "#001900",
+          "#0B3400",
+          "#255000",
+          "#3F6E00",
+          "#5B8C00",
+          "#7EB200",
+          "#A2DA36",
+          "#DCF1C1"
+        ]
+      },
+      "pink": {
+        "role": "tertiary",
+        "displayName": "Pink",
+        "canonical": "#E5237E",
+        "tonalRamp": [
+          "#41000F",
+          "#6E0025",
+          "#92003E",
+          "#B60059",
+          "#DA0F76",
+          "#FF4B99",
+          "#FF76BF",
+          "#FFD2E6"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#171029",
+        "tonalRamp": [
+          "#0B0714",
+          "#171029",
+          "#221A38",
+          "#2F2649",
+          "#453A66",
+          "#6B5F91",
+          "#A79CC4",
+          "#DDD7EC"
+        ]
+      },
+      "page": {
+        "role": "neutral",
+        "displayName": "Page",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#1D1B18",
+          "#2F2C27",
+          "#48453D",
+          "#615D53",
+          "#807B6E",
+          "#A5A093",
+          "#C9C5BA",
+          "#EFEDE7"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Ground",
+        "canonical": "#F8F7F4",
+        "tonalRamp": [
+          "#1D1B18",
+          "#2F2C27",
+          "#48453D",
+          "#615D53",
+          "#807B6E",
+          "#A5A093",
+          "#C9C5BA",
+          "#EFEDE7"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "#EFEDE7",
+        "tonalRamp": [
+          "#1D1B18",
+          "#2F2C27",
+          "#48453D",
+          "#615D53",
+          "#807B6E",
+          "#A5A093",
+          "#C9C5BA",
+          "#EFEDE7"
+        ]
+      },
+      "pencil": {
+        "role": "neutral",
+        "displayName": "Pencil",
+        "canonical": "#A5A093",
+        "tonalRamp": [
+          "#1D1B18",
+          "#2F2C27",
+          "#48453D",
+          "#615D53",
+          "#807B6E",
+          "#A5A093",
+          "#C9C5BA",
+          "#EFEDE7"
+        ]
+      },
+      "text-secondary": {
+        "role": "neutral",
+        "displayName": "Text Secondary",
+        "canonical": "#615D53",
+        "tonalRamp": [
+          "#1D1B18",
+          "#2F2C27",
+          "#48453D",
+          "#615D53",
+          "#807B6E",
+          "#A5A093",
+          "#C9C5BA",
+          "#EFEDE7"
+        ]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Text Muted",
+        "canonical": "#767166",
+        "tonalRamp": [
+          "#1D1B18",
+          "#2F2C27",
+          "#48453D",
+          "#615D53",
+          "#807B6E",
+          "#A5A093",
+          "#C9C5BA",
+          "#EFEDE7"
+        ]
+      },
+      "danger": {
+        "role": "neutral",
+        "displayName": "Danger Red",
+        "canonical": "#C7333B",
+        "tonalRamp": [
+          "#3D0000",
+          "#680000",
+          "#8B0006",
+          "#AE1326",
+          "#D13D43",
+          "#FC6666",
+          "#FF8D8A",
+          "#FFD8D4"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display · DynaPuff",
+        "purpose": "The screen's own name. One per screen, always the h1, never inside a component."
+      },
+      "headline": {
+        "displayName": "Headline · Bricolage 800",
+        "purpose": "Money, XP, prices, counts. The figures a student came for."
+      },
+      "title": {
+        "displayName": "Title · Bricolage 700",
+        "purpose": "Section headings and card titles."
+      },
+      "body": {
+        "displayName": "Body · Instrument Sans",
+        "purpose": "Prose, list rows, UI text. The workhorse at 15px."
+      },
+      "label": {
+        "displayName": "Label · Gabarito caps",
+        "purpose": "Caps labels, stamps, stock counts, metadata. tabular-nums on anything that counts."
+      },
+      "annotation": {
+        "displayName": "Annotation · Lacquer",
+        "purpose": "The margin voice. One short phrase per view, tilted, never load-bearing."
+      }
+    },
+    "shadows": [
+      {
+        "name": "paper",
+        "value": "2px 3px 0 rgba(23,16,41,.10)",
+        "purpose": "One sheet resting on another. Cards, badges, buttons, ticket stubs."
+      },
+      {
+        "name": "paper-lg",
+        "value": "4px 6px 0 rgba(23,16,41,.13)",
+        "purpose": "The hover state, and the only thing hover changes."
+      },
+      {
+        "name": "paper-inset",
+        "value": "2px 2px 0 rgba(23,16,41,.05)",
+        "purpose": "A sheet pressed into the surface."
+      },
+      {
+        "name": "hand",
+        "value": "3px 4px 0 rgba(110,43,238,.16)",
+        "purpose": "The violet variant, for objects sitting on a violet ground."
+      },
+      {
+        "name": "sticker-cut",
+        "value": "0 0 0 2.5px #FFFFFF",
+        "purpose": "Not a shadow: the white keyline of a die-cut sticker. Always composed before a paper shadow."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-launch",
+        "value": "cubic-bezier(.2,0,0,1)",
+        "purpose": "Default. Fast out, no bounce."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(.5,0,.2,1)",
+        "purpose": "Symmetric state changes."
+      },
+      {
+        "name": "dur-fast",
+        "value": "120ms",
+        "purpose": "Colour and background changes."
+      },
+      {
+        "name": "dur-med",
+        "value": "200ms",
+        "purpose": "Shadow lift, the tab blob, dialog entrance."
+      },
+      {
+        "name": "dur-slow",
+        "value": "320ms",
+        "purpose": "The longest thing the system allows."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "640px"
+      },
+      {
+        "name": "tablet",
+        "value": "1024px"
+      },
+      {
+        "name": "desktop",
+        "value": "1025px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one route forward on a screen. Die-cut keyline over a flat paper shadow.",
+      "html": "<button class=\"ds-btn-primary\">Get verified</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 18px;border:none;border-radius:999px;background:#6E2BEE;color:#fff;font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;box-shadow:0 0 0 2.5px #fff,2px 3px 0 rgba(23,16,41,.10);transition:box-shadow 200ms cubic-bezier(.2,0,0,1),background 120ms cubic-bezier(.2,0,0,1)}.ds-btn-primary:hover{background:#5A1BCF;box-shadow:0 0 0 2.5px #fff,4px 6px 0 rgba(23,16,41,.13)}.ds-btn-primary:focus-visible{outline:2px solid #8A4FFC;outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "White fill with a pencil ring standing in for a border.",
+      "html": "<button class=\"ds-btn-secondary\">Clear filters</button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 18px;border:none;border-radius:999px;background:#fff;color:#171029;font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;box-shadow:0 0 0 2.5px #fff,0 0 0 4px #C9C5BA,2px 3px 0 rgba(23,16,41,.10);transition:box-shadow 200ms cubic-bezier(.2,0,0,1)}.ds-btn-secondary:hover{box-shadow:0 0 0 2.5px #fff,0 0 0 4px #807B6E,4px 6px 0 rgba(23,16,41,.13)}.ds-btn-secondary:focus-visible{outline:2px solid #8A4FFC;outline-offset:2px}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "No box. A bottom pencil line and wobbly top corners; focus sweeps a butter highlighter across the bottom of the field. The system's signature interaction.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">School email</span><input class=\"ds-input\" placeholder=\"you@school.edu\"></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:6px;font-family:\"Instrument Sans\",system-ui,sans-serif}.ds-field-label{font-family:Gabarito,system-ui,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#615D53}.ds-input{height:44px;padding:0 12px;border:none;border-bottom:2px solid #A5A093;border-radius:9px 11px 3px 3px/11px 9px 3px 3px;background:#F8F7F4;font:inherit;font-size:14.5px;color:#171029;transition:border-color 120ms,box-shadow 120ms,background 120ms}.ds-input::placeholder{color:#767166}.ds-input:focus{outline:none;background:#fff;border-bottom-color:#6E2BEE;box-shadow:inset 0 -9px 0 #FAEBBE}"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Wobbly corners, flat paper shadow. Hover lifts the shadow and washes the surface 5% toward ink; nothing moves.",
+      "html": "<div class=\"ds-card\"><p class=\"ds-card-caps\">Digital · K-beauty · 45 min</p><h3 class=\"ds-card-title\">Solra — unboxing reel on your feed</h3><p class=\"ds-card-body\">Film a 30-60 second unboxing and post it to your feed.</p></div>",
+      "css": ".ds-card{max-width:340px;background:#fff;border-radius:14px 17px 13px 18px/17px 14px 18px 13px;padding:24px;box-shadow:2px 3px 0 rgba(23,16,41,.10);font-family:\"Instrument Sans\",system-ui,sans-serif;cursor:pointer;transition:box-shadow 200ms cubic-bezier(.2,0,0,1)}.ds-card:hover{background-image:linear-gradient(rgba(23,16,41,.05),rgba(23,16,41,.05));box-shadow:4px 6px 0 rgba(23,16,41,.13)}.ds-card-caps{margin:0;font-family:Gabarito,system-ui,sans-serif;font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#615D53}.ds-card-title{margin:4px 0 0;font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;line-height:1.15;color:#171029}.ds-card-body{margin:8px 0 0;font-size:15px;line-height:1.55;color:#48453D}"
+    },
+    {
+      "name": "Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "A die-cut sticker. Pill, tinted, with a keyline and a flat shadow.",
+      "html": "<span class=\"ds-badge\">crew</span><span class=\"ds-badge ds-badge-lime\">shipped</span><span class=\"ds-badge ds-badge-neutral\">default</span>",
+      "css": ".ds-badge{display:inline-flex;align-items:center;height:24px;padding:0 11px;margin-right:8px;border-radius:999px;background:#EDE5FF;color:#171029;font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-size:12px;font-weight:700;white-space:nowrap;box-shadow:2px 2px 0 rgba(23,16,41,.14)}.ds-badge-lime{background:#9BD22B}.ds-badge-neutral{background:#F8F7F4;color:#48453D}"
+    },
+    {
+      "name": "Bottom Tab Bar",
+      "kind": "nav",
+      "refersTo": "tab-bar-blob",
+      "description": "A floating white pill. The current tab grows a hand-drawn blob in its own tint behind the icon. Labels are visually hidden; blob plus icon carry the state.",
+      "html": "<nav class=\"ds-tabs\"><button class=\"ds-tab ds-tab-current\" aria-label=\"Gigs\"><span class=\"ds-blob\"></span><svg class=\"ds-ic\" viewBox=\"0 0 60 60\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15.5 8.5 C16.5 22 18.5 38 21 52.5\"/><path d=\"M17 12.5 C27 8.5 33 15.5 43.5 11.5 C44.8 18.2 46.2 24 48 30 C38 34.5 30.5 27.5 20.5 32\"/></svg></button><button class=\"ds-tab\" aria-label=\"Perks\"><svg class=\"ds-ic\" viewBox=\"0 0 60 60\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M13.5 22.5 C24 20.8 36 20.9 46.8 22.2 C48.5 31.5 49.3 40.5 49 49.5 C36.5 51.5 23 51.4 11.5 49.8 C11.6 40.5 12.3 31.5 13.5 22.5 Z\"/><path d=\"M22.5 22 C21.8 15 24.8 9.5 30.2 9.4 C35.8 9.3 38.6 14.8 38.2 21.6\"/></svg></button><button class=\"ds-tab\" aria-label=\"Application\"><svg class=\"ds-ic\" viewBox=\"0 0 60 60\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M11.5 14.5 L15.5 18.5 L22.5 10.5\"/><path d=\"M30 15 C36.5 14.6 42.5 14.7 48.5 15.1\"/><path d=\"M11.5 32.5 L15.5 36.5 L22.5 28.5\"/><path d=\"M30 33 C36.5 32.6 42.5 32.7 48.5 33.1\"/><path d=\"M11.5 50.5 L15.5 54.5 L22.5 46.5\"/><path d=\"M30 51 C36.5 50.6 42.5 50.7 48.5 51.1\"/></svg></button><button class=\"ds-tab\" aria-label=\"Me\"><svg class=\"ds-ic\" viewBox=\"0 0 60 60\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M30 33.5 C23.2 33.5 17.8 27.9 17.8 21.2 C17.8 14.4 23.2 9 30 9 C36.8 9 42.2 14.4 42.2 21.2 C42.2 27.9 36.8 33.5 30 33.5 Z\"/><path d=\"M10.5 52.5 C13.5 43 21 38 30 38 C39 38 46.5 43 49.5 52.5\"/></svg></button></nav>",
+      "css": ".ds-tabs{display:inline-flex;align-items:center;gap:6px;padding:1px 2px;border-radius:999px;background:#fff;box-shadow:2px 3px 0 rgba(23,16,41,.10)}.ds-tab{position:relative;width:52px;height:52px;display:flex;align-items:center;justify-content:center;border:none;background:none;cursor:pointer;color:#615D53}.ds-blob{position:absolute;width:40px;height:40px;border-radius:58% 42% 52% 48%/48% 60% 40% 52%;background:#EDE5FF;transform:rotate(-8deg) scale(1);transition:transform 200ms cubic-bezier(.2,0,0,1)}.ds-tab-current{color:#171029}.ds-ic{position:relative;width:30px;height:30px}@media (prefers-reduced-motion:reduce){.ds-blob{transition:none}}.ds-tab:hover{color:#171029}.ds-tab:focus-visible{outline:2px solid #8A4FFC;outline-offset:-4px;border-radius:999px}"
+    },
+    {
+      "name": "Ticket Stub",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "An event ticket. Two radial gradients punch a notch through both edges at the tear line, intersected so only what both masks agree is opaque survives.",
+      "html": "<a class=\"ds-stub-link\" href=\"#\"><div class=\"ds-stub\"><div class=\"ds-stub-date\"><span class=\"ds-stub-when\">Sat · Aug</span><span class=\"ds-stub-day\">29</span><span class=\"ds-stub-admit\">admit one</span></div><div class=\"ds-stub-mid\"><span class=\"ds-stub-title\">Vera pop-up — door crew</span><span class=\"ds-stub-meta\">Warehouse 12 · 6–9pm</span></div></div></a>",
+      "css": ".ds-stub{display:flex;align-items:stretch;max-width:340px;background:#F8F7F4;border-radius:14px 17px 13px 18px/17px 14px 18px 13px;font-family:\"Instrument Sans\",system-ui,sans-serif;-webkit-mask:radial-gradient(circle at 92px 0,transparent 8px,#000 8.5px),radial-gradient(circle at 92px 100%,transparent 8px,#000 8.5px);-webkit-mask-composite:source-in;mask:radial-gradient(circle at 92px 0,transparent 8px,#000 8.5px),radial-gradient(circle at 92px 100%,transparent 8px,#000 8.5px);mask-composite:intersect}.ds-stub-date{width:92px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:18px 0;border-right:1.5px dashed #C9C5BA}.ds-stub-when{font-family:Gabarito,system-ui,sans-serif;font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#615D53}.ds-stub-day{font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-weight:800;font-size:28px;letter-spacing:-.02em;line-height:1.05;color:#171029}.ds-stub-admit{margin-top:2px;font-family:Gabarito,system-ui,sans-serif;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#615D53}.ds-stub-mid{flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:5px}.ds-stub-title{font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-weight:700;font-size:15px;letter-spacing:-.01em;color:#171029}.ds-stub-meta{font-family:Gabarito,system-ui,sans-serif;font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#615D53}.ds-stub-link{display:inline-block;text-decoration:none;color:inherit}.ds-stub-link .ds-stub{transition:box-shadow 200ms cubic-bezier(.2,0,0,1)}.ds-stub-link:hover .ds-stub,.ds-stub-link:focus-visible .ds-stub{box-shadow:4px 6px 0 rgba(23,16,41,.13)}.ds-stub-link:focus-visible{outline:2px solid #8A4FFC;outline-offset:3px;border-radius:14px}@media (prefers-reduced-motion:reduce){.ds-stub-link .ds-stub{transition:none}}"
+    },
+    {
+      "name": "Ringed Figure",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The one number that matters, with a marker circle drawn around it. The system's answer to a hero metric: no gradient, no supporting stats, just the figure and the ring.",
+      "html": "<div class=\"ds-fig\"><span class=\"ds-fig-label\">Cash</span><span class=\"ds-fig-ring\"><span class=\"ds-fig-value\">$133</span></span><span class=\"ds-fig-note\">spend or withdraw</span></div>",
+      "css": ".ds-fig{display:inline-flex;flex-direction:column;align-items:flex-start;font-family:\"Instrument Sans\",system-ui,sans-serif}.ds-fig-label{font-family:Gabarito,system-ui,sans-serif;font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#615D53}.ds-fig-ring{position:relative;display:inline-block;width:max-content;margin-top:10px}.ds-fig-ring::before{content:\"\";position:absolute;inset:-8px -14px -6px -12px;background:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 60' preserveAspectRatio='none'%3E%3Cellipse cx='60' cy='30' rx='55' ry='25' fill='none' stroke='%236E2BEE' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E\") center/100% 100% no-repeat;opacity:.85;pointer-events:none}.ds-fig-value{position:relative;font-family:Gabarito,system-ui,sans-serif;font-weight:700;font-size:28px;letter-spacing:-.01em;font-variant-numeric:tabular-nums;color:#171029}.ds-fig-note{margin-top:12px;font-family:Lacquer,cursive;font-size:15px;color:#6E2BEE;transform:rotate(-1.5deg);transform-origin:left center}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Campus Bulletin Board",
+    "overview": "A cork board outside a lecture hall, three weeks into term. Flyers overlap at slight angles because someone pinned them in a hurry. A drop is announced on a card that is literally a card. Someone has circled a number in marker. Nothing on the board is generated; every piece was made by a person and put there by a person.\n\nThis is a phone-first H5 for students between classes, so the board is dense and everything on it is legible in one pass, but density never becomes uniformity: a mission tile, a quest card, a folder and a ticket stub are four different objects and they look like four different objects. Colour is carried by the paper, not by the wall.\n\nThe system rejects three specific things, named by the owner: a job board, a creator-commerce feed, and an enterprise SaaS admin. The third is the easiest to drift into when building app screens rather than marketing pages. Gamification is deliberately not rejected.",
+    "keyCharacteristics": [
+      "Hand-drawn geometry: wobbly radii, flat offset shadows, marker circles, tally strokes",
+      "Colour lives on paper objects, never on page backgrounds or navigation chrome",
+      "Five type families, each with one job, and a five-rung size ladder",
+      "Nothing in the system blurs and nothing moves on hover",
+      "Every control clears a 44px touch target, whatever the drawn ink measures"
+    ],
+    "rules": [
+      {
+        "name": "The Paper Objects Rule",
+        "body": "Accents belong to things you could pick up: folders, bubbles, notes, stickers, cards. They are never a page background and never navigation chrome. The wall stays white.",
+        "section": "colors"
+      },
+      {
+        "name": "The Navigation Stays Core Rule",
+        "body": "Tabs, segmented switches and nav chrome use violet, white and ink only. The bottom tab bar is the exception: each of its four fixed destinations carries its own soft accent behind the active icon, so a glance at the colour says where you are before the icon is read. Four destinations that never reorder can be learned as colours; a variable nav cannot.",
+        "section": "colors"
+      },
+      {
+        "name": "The Measured Band Rule",
+        "body": "Text on a coloured band is measured, never assumed. Four of the five bands in this app failed AA as first drawn, and coral with white text was 2.82:1.",
+        "section": "colors"
+      },
+      {
+        "name": "The Five Rungs Rule",
+        "body": "Every font size names a rung: 10 / 12 / 15 / 18 / 22px. No stylesheet writes a number. Picking a size by eye is what produced 130 hardcoded values across 25 sizes down to 9px before the ladder existed.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Note Rule",
+        "body": "Lacquer is one short phrase per view, tilted off the baseline, never a sentence, and never anything the screen cannot be read without. If it carries information, it is a lede in body type, not a note.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "Sentence case everywhere, headlines and buttons included. The only uppercase is the DynaPuff screen title and the Gabarito caps label, both stamps rather than sentences.",
+        "section": "typography"
+      },
+      {
+        "name": "The Ground Casts No Shadow Rule",
+        "body": "A full-bleed panel is the ground the screen stands on, and ground does not cast a shadow. Only things resting on that ground cast.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Nothing Moves Rule",
+        "body": "Hover raises the shadow and may wash the surface. It never translates, never tilts, never scales. Tilt is a resting property: cards and folders are drawn at ±1-4° and stay there.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do name a rung for every font size: 10 / 12 / 15 / 18 / 22px. Never write a number into a stylesheet.",
+      "Do give every control a 44px target even when the drawn ink is smaller. The target is sized, not the ink.",
+      "Do measure contrast on any new coloured band before shipping it.",
+      "Do keep tilt as a resting property. Cards and folders are drawn at ±1-4° and stay there.",
+      "Do let a full-bleed panel run off the bottom of the screen. It is the ground; it reaches the floor.",
+      "Do change components in axelerate-design-system and reach the app by bumping the pinned SHA."
+    ],
+    "donts": [
+      "Don't build a job board. No rows of near-identical listings, no filter rail that outweighs the content.",
+      "Don't build a creator-commerce feed. No cover images wall-to-wall, no follower counts as the headline.",
+      "Don't build an enterprise SaaS admin. No grey sidebar, no data tables, no dashboard cards, no navy.",
+      "Don't move anything on hover. No translate, no tilt, no scale. The shadow lifts and that is all.",
+      "Don't blur. If a shadow has a blur radius, it is not from this system.",
+      "Don't put an accent on a page background or on navigation chrome.",
+      "Don't put white text on coral (2.82:1) or any other band colour you have not measured.",
+      "Don't use border-left or border-right greater than 1px as a coloured stripe.",
+      "Don't let Lacquer carry information. If the screen cannot be read without it, it is not a note.",
+      "Don't hold gamification back. XP, levels, streaks and quests are wanted."
+    ]
+  }
+}

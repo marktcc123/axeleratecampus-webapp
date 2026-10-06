@@ -1,0 +1,63 @@
+.page { padding: var(--space-2xl) 0 var(--space-3xl); }
+.page__h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-4xl);
+  letter-spacing: var(--tracking-tighter);
+  line-height: var(--leading-tight);
+  margin: 0 0 var(--space-md);
+  max-width: 20ch;
+}
+.page__lede { font-size: var(--text-lg); color: var(--text-secondary); max-width: 56ch; margin: 0 0 var(--space-xl); }
+.benefits { display: grid; gap: var(--space-md); margin: var(--space-xl) 0; }
+.benefits h3 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg); margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
+.benefits p { margin: 0; color: var(--text-secondary); font-size: var(--text-sm); }
+@media (min-width: 641px) { .benefits { grid-template-columns: repeat(3, 1fr); } }
+.page__cta { display: flex; flex-direction: column; gap: var(--space-xs); align-items: flex-start; }
+
+.legal { max-width: 720; }
+.legal__updated {
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.legal__h2 { font-size: var(--text-xl); }
+.legal__section { margin-bottom: var(--space-xl); }
+.legal__section p {
+  margin: 0 0 12px;
+  max-width: 62ch;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+}
+.legal__draft {
+  display: inline-block;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--warning-fg);
+  background: var(--warning-bg);
+  padding: 6px 10px;
+  border-radius: var(--radius-hand-sm);
+  margin-bottom: var(--space-xl);
+}
+
+/* App-owned wrapper for Toast. Below md it spans gutter-to-gutter, so the
+   component's max-width:100% resolves against the viewport, not its own
+   340px — the design system is never overridden (spec §3.3). */
+.toast-slot {
+  position: fixed;
+  z-index: 200;
+  bottom: var(--gutter);
+  left: var(--gutter);
+  right: var(--gutter);
+}
+@media (min-width: 641px) {
+  .toast-slot { left: auto; right: var(--space-lg); bottom: var(--space-lg); }
+}

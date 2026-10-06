@@ -1,0 +1,567 @@
+/* The admin console. All rules scoped under .adm: DS components inject their
+   styles at JS-execution time, after this stylesheet, so an unscoped (0,1,0)
+   rule on an element wearing an ax-* class loses the tie. */
+.adm { padding-bottom: 26px; }
+
+.adm__who {
+  margin: 3px 0 0;
+  font-size: var(--text-xs);
+  color: var(--gray-600);
+}
+
+/* Folder tabs, the mission board's own pattern (.ft in parts.css): gray-100
+   at rest, cream when selected, a wobbly asymmetric radius, and the selected
+   one biting into the panel below so the two read as one folder.
+   
+   The one departure the board does not need: nine tabs cannot fit a 520px
+   column, so this scrolls. The overlap therefore comes from the panel being
+   pulled UP rather than the tabs being pushed DOWN — a tab with a negative
+   bottom margin would be clipped by this container's own overflow. */
+.adm__tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* Full-bleed: .app__col carries 16px of padding, so -16px exactly. */
+  margin: 16px -16px 0;
+  padding: 0 16px;
+}
+.adm__tabs::-webkit-scrollbar { display: none; }
+
+.adm .adm__tab {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  /* Load-bearing: this is an <a>, so it takes content-box, and min-height on a
+     content box STACKS on the padding. Without it the 44px floor plus 29px of
+     padding rendered a 73px tab — the same trap me-hub.css records for
+     .set__row. Buttons here are already border-box; anchors are not. */
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 8px 11px 15px;
+  border-radius: 11px 14px 0 0 / 13px 10px 0 0;
+  background: var(--gray-100);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  letter-spacing: -0.01em;
+  color: var(--gray-600);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease-launch), color var(--dur-fast) var(--ease-launch);
+}
+.adm .adm__tab:hover { background: var(--gray-200); color: var(--text-primary); }
+/* NavLink adds .active itself; z-index 2 puts the selected tab above the
+   panel so their shared cream meets with no seam. */
+.adm .adm__tab.active {
+  padding: 9px 12px 18px;
+  background: var(--surface-quiet);
+  color: var(--text-primary);
+  z-index: 2;
+}
+.adm__tab-n {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  /* gray-600, not gray-500: at 10px this needs 4.5:1 and gray-500 on the
+     inactive tab's gray-100 is 3.60. gray-600 is 5.61. Caught by the WCAG
+     sweep, not by eye. */
+  color: var(--gray-600);
+}
+/* The board hides the count on unselected tabs. Here it is the whole signal —
+   how much work is waiting behind a tab nobody is looking at — so it stays,
+   and only its weight changes. */
+.adm .adm__tab.active .adm__tab-n { color: var(--text-brand); }
+
+/* The panel the tabs sit on, following .gb__panel: cream, full-bleed, pulled
+   up so the selected tab bites into it.
+   No z-index here, deliberately. Positioned with `z-index: auto` the panel
+   still paints over the bottom lip of every inactive tab (it comes later in
+   the DOM) and still under the selected one (that tab asks for 2), so the
+   folder reads the same — but the panel no longer opens a stacking context,
+   and a dialog inside it is no longer trapped beneath it. With z-index 1 here,
+   every catalogue form's footer was painted over by the app's tab bar (z 40),
+   which made Publish unclickable on a phone. */
+.adm__panel {
+  position: relative;
+  /* Bites into the tabs so the selected one reads as the same sheet of paper.
+     A 44px tab less this overlap is ~32px of visible tab. */
+  margin: -12px -16px 0;
+  overflow-x: clip;
+  background: var(--surface-quiet);
+  border-radius: 22px 22px 20px 22px / 18px 18px 16px 18px;
+  padding: 26px 16px 28px;
+}
+
+.adm__empty { padding: 34px 0; }
+.adm__empty-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+.adm__empty-note { margin: 6px 0 0; font-size: var(--text-sm); color: var(--gray-600); }
+
+
+/* Above the dock, which owns the bottom 82px. */
+.adm__toast {
+  position: fixed;
+  left: 50%;
+  bottom: 96px;
+  transform: translateX(-50%);
+  z-index: 40;
+  width: min(340px, calc(100vw - 36px));
+}
+
+/* The cream panel is the desk; these are the paper objects on it. Without them
+   every panel was one flat cream slab with headings floating in it. */
+.adm-card {
+  background: var(--gray-0);
+  border-radius: var(--radius-hand);
+  box-shadow: var(--shadow-paper);
+  padding: 4px 0;
+}
+
+/* Four figures, two across, hairline-divided — not four 38px hero numbers.
+   Stays 2-up at 320: the widest figure here is ~72px at 22px extrabold. */
+.adm-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 0;
+}
+.adm-stat { padding: 13px 15px; min-width: 0; }
+.adm-stat:nth-child(n + 3) { border-top: 1.5px solid var(--gray-100); }
+.adm-stat:nth-child(2n) { border-left: 1.5px solid var(--gray-100); }
+.adm-stat__l {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+}
+.adm-stat__n { position: relative; margin: 5px 0 0; display: inline-block; }
+.adm-stat__v {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+/* The hand-drawn marker ring around the one figure that matters. Sized past the
+   figure on both axes, and aspect-ratio is overridden because .doodle forces a
+   square and a ring around a number is wider than it is tall. */
+.adm-stat__ring {
+  position: absolute;
+  left: -9px;
+  top: 50%;
+  width: calc(100% + 18px);
+  height: 30px;
+  margin-top: -15px;
+  aspect-ratio: auto;
+  color: var(--violet-400);
+  opacity: 0.85;
+}
+.adm-stat__note {
+  margin: 6px 0 0;
+  font-size: var(--text-xs);
+  line-height: 1.35;
+  color: var(--gray-600);
+  /* Two lines' worth whether the note needs them or not: the GMV note wraps
+     ("701,700 credit · $7,017 in shop") and the others do not, which left the
+     four cells at two different heights and stepped the divider between them. */
+  min-height: 2.7em;
+}
+
+.adm-an__ranges { display: flex; gap: 4px; flex: none; }
+.adm .adm-an__range {
+  min-height: 44px;
+  /* 44 on BOTH axes: this repo's touch sweep measures width as well as height,
+     and "7d" at 10px caps plus 11px of padding a side came to 39 wide. */
+  min-width: 44px;
+  padding: 0 11px;
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius-pill);
+  background: var(--gray-0);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.adm .adm-an__range.is-on { border-color: var(--ink-900); background: var(--ink-900); color: var(--gray-0); }
+
+
+/* ---- Queue rows: the shape every panel below Analytics is built from ---- */
+.adm .adm-row { padding: 0; margin-bottom: 12px; }
+.adm .adm-row__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 60px;
+  padding: 12px 14px;
+  border: none;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.adm-row__mid { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+.adm-row__title {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.adm-row__meta { font-size: var(--text-xs); color: var(--gray-600); }
+.adm-row__chev {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--gray-500);
+  border-bottom: 2px solid var(--gray-500);
+  border-radius: 1px;
+  transform: rotate(45deg);
+  transition: transform var(--dur-med) var(--ease-launch);
+}
+.adm-row__chev.is-open { transform: rotate(-135deg); }
+
+.adm-row__body { padding: 12px 14px 14px; border-top: 1.5px solid var(--gray-100); }
+.adm-row__fact { display: flex; justify-content: space-between; gap: 14px; margin: 0 0 8px; }
+.adm-row__fact-l {
+  flex: none;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+  padding-top: 3px;
+}
+.adm-row__fact-v {
+  font-size: var(--text-xs);
+  color: var(--text-primary);
+  text-align: right;
+  min-width: 0;
+  /* Long values (an items list, an account line) wrap instead of widening the
+     row: a flex item's min-width is auto, which lets it push past the column. */
+  overflow-wrap: anywhere;
+}
+.adm-row__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+/* The packing slip on an order row (2026-09-23): three blocks under dashed
+   hairlines — the receipt's rule — each with a caps label. Everything left-
+   aligned as a label to read off, not a ledger to scan; only the prices sit
+   right. The item link's 44px box is pulled in with negative block margins so
+   the list keeps its line height. */
+.slip { display: flex; flex-direction: column; }
+.slip__blk { padding: 12px 0; }
+.slip__blk + .slip__blk { border-top: 1.5px dashed var(--gray-200); }
+.slip__blk:first-child { padding-top: 2px; }
+.slip__lab {
+  margin: 0 0 6px;
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-secondary);
+}
+.slip__name { margin: 0; font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); }
+.slip__addr { margin: 2px 0 0; display: flex; flex-direction: column; font-size: var(--text-sm); line-height: 1.45; color: var(--gray-700); }
+.slip__contact { margin: 6px 0 0; display: flex; flex-wrap: wrap; gap: 6px; font-family: var(--font-label); font-size: var(--text-xs); color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.slip__dot { color: var(--gray-400); }
+
+.slip__items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.slip__item { display: flex; align-items: flex-start; gap: 10px; min-width: 0; }
+.slip__qty { flex: none; min-width: 26px; font-size: var(--text-sm); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+.slip__what { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.adm .slip__pname { display: inline-flex; align-items: center; align-self: flex-start; min-height: 44px; margin: -12px 0; font-size: var(--text-sm); color: var(--text-primary); }
+.adm a.slip__pname { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--gray-400); }
+.slip__brand { font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 600; letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-secondary); }
+.slip__price { flex: none; font-size: var(--text-sm); font-variant-numeric: tabular-nums; color: var(--text-primary); }
+.slip__sum, .slip__paid { margin: 10px 0 0; display: flex; justify-content: space-between; gap: 12px; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+.slip__sum { padding-top: 10px; border-top: 1.5px solid var(--gray-200); font-weight: 700; color: var(--text-primary); }
+.slip__paid { margin-top: 4px; color: var(--text-secondary); }
+.slip__paid span:last-child { text-align: right; }
+
+/* What the student asked for, on a tinted note: their words, set apart from
+   the facts so the reviewer reads them as a request, not as a field. */
+.slip__ask { margin-top: 12px; padding: 12px 14px; border-top: 0; border-radius: 12px; background: var(--accent-yellow-soft); }
+.slip__blk + .slip__ask { border-top: 0; }
+.slip__ask .slip__lab { color: var(--gray-700); }
+.slip__quote { margin: 0; font-size: var(--text-sm); line-height: 1.5; color: var(--text-primary); }
+
+/* Ship it: the two fields side by side at the slip's foot — the carrier is a
+   short word, the number is long — and the button under them in the row's own
+   actions strip. */
+.slip__ship-fields { display: grid; grid-template-columns: minmax(96px, 1fr) 2fr; gap: 10px; align-items: end; }
+.slip__ship .adm-row__actions { margin-top: 12px; }
+/* Row actions as small link buttons (owner, 2026-09-23): the label face at xs,
+   underlined, 44px tall for the thumb with the type small inside it — the
+   split every small control in the app makes. The action that moves the
+   order on is violet; a refusal stays in ink. The first one's padding is
+   pulled back so the word sits on the slip's left edge. */
+.adm .adm-link {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; margin: -4px 0 -6px;
+  border: none; background: none; cursor: pointer;
+  font-family: var(--font-label); font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.02em;
+  color: var(--gray-700); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--gray-400);
+}
+.adm .adm-link:first-child { margin-left: -8px; }
+.adm .adm-link--go { color: var(--violet-600); text-decoration-color: currentColor; }
+.adm .adm-link:hover { color: var(--text-primary); }
+.adm .adm-link--go:hover { color: var(--violet-700); }
+.adm-row__actions:has(.adm-link) { gap: 14px; margin-top: 8px; }
+/* A form's one-line refusal to send, under its fields. */
+.adm-form__err { margin: 10px 0 0; font-size: var(--text-xs); font-weight: 700; line-height: 1.4; color: var(--text-primary); }
+
+.adm__queue-empty { padding: 26px 0; font-size: var(--text-sm); color: var(--gray-600); }
+
+/* ---- Grouped sections (Events by event, Withdrawals' two halves) ---- */
+/* 14, not 26: with the rows inside a group 12px apart, 26px between groups was
+   double the distance it needed to read as a break. */
+.adm-grp { margin-bottom: 14px; }
+.adm-grp:last-child { margin-bottom: 0; }
+.adm-grp__title {
+  margin: 0 0 8px;
+  /* 14px in, matching .adm-row__head's own left padding, so the group's name
+     and the rows under it share one left edge instead of stepping. */
+  padding-left: 14px;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+/* ---- Status filter chips (UGC, Physical gigs) ---- */
+.adm__chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 -16px 16px;
+  padding: 2px 16px 4px;
+}
+.adm__chips::-webkit-scrollbar { display: none; }
+.adm .adm__chip {
+  flex: none;
+  min-height: 44px;
+  padding: 0 13px;
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius-pill);
+  background: var(--gray-0);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.adm .adm__chip.is-on { border-color: var(--ink-900); background: var(--ink-900); color: var(--gray-0); }
+.adm__chip-n { font-variant-numeric: tabular-nums; }
+
+/* ---- Charts. This screen plots; nothing outside src/app/admin does. ---- */
+.adm-ch { margin-top: 14px; padding: 15px 15px 17px; }
+.adm-ch__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.adm-ch__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+.adm-ch__sub { margin: 5px 0 13px; font-size: var(--text-xs); color: var(--gray-600); }
+
+.adm-lc { position: relative; }
+.adm-lc__legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 10px; }
+.adm-lc__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+}
+.adm-lc__swatch { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+.adm-lc__svg { display: block; max-width: 100%; touch-action: pan-y; }
+/* Axis type is a presentation attribute target, so it is set here rather than
+   inline: SVG text does not inherit the cascade the way HTML does. */
+.adm-lc__tick {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 500;
+  fill: var(--gray-500);
+  font-variant-numeric: tabular-nums;
+}
+.adm-lc__read {
+  margin: 8px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Side by side while both fit; centred once the legend wraps under the donut,
+   which it does below ~360px. */
+.adm-dn { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 18px; }
+.adm-dn__svg { width: 168px; height: 168px; flex: none; }
+.adm-dn__total {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  fill: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.adm-dn__unit {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  fill: var(--gray-600);
+}
+.adm-dn__legend { list-style: none; margin: 0; padding: 0; flex: 1; min-width: 150px; }
+.adm-dn__key {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 0;
+  border-bottom: 1.5px solid var(--gray-100);
+}
+.adm-dn__key:last-child { border-bottom: none; }
+.adm-dn__swatch { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+.adm-dn__name { flex: 1; font-size: var(--text-xs); color: var(--text-primary); min-width: 0; }
+.adm-dn__val {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.adm-dn__pct { font-weight: 500; color: var(--gray-600); }
+
+/* ---- Withdrawals, Campuses, Career, Cashback ---- */
+.adm-w9 { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+
+.adm-cmp__top { margin-bottom: 14px; }
+.adm-cmp__row { display: flex; align-items: center; gap: 12px; padding: 11px 15px; }
+.adm-cmp__dot {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 56% 44% 52% 48% / 48% 52% 44% 56%;
+  box-shadow: inset 0 0 0 1.5px rgba(23, 16, 41, 0.1);
+}
+.adm-cmp__form { display: flex; flex-direction: column; gap: 14px; }
+
+.adm-car__file { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+.adm-car__file-label {
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+}
+.adm .adm-car__file-input { font-size: var(--text-xs); color: var(--text-primary); max-width: 100%; }
+.adm-car__file-name { font-size: var(--text-xs); color: var(--text-primary); }
+.adm-car__file-note { font-family: var(--font-hand); font-size: var(--text-sm); color: var(--gray-600); }
+
+/* The field and its Save button stay on one line at every width. They used to
+   stack below 360px, which turned three resting Save buttons into three
+   full-width violet slabs and made them the loudest thing on the screen. Save
+   now appears only when a value is dirty, so the row has room. */
+.adm-car__edit { display: flex; align-items: center; gap: 10px; padding: 9px 15px; }
+.adm-car__edit > *:first-child { flex: 1; min-width: 0; }
+.adm-car__edit > *:not(:first-child) { flex: none; }
+
+/* A grid, not a flex row: as flex, the category label sized to its own text and
+   the four rate fields landed at four different x positions. (The flex:none
+   rule that caused it sat at (0,2,0) and beat .adm-cb__cat's own flex:1 at
+   (0,1,0) — the same specificity trap shell.css documents.) Columns keep the
+   fields in one column; the Save track collapses to nothing when absent. */
+.adm-cb__row {
+  display: grid;
+  grid-template-columns: 1fr 78px auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 15px;
+}
+.adm-cb__cat { min-width: 0; font-size: var(--text-sm); color: var(--text-primary); }
+/* What the brand's products pay back today, under its name — the same rung and
+   grey as every other row's second line (.adm-row__meta). */
+.adm-cb__now { display: block; font-size: var(--text-xs); color: var(--gray-600); }
+.adm-cb__pct {
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--gray-600);
+}
+.adm-car__path { padding: 11px 15px; }
+.adm-cb__note { margin: 14px 4px 0; font-family: var(--font-hand); font-size: var(--text-sm); color: var(--gray-600); }
+
+/* Opening a row is a state change, so it gets feedback — opacity only, at
+   160ms. No movement: PRODUCT.md strips translate and rotate from hover
+   everywhere, and a body that slides would fight that. */
+@keyframes admReveal { from { opacity: 0; } }
+.adm-row__body { animation: admReveal 160ms var(--ease-launch); }
+@media (prefers-reduced-motion: reduce) {
+  .adm-row__body { animation: none; }
+  .adm-row__chev { transition: none; }
+}
+
+/* A list card: one paper object, rows divided by hairlines. Used where the panel
+   shows a flat list (schools, rates, roles) rather than openable objects. */
+.adm-list { padding: 0; }
+.adm-list > * + * { border-top: 1.5px solid var(--gray-100); }
+
+/* A quiet destructive affordance. Violet belongs to primary actions, so Remove
+   is grey until you reach for it, and only then takes the danger colour. It
+   pads to the 44px floor on its own box rather than through a pseudo-element,
+   because the touch sweep measures the element itself. */
+.adm .adm-quiet {
+  flex: none;
+  min-height: 44px;
+  padding: 0 4px 0 12px;
+  border: none;
+  background: none;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: color var(--dur-fast);
+}
+
+/* Darkens to ink on hover rather than turning coral: coral on white is 3.45:1
+   and this label is 10px, which needs 4.5. Darkening is the design system's own
+   hover convention anyway. */
+.adm .adm-quiet:hover { color: var(--text-primary); }

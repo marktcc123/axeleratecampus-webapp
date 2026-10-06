@@ -1,0 +1,215 @@
+/* AppBar carries the row, the wordmark and the 44px targets. The only thing
+   left for the app is the gap to whatever the screen puts underneath — and one
+   height.
+
+   The bar sized itself off its tallest child, and the design system gives the
+   bell `margin: -8px -6px -8px 0` so a 44px hit area does not inflate the row.
+   That left the avatar as the only 44px contributor, so Me — which hides the
+   avatar, because the profile picture sits right below — got a 28px bar while
+   every other tab screen got 44, and the wordmark sat 8px higher there. */
+/* Tighter top and bottom (owner, 2026-09-08): -6 into the column's 16px top
+   padding — the 44px targets keep their box — and 12 below instead of 22. The
+   column padding itself stays: the banded sub-screens bleed -16px against it. */
+.ah { min-height: 44px; margin: -6px 0 12px; }
+/* The header's own box, for the first-run note to hang from. */
+.ah__wrap { position: relative; }
+
+/* The wordmark is the app's own node, not AppBar's string treatment — that is
+   the documented way to change it ("pass a node to render your own"). It is the
+   drawn mark now (components/Logo.jsx), at the height the typed --text-lg word
+   took in this row. */
+.ah__wordmark { display: block; height: 16px; width: auto; }   /* 18 → 16: the 10% cut (owner, 2026-09-08) */
+
+/* One visible gap across cart → bell → avatar, tight (owner, 2026-09-08,
+   twice): they sit in the system's 44px boxes, which put 28px of air between
+   20px glyphs. Pulling each in 14px makes that 14; the 28px disc fills more of
+   its box than a 20px glyph, so it comes in 4px less — the half size
+   difference — for the same 14. The 44px boxes now overlap by 10–14px; each
+   still measures 44 on its own, and a tap lands on the nearer glyph. */
+.ah .ah__bell { margin-left: -14px; }
+.ah .ah__avatar { margin-left: -10px; }
+
+/* The count, on the cart's own box. Absolute, so a two-digit count grows
+   rightward out of the glyph rather than pushing the row apart; the box it
+   sits in is the 44px action, not the 20px glyph, so the offsets are measured
+   from the box's edges. */
+.ah .ah__cart, .ah .ah__bell { position: relative; }
+/* One pill for both counts — items in the cart, unread in the inbox (owner,
+   2026-09-21, chosen from six renderings: the cart's badge, reused as-is). */
+.ah__cart-n, .ah__bell-n {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 15px;
+  height: 15px;
+  box-sizing: border-box;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: var(--violet-600);
+  color: var(--text-inverse);
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  line-height: 15px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The avatar is a button now (owner, 2026-09-21) and buttons bring their own
+   chrome, which the system's avatar class does not undo. */
+.ah button.ah__avatar { padding: 0; border: none; background: none; cursor: pointer; }
+/* The disc's own box: the ring's containing block, so its centre is the
+   disc's. Sized to the disc outright (Avatar size={28} in AppHeader.jsx) —
+   as the avatar slot's direct child it otherwise takes the system's 36px
+   slot size and the ring drifts 4px right and down. */
+.ah button.ah__avatar .ah__avatar-disc { position: relative; display: inline-flex; width: 28px; height: 28px; line-height: 0; overflow: visible; }
+/* overflow: visible is load-bearing above — the slot's own rule clips its child
+   to the disc, which would cut the ring the moment it breathes past 28px. */
+
+/* The first-run hint (owner, 2026-09-22: nobody knows the menu is behind the
+   avatar). A coral ring round the disc breathes out three times, ~4s in all,
+   on every open of the app until the drawer has been opened once — then the
+   store remembers (firstrun.js 'account-menu') and it never comes back. A
+   guidance loop, not a transition, so it sits outside the 320ms ceiling on
+   purpose; no bounce, no blur, scale and opacity only. Reduced motion gets a
+   still ring instead. */
+.ah__avatar-hint {
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 3px solid var(--accent-coral);
+  pointer-events: none;
+  animation: ah-hint 1400ms var(--ease-launch) 6 both;
+}
+@keyframes ah-hint {
+  0% { transform: scale(0.82); opacity: 1; }
+  70% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* The note under the avatar: sticker yellow (ink on it 16.65:1), the hand
+   face, tilted two degrees like every other paper tag, a tail up to the disc.
+   A button, so tapping the note itself opens the drawer. It rises in half a
+   second after the screen does — after the eye has landed. Above the page's
+   cards (z 45), under the drawer and its scrim (60, 61). */
+.ah__hint-note {
+  position: absolute;
+  top: calc(100% - 2px);
+  right: 8px;
+  z-index: 45;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 12px 14px 12px 14px / 14px 12px 14px 12px;
+  background: var(--accent-yellow);
+  color: var(--ink-900);
+  box-shadow: var(--shadow-paper);
+  font-family: var(--font-hand);
+  font-size: var(--text-lg);
+  line-height: 1.1;
+  white-space: nowrap;
+  cursor: pointer;
+  rotate: -2deg;
+  animation: ah-note-in 320ms var(--ease-launch) 500ms both;
+}
+.ah__hint-note::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 22px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent-yellow);
+  transform: rotate(45deg);
+}
+@keyframes ah-note-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* A count that changes is a count that pops (2026-09-22): the span is keyed
+   by its number, so every change remounts it and replays 200ms of scale. */
+.ah__cart-n, .ah__bell-n { animation: ah-pop 200ms var(--ease-launch) both; }
+@keyframes ah-pop { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* The account drawer (owner, 2026-09-21): in from the right edge, a little
+   under half the screen, on ink — violet first, then black the same day. Fixed,
+   above the tab bar's 40; the scrim takes the same layer so the two cannot
+   separate.
+
+   The width has a floor: at 50vw a 320px phone gives 160px, and "Mission
+   tracker" beside its icon needs about 200. So the drawer is half the screen
+   where half the screen is wide enough, and 224px where it is not. */
+.ah__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  background: rgba(23, 16, 41, 0.32);
+  animation: ah-scrim 200ms var(--ease-launch, ease-out) both;
+}
+.ah__drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 61;
+  width: clamp(224px, 50vw, 320px);
+  box-sizing: border-box;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 14px calc(18px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--ink-900);
+  color: var(--text-inverse);
+  overflow-y: auto;
+  /* 240ms, one ease-out, no bounce; DESIGN.md keeps transitions under 320. */
+  animation: ah-drawer 240ms var(--ease-launch, cubic-bezier(0.22, 1, 0.36, 1)) both;
+}
+@keyframes ah-drawer { from { transform: translateX(100%); } to { transform: none; } }
+@keyframes ah-scrim { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .ah__scrim, .ah__drawer, .ah__cart-n, .ah__bell-n { animation: none; }
+  .ah__avatar-hint { animation: none; inset: -5px; opacity: 0.9; }
+  .ah__hint-note { animation: none; }
+}
+/* An <a> is content-box here, so the 44px floor is padding: a min-height would
+   stack on top of it, the bug this repo has hit four times. White on violet 600
+   is 6.48:1, the one accent in this palette that carries white. */
+.ah__drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* The Share row is a <button> among <a>s: the resets are what let one rule
+     draw both. */
+  width: 100%;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 13px 12px;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text-inverse);
+  text-decoration: none;
+  font-family: var(--font-label);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+/* (0,2,0) on purpose: the design system's global `a:hover` is (0,1,1) and was
+   winning the colour back — violet-700 type on a dark drawer, which is what
+   the owner saw as "the text disappears on hover" (2026-09-21). The ground
+   lifts a little; the type stays exactly what it was. White on ink is 17:1. */
+.ah__drawer .ah__drawer-item:hover { background: rgba(255, 255, 255, 0.12); color: var(--text-inverse); }
+.ah__drawer-icon { flex: none; color: currentColor; }
+/* The rule between the groups, in the drawer's own ink. */
+.ah__drawer-rule { margin: 10px 12px; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.28); }
+/* Log out in red, and no louder than its neighbours (owner, 2026-09-21: the
+   pill was too much). On ink a real red reads: red-500 measures about 4.8:1
+   against ink-900, where on the violet drawer it measured 1.2 and the row had
+   to fall back to a pale tint. Same shape as every row above it. */
+.ah__drawer-item--danger,
+.ah__drawer .ah__drawer-item--danger:hover { color: var(--red-500); }
+
+/* The next pass, at the top of the drawer (owner, 2026-09-21): Me's Upcoming
+   card at its mini scale — white paper on the ink. */
+.ah__drawer .ah__drawer-next { margin-bottom: 6px; }
+.ah__drawer .ah__drawer-next .po { margin-bottom: 8px; }

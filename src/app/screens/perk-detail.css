@@ -1,0 +1,420 @@
+/* One product, from H5.dc.html's perk detail. Own classes only — nothing here
+   reaches into a design-system component. */
+
+/* Back and Share over the shots: parts/DetailTopBar.jsx, fixed to the top. */
+
+/* One shot or several: the same frame either way, and the row simply has
+   nothing to scroll when there is one. scroll-PADDING, not padding — snap
+   aligns to the snapport, which padding does not inset, and this repo has
+   already shipped that bug once on the board's events row. */
+/* The shots begin at the screen's top edge like the mission and event covers
+   (owner, 2026-09-09): the page escapes the column's top padding. */
+.pd__gallery { position: relative; margin-top: -16px; }
+.pd__shots {
+  /* Out to the screen edges and back in by 6, not the column's 16: the owner
+     wants the shot big with only a small margin. scroll-padding matches, or the
+     snap eats the inset and the first shot sits flush left. */
+  margin: 0 calc(var(--shell-pad) * -1);
+  padding: 0 6px;
+  list-style: none;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 6px;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.pd__shots::-webkit-scrollbar { display: none; }
+.pd__shot {
+  flex: 0 0 100%;
+  width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  aspect-ratio: 1;
+  border-radius: var(--radius-hand-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-paper);
+}
+/* Paper discs on the photo, the same treatment the back control gets: the
+   glyph has to hold whatever the shot behind it turns out to be. 44x44 for the
+   touch floor, and centred on the photo rather than the gallery, which is
+   taller once the dots are counted. */
+.pd .pd__shot-nav {
+  position: absolute;
+  top: calc(50% - 22px);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-pill);
+  background: var(--gray-0);
+  box-shadow: var(--sticker-cut), var(--shadow-paper);
+  color: var(--ink-900);
+}
+.pd .pd__shot-nav--prev { left: 12px; }
+.pd .pd__shot-nav--next { right: 12px; }
+.pd .pd__shot-nav:active { transform: translate(1px, 1px); }
+@media (prefers-reduced-motion: reduce) {
+  .pd .pd__shot-nav:active { transform: none; }
+}
+
+.pd__dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+.pd__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gray-300);
+  transition: background var(--dur-fast);
+}
+.pd__dot.is-on { background: var(--ink-900); }
+.pd__flag {
+  position: absolute; top: 10px; right: 10px;
+  padding: 4px 10px; border-radius: var(--radius-pill);
+  background: var(--gray-0); box-shadow: var(--sticker-cut);
+  font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700;
+  letter-spacing: var(--tracking-caps); text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* The brand line (owner, 2026-09-23): a 32px disc and the name at --text-lg,
+   the mission page's host line (gigs-detail.css .gd__host-*) — it was a caps
+   whisper at 3xs. One link round both, a 44px row for the thumb without
+   moving the line (negative block margin, the .gd__host-link trick). */
+.pd__brand { margin: 16px 0 0; display: flex; align-items: center; }
+.pd .pd__brand-link {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin: -6px 0;
+  text-decoration: none; color: inherit;
+}
+.pd__brand-name { font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); }
+.pd { padding-bottom: calc(188px + env(safe-area-inset-bottom, 0px)); }
+.pd__intro {
+  margin: 18px 0 0;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--gray-800);
+}
+.pd__intro p { margin: 0 0 10px; }
+.pd__intro p:last-child { margin-bottom: 0; }
+.pd__intro ul, .pd__intro ol { margin: 0 0 10px; padding-left: 1.15em; }
+.pd__intro li { margin: 4px 0; }
+.pd__intro strong { font-weight: 700; color: var(--ink-900); }
+
+.pd__title {
+  margin: 5px 0 0;
+  font-family: var(--font-display); font-weight: 700; font-size: var(--text-xl);
+  letter-spacing: -0.01em; line-height: 1.25; color: var(--text-primary);
+}
+
+/* Named for the cashback, not the back link — they collided as .pd__back and
+   the price row inherited a 44x44 button box with negative margins. */
+.pd__cashback {
+  font-family: var(--font-label); font-size: var(--text-xs); font-weight: 700;
+  letter-spacing: 0.03em; color: var(--text-brand);
+}
+.pd__stock {
+  margin: 6px 0 0;
+  font-family: var(--font-label); font-size: var(--text-lg); font-weight: 600;
+  letter-spacing: 0.04em; font-variant-numeric: tabular-nums; color: var(--text-secondary);
+  /* Right, like the stepper below it: it is the ceiling that stepper counts
+     against, and the two read as one column of numbers rather than one fact
+     on the left and its consequence on the right. */
+  text-align: right;
+}
+
+
+/* Column, not row: the button used to be this row's only child, and the reason
+   line that now follows it was landing beside the button instead of under it. */
+/* The two choices on one row: sizes take the width they need, the stepper
+   holds its own at the right edge. */
+.pd__choose {
+  margin-top: 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pd__sizes { min-width: 0; }
+
+/* The buy bar. It stands where the tab bar would be — TabBar and CartFab both
+   take themselves off this route — so it repeats the pill's own geometry:
+   16px up from the safe area, centred, and never wider than the column. */
+.pd__bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  width: 100%;
+  max-width: 520px;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: var(--radius-hand-lg);
+  background: var(--gray-0);
+  box-shadow: var(--sticker-cut), var(--shadow-paper-lg);
+  /* The column's own 16px gutter on each side, so the bar lines up with the
+     page's edges rather than sitting proud of them. The width alone does it:
+     a side margin on top of left:50% + translateX(-50%) pushed the whole bar
+     16px right of centre (owner, 2026-09-21: "it leans right"). */
+  width: calc(100% - var(--shell-pad) * 2);
+}
+.pd__bar-row { display: flex; align-items: center; gap: 10px; }
+.pd__bar-acts { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.pd__bar-total { flex: none; min-width: 0; }
+.pd__bar-lab {
+  display: block;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.pd__bar-from {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  letter-spacing: 0;
+  margin-right: 4px;
+  color: var(--text-secondary);
+}
+.pd__bar-fig {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-900);
+}
+/* Ink outline, not a grey one — the same pair the shop card's bag and gift
+   make: a solid action beside an outlined one. */
+.pd__bar-credit {
+  display: block;
+  margin-top: 1px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-brand);
+}
+.pd .pd__bar-gift {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-pill);
+  background: var(--gray-0);
+  box-shadow: inset 0 0 0 1.5px var(--ink-900);
+  color: var(--ink-900);
+}
+.pd .pd__bar-gift:active { transform: translate(1px, 1px); }
+/* Scoped to (0,2,0): it lands on an element wearing .ax-btn, and design-system
+   styles are injected after the app's bundle. */
+.pd .pd__bar-act {
+  flex: 1;
+  min-width: 0;
+  /* Ink, not the design system's violet primary. Scoped to (0,2,0) so it wins
+     against .ax-btn--primary, which is injected after the app's bundle. */
+  background: var(--ink-900);
+  color: var(--gray-0);
+}
+/* Add to cart sits beside Buy now. (0,3,0) so it wins the ink fill above. */
+.pd .pd__bar-act.pd__bar-act--quiet {
+  background: var(--gray-0);
+  color: var(--ink-900);
+  box-shadow: inset 0 0 0 1.5px var(--ink-900);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pd .pd__bar-gift:active { transform: none; }
+}
+
+/* Three columns, icon over text, instead of three stacked rows. The dashed
+   grey rules that separated the rows go with the layout: they were row
+   dividers, and nothing else on this app is drawn with a grey hairline. */
+.pd__promises {
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.pd__promise {
+  box-sizing: border-box;
+  padding: 14px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  border-radius: var(--radius-hand);
+  background: var(--surface-quiet);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-primary);
+}
+.pd__promise-ico { color: var(--ink-900); flex: none; }
+
+/* ---- Details, size, quantity, reviews ---- */
+.pd__details { margin: 16px 0 0; padding: 0; }
+.pd__detail {
+  display: flex;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1.5px solid var(--gray-100);
+}
+.pd__detail:last-child { border-bottom: none; }
+.pd__detail-k {
+  flex: none;
+  width: 78px;
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+  padding-top: 2px;
+}
+.pd__detail-v { margin: 0; flex: 1; min-width: 0; font-size: var(--text-xs); color: var(--text-primary); }
+
+.pd__field-label {
+  margin: 20px 0 8px;
+  font-family: var(--font-label);
+  font-size: var(--text-3xs);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+}
+.pd__size-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.pd .pd__size {
+  box-sizing: border-box;
+  min-width: 56px;
+  min-height: 44px;
+  padding: 0 14px;
+  /* Stickers, not grey-outlined pills. Outside — the shop cards, the quest
+     deck, the application folders — nothing is drawn with a grey hairline: the
+     edge is ink and the depth is a hard offset (--shadow-paper is 2px 3px 0).
+     Same treatment here so the inside of a product reads like the outside. */
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--gray-0);
+  box-shadow: inset 0 0 0 1.5px var(--ink-900), var(--shadow-paper);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: transform var(--dur-fast), background var(--dur-fast), color var(--dur-fast);
+}
+/* Pressed into the page rather than recoloured: the shadow is the affordance,
+   so taking it away is what "picked" looks like. */
+.pd .pd__size.is-on {
+  background: var(--ink-900);
+  color: var(--gray-0);
+  box-shadow: inset 0 0 0 1.5px var(--ink-900);
+  transform: translate(1px, 1px);
+}
+
+/* margin-left:auto, not the row's space-between: a product with no sizes has
+   no sibling to be spaced against, and the stepper sat at the left edge on
+   every one of them. */
+.pd__qty-row { flex: none; margin-left: auto; display: flex; align-items: center; gap: 4px; }
+.pd .pd__pm {
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--gray-0);
+  box-shadow: inset 0 0 0 1.5px var(--ink-900), var(--shadow-paper);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ink-900);
+  cursor: pointer;
+}
+.pd .pd__pm:active { transform: translate(1px, 1px); box-shadow: inset 0 0 0 1.5px var(--ink-900); }
+/* WCAG 1.4.3 exempts an inactive component by name, which is what this is at
+   one item or at the stock ceiling. Dashed, the way the design system marks a
+   disabled field, rather than a grey circle that still looks pressable. */
+.pd .pd__pm:disabled {
+  color: var(--gray-400);
+  background: var(--surface-quiet);
+  box-shadow: none;
+  outline: 1.5px dashed var(--gray-300);
+  outline-offset: -1.5px;
+  cursor: default;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pd .pd__size, .pd .pd__pm, .pd .pd__pm:active { transition: none; transform: none; }
+}
+.pd__qty-n {
+  min-width: 40px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.pd__act-why { margin: 6px 0 0; font-size: var(--text-xs); color: var(--gray-600); text-align: center; }
+
+.pd__stars { display: inline-flex; gap: 2px; }
+.pd__star { color: var(--gray-300); }
+.pd__star.is-on { color: var(--accent-yellow); }
+
+.pd__reviews { margin-top: 28px; }
+.pd__review-empty { margin: 8px 0 0; font-size: var(--text-sm); line-height: 1.5; color: var(--gray-600); }
+/* Column: the title/average row and the write-review button used to be one
+   flex row, and a third item split space-between three ways instead of
+   sitting under the other two. */
+.pd__reviews-head { display: flex; flex-direction: column; gap: 10px; }
+.pd__reviews-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.pd__reviews-h {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+.pd__reviews-sum { display: inline-flex; align-items: center; gap: 7px; }
+.pd__reviews-avg {
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.pd__reviews-n { font-size: var(--text-xs); color: var(--gray-600); }
+
+@media (prefers-reduced-motion: reduce) {
+}
+
+.pd__review-list { list-style: none; margin: 12px 0 0; padding: 0; }
+.pd__review { padding: 12px 0; border-bottom: 1.5px solid var(--gray-100); }
+.pd__review:last-child { border-bottom: none; }
+.pd__review-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pd__review-who { font-size: var(--text-xs); font-weight: 600; color: var(--text-primary); }
+/* gray-600, not gray-500: at 10px this needs 4.5:1 and gray-500 measured
+   4.22 on white. gray-600 is 6.56. */
+.pd__review-date { font-size: var(--text-3xs); color: var(--gray-600); margin-left: auto; }
+.pd__review-body { margin: 6px 0 0; font-size: var(--text-xs); line-height: 1.5; color: var(--gray-700); }

@@ -1,0 +1,153 @@
+/* The gate at /. Colours are tokens only; every size names a rung.
+
+   The same column as the four intro screens before it (18px 20px, the button
+   on the bottom edge), so arriving here reads as the fifth screen of one flow
+   rather than a different app. The scene in the middle is where the presence
+   is: paper objects carry the accents, the page stays white, which is the rule
+   DESIGN.md sets for every screen.
+
+   Note the (0,2,0) scoping rule from src/components/shell.css: the design
+   system injects each component's <style> at JS-execution time, after this
+   bundled sheet, so any rule here competing with an ax-* class on the same
+   element is scoped under .welcome to win the tie. */
+
+.welcome {
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface-page);
+  font-family: var(--font-body);
+}
+
+.welcome__top { display: flex; justify-content: center; padding-top: 6px; }
+/* The drawn mark. 28px, not the 36 it had when it was the only thing on the
+   page: it is the signature at the top of a scene now, not the scene. */
+.welcome__wordmark { display: block; height: 28px; width: auto; }
+
+.welcome__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ─── the scene ───────────────────────────────────────────────────────────
+   A fixed box, so the objects pinned inside it land where they were drawn at
+   every viewport rather than drifting with the column. 260 wide fits the 288px
+   column at 320 with room for the stickers' shadows. */
+.welcome__scene {
+  position: relative;
+  width: 260px;
+  height: 210px;
+  margin-bottom: 28px;
+}
+/* The system's illustration blob: its geometry, its violet-300, its −6°. */
+.welcome__blob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 168px;
+  height: 152px;
+  translate: -50% -50%;
+  background: var(--violet-300);
+  border-radius: 58% 42% 52% 48% / 48% 55% 45% 52%;
+  rotate: -6deg;
+}
+/* Ink line art on the blob, sized to the tier's 64% like the system's glyph. */
+.welcome__art {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  color: var(--ink-900);
+}
+/* The stickers, pinned to two corners of the scene and tilted at rest. Their
+   keyline and drop shadow are the component's own; only the position is ours. */
+.welcome__st { position: absolute; }
+.welcome__st--a { top: 14px; right: -6px; }
+.welcome__st--b { bottom: 18px; left: -4px; }
+/* One sparkle off the top-left, in butter: a doodle takes currentColor, and
+   this is the one hue on the page that is not violet or ink. Decorative, at
+   the opacity the quest deck draws its own marks. */
+.welcome__spark {
+  position: absolute;
+  top: -6px;
+  left: 22px;
+  width: 44px;
+  color: var(--butter-500);
+  opacity: 0.9;
+}
+
+/* ─── the words ─────────────────────────────────────────────────────────── */
+/* The intro's headline face and size, so the two read as one voice. */
+.welcome__h1 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: var(--text-2xl);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+/* --text-md is the gate's own prose rung (DESIGN.md names it for this screen
+   and the legal pages), a step wider than --text-sm for a line read once. */
+.welcome__lede {
+  margin: 10px 0 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+  max-width: 30ch;
+}
+
+/* ─── the doors ─────────────────────────────────────────────────────────── */
+.welcome__foot {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* Scoped: the anchors carry ax-btn, whose own <style> lands after this sheet.
+   Full width is the system's --full; the height is its --lg.
+
+   box-sizing is the one thing supplied here, and it is not an override: the
+   component never sets it. Button is drawn for a <button>, which the browser
+   makes border-box; on an <a> the default is content-box, so --full's 100%
+   had the side padding added on top and both doors measured 398px on a 390px
+   viewport — 28px of horizontal scroll on every width. */
+.welcome .welcome__cta,
+.welcome .welcome__login { box-sizing: border-box; text-decoration: none; }
+
+/* A link, not a button, and quiet: it goes somewhere, and it is the one thing
+   on the page a returning student does not need. 44px tall for the touch
+   floor, with the type small inside it — the split every small control in the
+   app makes. An <a> is content-box here, so the floor is padding. */
+.welcome .welcome__replay {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  /* 15px a side, not 13: at --text-xs the line box is 14px, so 13 measured 40
+     and missed the 44px floor. */
+  padding: 15px 8px;
+  margin-top: 2px;
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* A landscape phone or a desktop window: the column stops growing, as the
+   intro's does at the same width. */
+@media (min-width: 560px) {
+  .welcome { align-items: center; }
+  .welcome__top, .welcome__body, .welcome__foot { width: 100%; max-width: 520px; }
+}

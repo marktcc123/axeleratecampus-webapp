@@ -1,0 +1,22 @@
+/* The seat sheet: the shop filter sheet's geometry in the paper language. */
+.ats__overlay { position: fixed; inset: 0; z-index: 100; background: var(--overlay); }
+.ats {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; z-index: 101;
+  width: 100%; max-width: 520px; box-sizing: border-box; max-height: 90vh; overflow-y: auto;
+  margin: 0; background: var(--surface-card); border-radius: 18px 22px 0 0 / 22px 18px 0 0;
+  box-shadow: var(--shadow-paper-lg); padding: 10px 18px calc(20px + env(safe-area-inset-bottom, 0px));
+}
+.ats__grab { width: 42px; height: 4px; margin: 0 auto 6px; border-radius: var(--radius-pill); background: var(--gray-200); }
+.ats__top { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.ats__h { flex: 1; margin: 0; font-family: var(--font-display); font-weight: 800; font-size: var(--text-xl); letter-spacing: var(--tracking-tight); color: var(--text-primary); }
+.ats .ats__x { width: 44px; height: 44px; margin-right: -10px; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-900); }
+.ats__x-mark { position: relative; width: 16px; height: 16px; }
+.ats__x-mark::before, .ats__x-mark::after { content: ''; position: absolute; left: 7px; top: -1px; width: 2px; height: 18px; border-radius: 1px; background: currentColor; transform: rotate(45deg); }
+.ats__x-mark::after { transform: rotate(-45deg); }
+.ats__event { margin: 2px 0 0; font-size: var(--text-sm); font-weight: 600; color: var(--gray-700); overflow-wrap: anywhere; }
+.ats__field { margin-top: 14px; }
+/* The date, as a fact to agree to: label and value on one line, a hairline under. */
+.ats__when { margin: 14px 0 0; display: flex; align-items: baseline; gap: 12px; padding: 0 0 10px; border-bottom: 1.5px solid var(--gray-100); }
+.ats__when dt { font-family: var(--font-label); font-size: var(--text-3xs); font-weight: 700; letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-secondary); }
+.ats__when dd { margin: 0 0 0 auto; text-align: right; font-family: var(--font-label); font-size: var(--text-xs); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink-900); }
+.ats__act { margin-top: 20px; }

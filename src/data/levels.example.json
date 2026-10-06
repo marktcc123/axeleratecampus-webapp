@@ -1,0 +1,66 @@
+[
+  {
+    "level": 1,
+    "name": "Explorer",
+    "gate": "Verified student — school, work eligibility, payout, reach",
+    "perks": [
+      "Student-exclusive shop",
+      "Drops and free samples",
+      "Open events"
+    ]
+  },
+  {
+    "level": 2,
+    "name": "Contributor",
+    "gate": "300 XP · 3 completed missions",
+    "perks": [
+      "Public profile goes live",
+      "Early drop window",
+      "Creator events",
+      "Limited products",
+      "Brand badges",
+      "Application priority"
+    ]
+  },
+  {
+    "level": 3,
+    "name": "Insider",
+    "gate": "1,200 XP · 5+ missions · ≥90% on-time · 4.5+ star rating · no violations",
+    "perks": [
+      "24 hr early drop access",
+      "Closed events",
+      "Skip review on selected missions",
+      "Pitch your own mission idea",
+      "Drops open to you an hour early"
+    ]
+  },
+  {
+    "level": 4,
+    "name": "Trusted",
+    "gate": "3,000 XP · 10+ missions · 3+ brands · ≥92% on-time · strong ratings · 1+ portfolio-quality submission",
+    "perks": [
+      "Invite-only launches",
+      "Executive and founder networking",
+      "Internship pipeline",
+      "Brand advisory panels",
+      "Verified references",
+      "Creator dinners"
+    ]
+  },
+  {
+    "level": 5,
+    "name": "Partner",
+    "gate": "6,000 XP · 25+ missions · ≥95% on-time · sustained L4 record · clean standing · qualification + invitation",
+    "perks": [
+      "Direct brand introductions",
+      "Internships",
+      "Paid retainers",
+      "National campaigns",
+      "Conferences",
+      "Recommendation letters",
+      "Campus Lead title",
+      "Partner-only community",
+      "Annual Creator Summit"
+    ]
+  }
+]
