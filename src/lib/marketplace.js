@@ -96,21 +96,46 @@ export const timeframe = (id) => TIMEFRAMES.find((t) => t.id === id) ?? TIMEFRAM
 // Explicit states, and explicit edges. The store refuses a transition that is
 // not listed here, which is what stops a cluster from going live on nothing
 // more than a participant count.
+// V1 lifecycle. Qualification is a property of the demand itself.
+// Merchant matches do not gate it, and merchants are invited only once
+// the cluster is in `sourcing` or later.
 export const CLUSTER_STATES = [
-  'collecting', 'qualified', 'live', 'offers_open',
-  'offers_available', 'converting', 'scaled', 'expired', 'rejected',
+  'collecting', 'qualified', 'sourcing', 'offers_live', 'converting', 'closed',
+  'expired', 'rejected',
 ];
+
+// Older demo rows still use the previous names. Read them as the V1 state
+// they actually meant, so a reload does not drop live offers.
+export const LEGACY_CLUSTER_STATUS = {
+  qualifying: 'collecting',
+  live: 'sourcing',
+  offers_open: 'sourcing',
+  offers_available: 'offers_live',
+  scaled: 'closed',
+};
+
+export const canonicalStatus = (status) => LEGACY_CLUSTER_STATUS[status] ?? status;
 
 export const CLUSTER_FLOW = {
   collecting: ['qualified', 'expired', 'rejected'],
-  qualified: ['live', 'collecting', 'expired', 'rejected'],
-  live: ['offers_open', 'qualified', 'expired', 'rejected'],
-  offers_open: ['offers_available', 'live', 'expired', 'rejected'],
-  offers_available: ['converting', 'offers_open', 'expired', 'rejected'],
-  converting: ['scaled', 'offers_available', 'expired'],
-  scaled: ['converting', 'expired'],
+  qualified: ['sourcing', 'collecting', 'expired', 'rejected'],
+  sourcing: ['offers_live', 'qualified', 'expired', 'rejected', 'closed'],
+  offers_live: ['converting', 'sourcing', 'expired', 'rejected', 'closed'],
+  converting: ['closed', 'offers_live', 'expired'],
+  closed: [],
   expired: ['collecting'],
   rejected: [],
+};
+
+// Forward-only order used when a cluster is more than one edge away from
+// the status its numbers already justify.
+export const CLUSTER_RANK = {
+  collecting: 0,
+  qualified: 1,
+  sourcing: 2,
+  offers_live: 3,
+  converting: 4,
+  closed: 5,
 };
 
 export const canTransition = (from, to) => (CLUSTER_FLOW[from] ?? []).includes(to);
@@ -120,21 +145,20 @@ export const canTransition = (from, to) => (CLUSTER_FLOW[from] ?? []).includes(t
 // never "Trending".
 export const CLUSTER_LABEL = {
   collecting: 'Demand is forming',
-  qualified: 'Growing',
-  live: 'Live demand',
-  offers_open: 'Matching brands',
-  offers_available: 'Brands responded',
+  qualified: 'Qualified',
+  sourcing: 'Brands are being matched',
+  offers_live: 'Brands responded',
   converting: 'Brands responded',
-  scaled: 'Established market',
+  closed: 'Closed',
   expired: 'Expired',
   rejected: 'Closed',
 };
 
-export const PUBLIC_STATES = ['collecting', 'qualified', 'live', 'offers_open', 'offers_available', 'converting', 'scaled'];
-export const OFFERS_VISIBLE_STATES = ['offers_available', 'converting', 'scaled'];
-// A merchant may respond from here on: the demand is real enough to be worth
-// a brand's inventory commitment.
-export const MERCHANT_OPEN_STATES = ['live', 'offers_open', 'offers_available', 'converting', 'scaled'];
+export const PUBLIC_STATES = ['collecting', 'qualified', 'sourcing', 'offers_live', 'converting'];
+export const OFFERS_VISIBLE_STATES = ['offers_live', 'converting'];
+// Open to a verified merchant once demand itself has qualified. A merchant
+// match is not a prerequisite for reaching this set.
+export const MERCHANT_OPEN_STATES = ['sourcing', 'offers_live', 'converting'];
 
 // ─── merchant organization lifecycle ──────────────────────────────────────
 export const MERCHANT_STATES = ['pending', 'verified', 'rejected', 'suspended'];
@@ -196,26 +220,26 @@ export const ATTRIBUTION_CONFIDENCE = {
 // DEMO numbers for the beauty vertical. A category with a $400 basket would
 // not use the same floor as one with a $20 basket, which is why this is keyed
 // by category with a default rather than written into the scoring function.
+// Active participants, not "everyone who clicked interested". Merchant
+// matches are intentionally absent: they must not be required before a
+// brand is allowed to respond.
 export const THRESHOLDS = {
   default: {
-    minQualifiedParticipants: 15,
+    minActiveParticipants: 15,
     minReadyToBuy: 5,
     minEstimatedGmv: 300,
-    minMerchantMatches: 2,
     maxFraudScore: 0.5,
   },
   'Beauty / Personal Care': {
-    minQualifiedParticipants: 15,
+    minActiveParticipants: 15,
     minReadyToBuy: 5,
     minEstimatedGmv: 300,
-    minMerchantMatches: 2,
     maxFraudScore: 0.5,
   },
   Footwear: {
-    minQualifiedParticipants: 12,
+    minActiveParticipants: 12,
     minReadyToBuy: 4,
     minEstimatedGmv: 800,
-    minMerchantMatches: 2,
     maxFraudScore: 0.5,
   },
 };
@@ -253,9 +277,26 @@ export const SOURCE_TYPES = ['direct', 'campus', 'creator', 'salon', 'gym', 'com
 // ─── commercial terms ─────────────────────────────────────────────────────
 // Fields only. V0 takes no money and the UI keeps this out of the consumer's
 // way entirely; what matters is that the shape exists before it is needed.
+// One performance model per organization. Null means no fee is configured
+// and nothing is invented. `revenue_share` is a fraction of verified GMV.
+// `cpa` is a fixed amount per verified purchase.
 export const COMMERCIAL_DEFAULTS = {
-  commissionRate: null,
-  cpaUsd: null,
-  campaignFeeUsd: null,
-  model: 'affiliate',
+  model: null,
+  rate: null,
+  amount: null,
 };
+
+export function feeFor(commercial, { verifiedGmv = 0, verifiedPurchases = 0 } = {}) {
+  if (!commercial?.model) return null;
+  if (commercial.model === 'revenue_share') {
+    const rate = Number(commercial.rate);
+    if (!Number.isFinite(rate) || rate <= 0) return null;
+    return Math.round(verifiedGmv * rate * 100) / 100;
+  }
+  if (commercial.model === 'cpa') {
+    const amount = Number(commercial.amount);
+    if (!Number.isFinite(amount) || amount <= 0) return null;
+    return Math.round(verifiedPurchases * amount * 100) / 100;
+  }
+  return null;
+}

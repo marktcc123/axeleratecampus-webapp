@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { MATTERS, TIMEFRAMES, READINESS } from '../../lib/demand.js';
+import { TIMEFRAMES, READINESS } from '../../lib/demand.js';
+import { interpretDemand } from '../../marketplace/interpret.js';
 import { useDemand } from '../demand.jsx';
 import { useRequireAccount } from '../require-account.js';
 import './demand.css';
 
-const LAST = 5;
-const MAX_MUST_HAVE = 3;
+const LAST = 3;
 
 export default function DemandNew() {
   const nav = useNavigate();
@@ -16,34 +16,26 @@ export default function DemandNew() {
 
   const [step, setStep] = useState(1);
   const [rawText, setRawText] = useState(state?.rawText ?? '');
-  const [mustHave, setMustHave] = useState([]);
-  const [niceToHave, setNiceToHave] = useState([]);
-  const [maxBudget, setMaxBudget] = useState('');
   const [timeframe, setTimeframe] = useState('2weeks');
   const [readiness, setReadiness] = useState('interested');
   const [done, setDone] = useState(null);
   const [error, setError] = useState(null);
 
+  const understood = useMemo(() => (rawText.trim().length > 8 ? interpretDemand(rawText) : null), [rawText]);
+
   const draft = useMemo(() => ({
     rawText,
-    maxBudget: maxBudget ? Number(maxBudget) : null,
+    maxBudget: understood?.budgetMax ?? null,
     timeframe,
-    mustHave,
-    matters: niceToHave,
+    mustHave: understood?.labels ?? [],
+    matters: understood?.preferences ?? [],
     readiness,
-  }), [rawText, maxBudget, timeframe, mustHave, niceToHave, readiness]);
+  }), [rawText, understood, timeframe, readiness]);
 
   const preview = useMemo(
-    () => (rawText.trim().length > 8 ? matchDraft({ rawText, maxBudget: maxBudget ? Number(maxBudget) : null }) : null),
-    [rawText, maxBudget, matchDraft],
+    () => (rawText.trim().length > 8 ? matchDraft({ rawText, maxBudget: understood?.budgetMax ?? null }) : null),
+    [rawText, understood, matchDraft],
   );
-
-  const toggleMust = (c) => setMustHave((cur) => {
-    if (cur.includes(c)) return cur.filter((x) => x !== c);
-    if (cur.length >= MAX_MUST_HAVE) return cur;
-    return [...cur, c];
-  });
-  const toggleNice = (c) => setNiceToHave((cur) => (cur.includes(c) ? cur.filter((x) => x !== c) : [...cur, c]));
 
   // Clustering happens before anything is written, so the answer to "has
   // anyone else asked for this?" arrives before we decide what to create.
@@ -61,7 +53,7 @@ export default function DemandNew() {
       readiness,
       budget: draft.maxBudget,
       timeframeId: timeframe,
-      mustHave,
+      mustHave: draft.mustHave,
       signalId: done.signal.id,
     });
     nav(`/app/demand/${done.match.id}`, { state: { joined: Boolean(participation) } });
@@ -83,8 +75,8 @@ export default function DemandNew() {
   });
 
   const next = () => {
-    if (step === 4) finish();
-    else setStep((s) => s + 1);
+    if (step === 2) finish();
+    else setStep(2);
   };
 
   const noMatch = done && !done.match;
@@ -94,7 +86,7 @@ export default function DemandNew() {
     <div className="dn" data-testid="demand-new">
       <div className="dn__top">
         <ol className="dn__pips" aria-hidden="true">
-          {[1, 2, 3, 4, 5].map((n) => (
+          {[1, 2, 3].map((n) => (
             <li key={n} className="dn__pip" data-on={n <= step ? '' : undefined} />
           ))}
         </ol>
@@ -120,60 +112,16 @@ export default function DemandNew() {
 
         {step === 2 && (
           <>
-            <h1 className="dn__h1">What must a brand get right?</h1>
-            <p className="dn__lede">Up to {MAX_MUST_HAVE}. These are matched strictly — an offer that misses one says so.</p>
-            <div className="dn__chips" data-testid="must-have">
-              {MATTERS.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  className="dn__chip"
-                  aria-pressed={mustHave.includes(c)}
-                  disabled={!mustHave.includes(c) && mustHave.length >= MAX_MUST_HAVE}
-                  onClick={() => toggleMust(c)}
-                >
-                  {c}
-                </button>
+            <h1 className="dn__h1">We understood this.</h1>
+            <p className="dn__lede">Correct anything we missed by editing your sentence. We only ask what the sentence did not already say.</p>
+            <ul className="dn__reqs" data-testid="interpreted">
+              {(understood?.labels.length ? understood.labels : ['We’ll use your sentence as written']).map((label) => (
+                <li key={label}>{label}</li>
               ))}
-            </div>
-            <p className="dn__lede dn__lede--tight">Nice to have</p>
-            <div className="dn__chips" data-testid="nice-to-have">
-              {MATTERS.filter((c) => !mustHave.includes(c)).map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  className="dn__chip"
-                  aria-pressed={niceToHave.includes(c)}
-                  onClick={() => toggleNice(c)}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-          </>
-        )}
-
-        {step === 3 && (
-          <>
-            <h1 className="dn__h1">What&rsquo;s your maximum budget?</h1>
-            <p className="dn__lede">Optional. It decides which offers are shown to you as in budget.</p>
-            <label className="dn__budget">
-              <span>$</span>
-              <input
-                type="number"
-                min="1"
-                inputMode="numeric"
-                value={maxBudget}
-                onChange={(e) => setMaxBudget(e.target.value)}
-                placeholder="25"
-              />
-            </label>
-          </>
-        )}
-
-        {step === 4 && (
-          <>
-            <h1 className="dn__h1">When are you likely to buy?</h1>
+              {understood?.budgetMax != null && <li>Under ${understood.budgetMax}</li>}
+              {understood?.productType && <li>{understood.productType}</li>}
+            </ul>
+            <h2 className="dn__h1">When are you likely to buy?</h2>
             <p className="dn__lede">Your request stays live for this long, then we check in.</p>
             <ul className="dn__choices">
               {TIMEFRAMES.map((t) => (
@@ -266,7 +214,7 @@ export default function DemandNew() {
             onClick={next}
             disabled={step === 1 && rawText.trim().length < 8}
           >
-            {step === 4 ? 'See who else wants this' : 'Next'} <span aria-hidden="true">&rarr;</span>
+            {step === 2 ? 'See who else wants this' : 'Next'} <span aria-hidden="true">&rarr;</span>
           </button>
         </div>
       )}

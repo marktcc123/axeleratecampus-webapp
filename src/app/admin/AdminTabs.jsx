@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { isLegacyMode } from '../../lib/app-mode.js';
 
 // Thirteen tabs do not fit a 520px column, and neither existing pattern fits:
 // the DS Tabs component draws folder tabs sized for four, and the app's
@@ -9,6 +10,13 @@ import { NavLink } from 'react-router-dom';
 //
 // Counts appear only where a queue holds work waiting. A count of editable
 // rows (Campuses, Cashback) is not a to-do, so those carry none.
+export const MARKET_TABS = [
+  { slug: 'demand', label: 'Demand', countKey: null },
+  { slug: 'merchants', label: 'Merchants', countKey: null },
+  { slug: 'offers', label: 'Offers', countKey: null },
+  { slug: 'attribution', label: 'Attribution', countKey: null },
+];
+
 export const TABS = [
   { slug: 'analytics', label: 'Analytics', countKey: null },
   // The catalogue: what a student browses. These four write the same store the
@@ -33,9 +41,10 @@ export const TABS = [
 // tab role would promise aria-controls and a tabpanel that do not exist, while
 // also overriding the anchors' own link role for assistive tech.
 export default function AdminTabs({ counts = {} }) {
+  const tabs = isLegacyMode() ? TABS : MARKET_TABS;
   return (
     <nav className="adm__tabs" aria-label="Admin sections">
-      {TABS.map((tab) => {
+      {tabs.map((tab) => {
         const n = tab.countKey ? counts[tab.countKey] : null;
         return (
           <NavLink key={tab.slug} to={`/app/me/admin/${tab.slug}`} className="adm__tab">

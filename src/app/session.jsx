@@ -80,9 +80,9 @@ export function SessionProvider({ children }) {
 
     const merchantMembership = state.memberships.find((m) => m.role === ROLES.merchant) ?? null;
 
-    const signUp = ({ firstName, email, provider = 'email', ageRange = null, region = null, sourceType = 'direct', communityId = null }) => {
+    const signUp = ({ id, firstName, email, provider = 'email', ageRange = null, region = null, sourceType = 'direct', communityId = null }) => {
       const user = {
-        id: uid(),
+        id: id || uid(),
         firstName: String(firstName || '').trim() || 'You',
         email: String(email || '').trim(),
         provider,

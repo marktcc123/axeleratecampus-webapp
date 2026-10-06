@@ -23,8 +23,8 @@ const norm = (s) => String(s || '').toLowerCase().trim();
 // structured attributes say it. Title text is the last resort, never the first.
 function meets(requirement, offer, product) {
   const want = norm(requirement);
-  if ((offer.matched ?? []).some((m) => norm(m) === want)) return true;
-
+  // A merchant's own "matched" list is copy, not evidence. Fit is computed
+  // from the product's structured attributes.
   const attrs = product?.attributes ?? {};
   const bag = new Set([
     ...Object.entries(attrs).flatMap(([k, v]) => [
@@ -107,9 +107,7 @@ export function matchOffer(offer, { cluster, participation, product } = {}) {
 export function labelOffers(ranked) {
   if (!ranked.length) return ranked;
   const byScore = [...ranked].sort((a, b) => b.match.matchScore - a.match.matchScore);
-  const cheapest = [...ranked].sort((a, b) => a.offer.priceUsd - b.offer.priceUsd)[0];
   const fastest = [...ranked].sort((a, b) => days(a.offer.shippingTime) - days(b.offer.shippingTime))[0];
-  const priciest = [...ranked].sort((a, b) => b.offer.priceUsd - a.offer.priceUsd)[0];
 
   const taken = new Set();
   const assign = (row, label) => {
@@ -118,10 +116,13 @@ export function labelOffers(ranked) {
     taken.add(row.offer.id);
   };
 
+  const valueOf = (row) => (row.match.parts?.fit ?? 0) * (row.match.parts?.price ?? 0);
+  const byValue = [...ranked].sort((a, b) => valueOf(b) - valueOf(a));
+
   assign(byScore[0], 'Best Match');
-  assign(cheapest, 'Best Value');
-  assign(priciest, 'Premium Pick');
-  assign(fastest, 'Fastest');
+  assign(byValue.find((row) => row.offer.id !== byScore[0]?.offer.id) ?? byValue[0], 'Best Value');
+  assign([...ranked].sort((a, b) => days(a.offer.shippingTime) - days(b.offer.shippingTime))
+    .find((row) => !taken.has(row.offer.id)) ?? fastest, 'Fastest');
   byScore.forEach((row) => { if (!taken.has(row.offer.id)) row.label = 'Also matched'; });
 
   return byScore;
@@ -137,5 +138,6 @@ export function rankOffers(offers, { cluster, participation, productById = {} } 
     offer,
     match: matchOffer(offer, { cluster, participation, product: productById[offer.productId] }),
   }));
-  return labelOffers(rows);
+  const strongest = [...rows].sort((a, b) => b.match.matchScore - a.match.matchScore).slice(0, 3);
+  return labelOffers(strongest);
 }

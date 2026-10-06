@@ -127,7 +127,9 @@ export function demoAttributions(clusterId) {
   // The seed states a revenue figure. Spread it across the purchase records so
   // the merchant view's GMV is that figure, not a sum of whichever offer the
   // picker happened to land on.
-  const bought = rows.filter((r) => r.state !== 'clicked');
+  // Revenue sits on independently verified rows only. Self-reports stay
+  // in the list so the dashboard can show them apart from verified GMV.
+  const bought = rows.filter((r) => r.state === 'merchant_verified' || r.state === 'attributed');
   const target = Number(out.revenue) || 0;
   if (bought.length && target > 0) {
     const each = Math.floor(target / bought.length);

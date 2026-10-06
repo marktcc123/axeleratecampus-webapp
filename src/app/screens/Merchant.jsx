@@ -6,11 +6,7 @@ import { formatBudget, formatMoney } from '../../lib/demand.js';
 import './demand.css';
 
 const EMPTY = {
-  brand: '',
-  product: '',
-  checkoutUrl: '',
-  image: '',
-  retailPriceUsd: '',
+  productId: '',
   priceUsd: '',
   bundle: '',
   inventory: '',
@@ -19,12 +15,15 @@ const EMPTY = {
 };
 
 export default function Merchant() {
-  const { clusters, submitOffer, merchantView, myOrg } = useDemand();
+  const { clusters, products, submitOffer, merchantView, merchantOpportunities, myOrg } = useDemand();
   const [target, setTarget] = useState(null);
   const [form, setForm] = useState(EMPTY);
   const [sent, setSent] = useState(null);
   const [error, setError] = useState(null);
-  const live = clusters.filter((c) => c.openToMerchants);
+  const catalog = products.filter((p) => (myOrg ? p.orgId === myOrg.id : false));
+  const live = myOrg
+    ? merchantOpportunities(myOrg).map((row) => row.cluster)
+    : clusters.filter((c) => c.openToMerchants);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -34,15 +33,12 @@ export default function Merchant() {
     const result = submitOffer({
       clusterId: target.id,
       orgId: myOrg?.id,
-      product: form.product,
-      checkoutUrl: form.checkoutUrl,
-      retailPriceUsd: Number(form.retailPriceUsd) || Number(form.priceUsd),
+      productId: form.productId,
       priceUsd: Number(form.priceUsd),
       bundle: form.bundle || null,
       inventory: Number(form.inventory) || 0,
       shippingTime: form.shippingTime,
       why: form.why,
-      matched: (target.commonRequirements ?? []).slice(0, 3),
     });
     if (result?.error) {
       setError(result.message);
@@ -83,14 +79,17 @@ export default function Merchant() {
               <li key={c.id} className="mc__block">
                 <p className="mc__need">{c.normalizedNeed}</p>
                 <dl className="mc__stats">
-                  <div><dd>{view?.qualifiedBuyers ?? c.qualifiedDemandCount}</dd><dt>Qualified buyers</dt></div>
-                  <div><dd>{formatBudget(c.budgetRange, view?.targetPrice ?? c.averageBudget)}</dd><dt>Target price</dt></div>
-                  <div><dd>{c.purchaseWindow}</dd><dt>Purchase window</dt></div>
+                  <div><dd>{view?.activeDemand ?? c.counts?.joined ?? 0}</dd><dt>Active demand</dt></div>
+                  <div><dd>{view?.readyToBuy ?? c.counts?.readyToBuy ?? 0}</dd><dt>Ready to buy</dt></div>
+                  <div><dd>{formatBudget(c.budgetRange, view?.targetPrice ?? c.averageBudget)}</dd><dt>Median budget</dt></div>
                 </dl>
-                {(stats.purchases > 0) && (
+                {(stats.verifiedPurchases > 0) && (
                   <p className="mc__out" data-testid="merchant-outcomes">
-                    {stats.purchases} purchases · {formatMoney(stats.revenue)} GMV · {(stats.conversion * 100).toFixed(1)}% conversion
+                    {stats.verifiedPurchases} verified purchases · {formatMoney(stats.verifiedRevenue)} verified GMV · {(stats.conversion * 100).toFixed(1)}% verified conversion
                   </p>
+                )}
+                {(stats.selfReported > 0) && (
+                  <p className="mc__out">{stats.selfReported} self-reported. Not counted as verified GMV.</p>
                 )}
                 <button
                   type="button"
@@ -107,20 +106,23 @@ export default function Merchant() {
         {target && (
           <form className="mc__form" onSubmit={onSubmit}>
             <h3 className="dm__h2">Respond · {target.normalizedNeed}</h3>
+            <label className="mc__field">
+              <span>Product</span>
+              <select required value={form.productId || ''} onChange={set('productId')}>
+                <option value="">Choose from your catalog</option>
+                {catalog.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </label>
+            {!catalog.length && <p className="mc__p">Add a product before you can submit an offer. Match is calculated from the product’s attributes.</p>}
             {[
-              ['brand', 'Brand', 'text'],
-              ['product', 'Product name', 'text'],
-              ['checkoutUrl', 'Product / checkout URL', 'text'],
-              ['image', 'Product image URL', 'text'],
-              ['retailPriceUsd', 'Retail price', 'number'],
-              ['priceUsd', 'Offered price', 'number'],
+              ['priceUsd', 'Offer price', 'number'],
               ['bundle', 'Bundle / gift', 'text'],
-              ['inventory', 'Inventory available', 'number'],
-              ['shippingTime', 'Shipping time', 'text'],
+              ['inventory', 'Allocated inventory', 'number'],
+              ['shippingTime', 'Shipping promise', 'text'],
             ].map(([k, label, type]) => (
               <label key={k} className="mc__field">
                 <span>{label}</span>
-                <input required={['brand', 'product', 'checkoutUrl', 'priceUsd'].includes(k)} type={type} value={form[k]} onChange={set(k)} />
+                <input required={k === 'priceUsd' || k === 'inventory'} type={type} value={form[k]} onChange={set(k)} />
               </label>
             ))}
             <label className="mc__field">

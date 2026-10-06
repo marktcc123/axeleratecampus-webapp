@@ -1,6 +1,6 @@
 import {
-  readinessWeight, verificationWeight, isQualifying, READY_TO_BUY,
-  thresholdsFor, canTransition, ATTRIBUTION_CONFIDENCE,
+  readinessWeight, verificationWeight, READY_TO_BUY,
+  thresholdsFor, canTransition, canonicalStatus, CLUSTER_RANK, CLUSTER_FLOW,
 } from './marketplace.js';
 
 // Demand quality, as arithmetic over participations.
@@ -32,11 +32,15 @@ export function expectedOrderValue(p, cluster) {
 // The five figures the product talks about. Deliberately NOT one number:
 // "143 joined" and "16 purchase-verified" mean different things to a merchant,
 // and collapsing them is how a demand marketplace starts lying.
+const countsTowardDemand = (p) => (p.verificationLevel ?? 'V1') !== 'V0';
+
 export function breakdown(participations, now = Date.now()) {
-  const active = participations.filter((p) => isActive(p, now));
+  const active = participations.filter((p) => isActive(p, now) && countsTowardDemand(p));
   return {
     joined: active.length,
-    qualified: active.filter((p) => isQualifying(p.readiness)).length,
+    // Kept so older screens keep rendering. It is active demand, not a
+    // separate "qualified buyer" class — interested is not qualified.
+    qualified: active.length,
     readyToBuy: active.filter((p) => READY_TO_BUY.has(p.readiness)).length,
     purchaseVerified: active.filter((p) => p.verificationLevel === 'V3' || p.verificationLevel === 'V4').length,
     committed: active.filter((p) => p.readiness === 'committed' || p.verificationLevel === 'V4').length,
@@ -51,7 +55,7 @@ export function breakdown(participations, now = Date.now()) {
 // burst of identical signals cannot drag a cluster over the line on its own.
 export function estimatedGmv(participations, cluster, now = Date.now()) {
   return participations
-    .filter((p) => isActive(p, now))
+    .filter((p) => isActive(p, now) && countsTowardDemand(p))
     .reduce((sum, p) => {
       const commitment = readinessWeight(p.readiness) / 4;     // ready-to-buy = 1.0
       const confidence = verificationWeight(p.verificationLevel ?? 'V1');
@@ -87,70 +91,76 @@ export function demandQualityScore(cluster, participations, { merchantMatches = 
 
 export function meetsQualified(quality) {
   const { breakdown: b, estimatedGmv: gmv, thresholds: t } = quality;
+  const minActive = t.minActiveParticipants ?? t.minQualifiedParticipants ?? 15;
   return (
-    b.qualified >= t.minQualifiedParticipants
+    b.joined >= minActive
     && b.readyToBuy >= t.minReadyToBuy
     && gmv >= t.minEstimatedGmv
+    && (quality.parts?.trust ?? 1) >= (1 - (t.maxFraudScore ?? 1))
   );
 }
 
-export function meetsLive(quality, { merchantMatches = 0, adminApproved = false } = {}) {
-  if (!meetsQualified(quality)) return false;
-  return adminApproved || merchantMatches >= quality.thresholds.minMerchantMatches;
+// The status the numbers justify, ignoring how far the cluster currently is.
+export function desiredStatus(quality, { liveOffers = 0, verifiedPurchases = 0 } = {}) {
+  if (verifiedPurchases > 0 && liveOffers > 0) return 'converting';
+  if (liveOffers > 0) return 'offers_live';
+  if (meetsQualified(quality)) return 'sourcing';
+  return 'collecting';
 }
 
-// The one place a cluster's status may change on its own. Everything else goes
-// through an explicit admin action, and both are checked against CLUSTER_FLOW.
-export function nextStatus(cluster, quality, { merchantMatches = 0, liveOffers = 0, purchases = 0, adminApproved = false } = {}) {
-  const from = cluster.status;
-  if (from === 'rejected' || from === 'expired') return from;
+// Walk every legal forward edge until the cluster sits on the status its
+// demand already earned. Merchant matches are not an input.
+export function nextStatus(cluster, quality, { liveOffers = 0, verifiedPurchases = 0 } = {}) {
+  let from = canonicalStatus(cluster.status);
+  if (from === 'rejected' || from === 'expired' || from === 'closed') return from;
+  if (!CLUSTER_FLOW[from]) from = 'collecting';
 
-  const want = (() => {
-    if (purchases > 0 && liveOffers > 0) return 'converting';
-    if (liveOffers > 0) return 'offers_available';
-    if (meetsLive(quality, { merchantMatches, adminApproved })) {
-      return merchantMatches > 0 ? 'offers_open' : 'live';
-    }
-    if (meetsQualified(quality)) return 'qualified';
-    return 'collecting';
-  })();
+  const want = desiredStatus(quality, { liveOffers, verifiedPurchases });
+  if ((CLUSTER_RANK[want] ?? 0) < (CLUSTER_RANK[from] ?? 0) && want !== 'collecting') return from;
 
-  if (want === from) return from;
-
-  // One step at a time, along a legal edge. A cluster that qualifies and
-  // already has offers walks collecting → qualified → live → offers_open over
-  // successive evaluations rather than teleporting, so every state it passes
-  // through is one the UI and the admin log actually saw.
-  if (canTransition(from, want)) return want;
-  const step = (CLUSTER_PATH[from] ?? []).find((s) => canTransition(from, s));
-  return step ?? from;
+  let guard = 0;
+  while (from !== want && guard < 8) {
+    guard += 1;
+    if (canTransition(from, want)) return want;
+    const ahead = Object.entries(CLUSTER_RANK)
+      .filter(([, rank]) => rank > (CLUSTER_RANK[from] ?? 0) && rank <= (CLUSTER_RANK[want] ?? 0))
+      .sort((a, b) => a[1] - b[1])
+      .map(([id]) => id)
+      .find((id) => canTransition(from, id));
+    if (!ahead) return from;
+    from = ahead;
+  }
+  return from;
 }
-
-// The forward path, used when the target is more than one edge away.
-const CLUSTER_PATH = {
-  collecting: ['qualified'],
-  qualified: ['live'],
-  live: ['offers_open'],
-  offers_open: ['offers_available'],
-  offers_available: ['converting'],
-  converting: ['scaled'],
-};
 
 // Outcome figures for a merchant or an admin. Weighted by how much we believe
 // each attribution record.
-export function outcomeStats(records = []) {
+const VERIFIED_STATES = new Set(['merchant_verified', 'attributed']);
+
+// Clicks and self-reports stay visible. Verified GMV counts only rows an
+// independent confirmation produced. A self-report is never revenue.
+export function outcomeStats(records = [], purchases = []) {
   const clicks = records.filter((r) => r.state !== 'refunded').length;
-  const purchases = records.filter((r) => ['self_reported', 'merchant_verified', 'attributed'].includes(r.state));
-  const confident = purchases.reduce((n, r) => n + (ATTRIBUTION_CONFIDENCE[r.state] ?? 0), 0);
-  const revenue = purchases.reduce((n, r) => n + (Number(r.orderValueUsd) || 0), 0);
-  const refunded = records.filter((r) => r.state === 'refunded').length;
+  const selfReported = records.filter((r) => r.state === 'self_reported').length;
+  const fromAttributions = records.filter((r) => VERIFIED_STATES.has(r.state));
+  const fromPurchases = purchases.filter((p) => p.status === 'verified');
+  const verifiedRows = fromPurchases.length
+    ? fromPurchases.map((p) => ({ orderValueUsd: p.amount }))
+    : fromAttributions;
+  const verifiedPurchases = fromPurchases.length ? fromPurchases.length : fromAttributions.length;
+  const verifiedRevenue = verifiedRows.reduce((n, r) => n + (Number(r.orderValueUsd ?? r.amount) || 0), 0);
+  const refunded = records.filter((r) => r.state === 'refunded').length
+    + purchases.filter((p) => p.status === 'refunded').length;
   return {
     clicks,
-    purchases: purchases.length,
-    confidentPurchases: Math.round(confident * 10) / 10,
-    revenue,
+    selfReported,
+    verifiedPurchases,
+    verifiedRevenue,
+    // Older call sites. These are verified figures, not self-reports.
+    purchases: verifiedPurchases,
+    revenue: verifiedRevenue,
     refunded,
-    conversion: clicks > 0 ? purchases.length / clicks : 0,
+    conversion: clicks > 0 ? verifiedPurchases / clicks : 0,
   };
 }
 

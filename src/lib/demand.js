@@ -1,13 +1,9 @@
 import seed from '../data/demand.example.json';
 import { CLUSTER_LABEL, READINESS_CHOICES, TIMEFRAMES as TF, isQualifying } from './marketplace.js';
+import { bestCluster } from '../marketplace/clustering.js';
+import { parseBudget, scoreCluster, tokens } from '../marketplace/text.js';
 
-const STOP = new Set([
-  'a', 'an', 'the', 'for', 'and', 'that', 'with', 'under', 'looking', 'im', 'i',
-  'want', 'wanted', 'next', 'good', 'works', 'work', 'doesn', 't', 'doesnt',
-  'leave', 'leaves', 'really', 'actually', 'something', 'similar', 'like',
-  'can', 'carry', 'everywhere', 'am', 'is', 'are', 'to', 'of', 'in', 'on',
-  'my', 'me', 'it', 'its', 'be', 'or',
-]);
+export { parseBudget, scoreCluster, tokens };
 
 export const PLACEHOLDERS = [
   'A Korean sunscreen under $25 with no white cast',
@@ -32,54 +28,13 @@ export const QUALIFIED = {
   has: (id) => isQualifying(id),
 };
 
-export function tokens(text) {
-  return String(text || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9$]+/g, ' ')
-    .split(/\s+/)
-    .map((t) => t.replace(/^\$/, ''))
-    .filter((t) => t && !STOP.has(t) && t.length > 1);
-}
-
-export function parseBudget(text) {
-  const m = String(text || '').match(/\$?\s*(\d{1,4})\b/);
-  return m ? Number(m[1]) : null;
-}
-
-function hit(keyword, bag) {
-  if (bag.has(keyword)) return true;
-  for (const t of bag) {
-    if (keyword.includes(t) || t.includes(keyword)) return true;
-  }
-  return false;
-}
-
-export function scoreCluster(cluster, text, budget) {
-  const bag = new Set(tokens(text));
-  let score = 0;
-  for (const k of cluster.keywords ?? []) {
-    if (hit(k, bag)) score += 2;
-  }
-  const body = String(text || '').toLowerCase();
-  if (/white\s*cast/.test(body) && (cluster.keywords ?? []).includes('cast')) score += 3;
-  if (/korean/.test(body) && (cluster.keywords ?? []).includes('korean')) score += 2;
-  if (budget != null && cluster.budgetRange) {
-    const [lo, hi] = cluster.budgetRange;
-    if (budget >= lo && budget <= hi + 5) score += 2;
-    if (budget < lo - 10) score -= 2;
-  }
-  return score;
-}
-
-// The seam a later model plugs into. Today: keyword + budget overlap.
+// Category gate, then keyword and budget overlap. Organic clusters are
+// matchable because opening one stores the keywords interpretation produced.
 export function clusterDemand(input, clusters = seed.clusters) {
   const text = typeof input === 'string' ? input : input?.rawText ?? '';
-  const budget = typeof input === 'string' ? parseBudget(text) : (input?.maxBudget ?? parseBudget(text));
-  const ranked = clusters
-    .map((c) => ({ cluster: c, score: scoreCluster(c, text, budget) }))
-    .filter((r) => r.score >= 3)
-    .sort((a, b) => b.score - a.score);
-  return ranked[0] ?? null;
+  const budget = typeof input === 'string' ? parseBudget(text) : (input?.maxBudget ?? input?.budgetMax ?? parseBudget(text));
+  const signal = typeof input === 'string' ? { rawText: text, maxBudget: budget } : { ...input, rawText: text, maxBudget: budget };
+  return bestCluster(signal, clusters);
 }
 
 export function formatBudget(range, avg) {

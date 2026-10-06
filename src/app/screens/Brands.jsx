@@ -39,7 +39,7 @@ export default function Brands() {
 
         <ol className="mc__how">
           <li><b>Register your business.</b> We verify identity before anything you publish reaches a consumer.</li>
-          <li><b>Read live demand.</b> Qualified buyers, target price, the requirements people actually stated.</li>
+          <li><b>Read live demand.</b> Active demand, ready to buy, median budget, and the requirements people actually stated.</li>
           <li><b>Submit an offer.</b> Reviewed, then shown alongside competing brands.</li>
           <li><b>Sell on your own store.</b> We send the buyer to your checkout and attribute the sale.</li>
         </ol>
@@ -53,7 +53,8 @@ export default function Brands() {
               <li key={v.clusterId} className="mc__block">
                 <p className="mc__need">{v.need}</p>
                 <dl className="mc__stats">
-                  <div><dd>{v.qualifiedBuyers}</dd><dt>Qualified buyers</dt></div>
+                  <div><dd>{v.activeDemand}</dd><dt>Active demand</dt></div>
+                  <div><dd>{v.readyToBuy}</dd><dt>Ready to buy</dt></div>
                   <div><dd>{formatMoney(v.estimatedDemandUsd)}</dd><dt>Estimated demand</dt></div>
                   <div><dd>{formatBudget(v.budgetRange, v.targetPrice)}</dd><dt>Target price</dt></div>
                 </dl>

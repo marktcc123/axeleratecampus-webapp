@@ -9,8 +9,8 @@ import './screens.css';
 // Honest groups. "Trending" and a weekly growth percentage were momentum we
 // had not measured — a demand of four people is forming, it is not surging.
 const BLOCKS = [
-  { id: 'responded', title: 'Brands responded', test: (c) => ['offers_available', 'converting', 'scaled'].includes(c.status) },
-  { id: 'open', title: 'Open demand', test: (c) => ['live', 'offers_open', 'qualified'].includes(c.status) },
+  { id: 'responded', title: 'Brands responded', test: (c) => ['offers_live', 'converting'].includes(c.status) },
+  { id: 'open', title: 'Open demand', test: (c) => ['sourcing', 'qualified'].includes(c.status) },
   { id: 'forming', title: 'Demand is forming', test: (c) => c.status === 'collecting' },
 ];
 

@@ -1,8 +1,14 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import seed from '../data/demand.example.json';
 import { clusterDemand, slugNeed } from '../lib/demand.js';
+import { isDemoMode, isLiveMode } from '../lib/app-mode.js';
 import { track } from '../lib/analytics.js';
 import { demoAttributions, demoParticipations } from '../lib/demo-participants.js';
+import { canonicalFromInterpretation, interpretDemand } from '../marketplace/interpret.js';
+import { applySelfReport, applyVerifiedPurchase, attributionToken } from '../marketplace/purchases.js';
+import { feeFor } from '../lib/marketplace.js';
+import { loadMarketplace, syncMarketplace } from '../marketplace/remote.js';
+import { clustersForMode, demandsForMerchant, rowsForMode } from '../marketplace/sources.js';
 import {
   breakdown, daysLeft, demandQualityScore, estimatedGmv, expiryFor,
   isActive, nextStatus, outcomeStats,
@@ -44,6 +50,7 @@ function empty() {
     products: [],
     offers: [],
     attributions: [],
+    purchases: [],
     outcomes: [],
     notifications: [],
     adminFlags: [],
@@ -100,34 +107,57 @@ const uid = (p) => `${p}-${Date.now().toString(36)}-${Math.random().toString(36)
 const now = () => new Date().toISOString();
 
 export function DemandProvider({ children }) {
-  const [state, setState] = useState(load);
+  const live = isLiveMode();
+  const [state, setState] = useState(() => (live ? empty() : load()));
+  const [remoteError, setRemoteError] = useState(null);
   const session = useSession();
+
+  useEffect(() => {
+    if (!live) return undefined;
+    let stop = false;
+    loadMarketplace().then((remote) => {
+      if (stop) return;
+      if (remote.error) setRemoteError(remote.error);
+      else setState((prev) => ({ ...empty(), ...prev, ...remote.state }));
+    });
+    return () => { stop = true; };
+  }, [live]);
 
   const commit = useCallback((fn) => {
     setState((prev) => {
       const next = fn(prev);
-      persist(next);
+      if (live) {
+        syncMarketplace(prev, next).then((result) => {
+          if (result?.error) setRemoteError(result.error);
+          else if (result?.participationFacts) {
+            setState((cur) => ({ ...cur, participationFacts: result.participationFacts }));
+          }
+        });
+      } else {
+        persist(next);
+      }
       return next;
     });
-  }, []);
+  }, [live]);
 
   const api = useMemo(() => {
     const userId = session.userId;
     const t = Date.now();
 
     // ─── organizations, products ──────────────────────────────────────────
-    const organizations = [...seed.organizations, ...state.organizations]
+    const demo = isDemoMode();
+    const organizations = [...(demo ? seed.organizations : []), ...state.organizations]
       .map((o) => ({ ...o, status: state.orgStatus[o.id] ?? o.status }));
     const orgById = Object.fromEntries(organizations.map((o) => [o.id, o]));
 
-    const products = [...seed.products, ...state.products];
+    const products = [...(demo ? seed.products : []), ...state.products];
     const productById = Object.fromEntries(products.map((p) => [p.id, p]));
 
     // ─── offers ───────────────────────────────────────────────────────────
     // An offer's effective status is the admin's decision if there is one,
     // then its own; an offer from a suspended or unverified organization is
     // never public whatever its own row says.
-    const allOffers = [...seed.offers, ...state.offers].map((o) => {
+    const allOffers = [...(demo ? seed.offers : []), ...state.offers].map((o) => {
       const org = orgById[o.orgId];
       const status = state.offerStatus[o.id] ?? o.status ?? 'submitted';
       const gated = org && org.status !== 'verified' && status === 'live' ? 'submitted' : status;
@@ -145,9 +175,14 @@ export function DemandProvider({ children }) {
       .filter((o) => OFFER_PUBLIC_STATES.includes(o.status) && (o.inventory ?? 1) > 0);
 
     // ─── participations ───────────────────────────────────────────────────
-    const participantsFor = (id) => [...demoParticipations(id), ...state.participations.filter((p) => p.clusterId === id)];
+    const participantsFor = (id) => (
+      demo
+        ? rowsForMode(true, demoParticipations(id), state.participations.filter((p) => p.clusterId === id))
+        : (state.participationFacts ?? []).filter((p) => p.clusterId === id)
+    );
+    const purchasesFor = (id) => (state.purchases ?? []).filter((p) => p.clusterId === id);
     const attributionsFor = (id) => [
-      ...demoAttributions(id),
+      ...(demo ? demoAttributions(id) : []),
       ...state.attributions.filter((a) => a.clusterId === id).map((a) => ({ ...a, state: state.attributionStatus[a.id] ?? a.state })),
     ];
 
@@ -156,7 +191,11 @@ export function DemandProvider({ children }) {
     ) ?? null;
 
     // ─── clusters ─────────────────────────────────────────────────────────
-    const base = [...seed.clusters.map((c) => ({ ...c, demo: true })), ...state.opened];
+    const base = clustersForMode(
+      demo,
+      seed.clusters.map((c) => ({ ...c, demo: true })),
+      state.opened,
+    );
 
     const clusters = base.map((c) => {
       const parts = participantsFor(c.id);
@@ -164,7 +203,7 @@ export function DemandProvider({ children }) {
       const live = offers.filter((o) => o.status === 'live');
       const merchantMatches = new Set(offers.filter((o) => o.status !== 'rejected').map((o) => o.orgId)).size;
       const records = attributionsFor(c.id);
-      const outcome = outcomeStats(records);
+      const outcome = outcomeStats(records, purchasesFor(c.id));
 
       const quality = demandQualityScore(c, parts, {
         merchantMatches,
@@ -177,10 +216,8 @@ export function DemandProvider({ children }) {
       const status = expired
         ? 'expired'
         : stored ?? nextStatus(c, quality, {
-          merchantMatches,
           liveOffers: live.length,
-          purchases: outcome.purchases,
-          adminApproved: Boolean(state.clusterApproved[c.id]),
+          verifiedPurchases: outcome.verifiedPurchases,
         });
 
       const mine = myParticipation(c.id);
@@ -289,18 +326,21 @@ export function DemandProvider({ children }) {
       }
 
       const tf = timeframe(draft.timeframe);
+      const interpretation = interpretDemand(draft.rawText);
       const signal = {
         id: uid('sig'),
         userId,
         rawText: draft.rawText,
+        interpretation,
         // Structured extraction. Matching happens on these, not on the title —
         // "lightweight" and "no white cast" are the product decision, and a
         // keyword search over a sentence loses both.
-        category: draft.category ?? null,
-        maxBudget: draft.maxBudget ? Number(draft.maxBudget) : null,
+        category: draft.category ?? interpretation.category ?? null,
+        productType: interpretation.productType ?? null,
+        maxBudget: draft.maxBudget ? Number(draft.maxBudget) : interpretation.budgetMax,
         timeframeId: tf.id,
-        mustHave: draft.mustHave ?? [],
-        optionalPreferences: draft.matters ?? [],
+        mustHave: draft.mustHave?.length ? draft.mustHave : interpretation.labels,
+        optionalPreferences: draft.matters ?? interpretation.preferences,
         readiness: draft.readiness ?? 'interested',
         region: draft.region ?? session.user?.region ?? null,
         sourceType: draft.sourceType ?? session.user?.sourceType ?? 'direct',
@@ -421,13 +461,19 @@ export function DemandProvider({ children }) {
     const openOwn = (signal, extras = {}) => {
       const id = uid('dmd');
       const tf = timeframe(signal.timeframeId);
+      const interpretation = signal.interpretation ?? interpretDemand(signal.rawText);
+      const canonical = canonicalFromInterpretation(interpretation, signal.rawText);
       const opened = {
         id,
         normalizedNeed: slugNeed(signal.rawText),
-        category: extras.category ?? signal.category ?? 'General',
-        averageBudget: signal.maxBudget,
-        budgetRange: signal.maxBudget ? [Math.max(0, signal.maxBudget - 5), signal.maxBudget] : null,
-        commonRequirements: signal.mustHave ?? [],
+        category: extras.category ?? signal.category ?? canonical.category,
+        productType: canonical.productType,
+        averageBudget: signal.maxBudget ?? canonical.averageBudget,
+        budgetRange: signal.maxBudget ? [Math.max(0, signal.maxBudget - 5), signal.maxBudget] : canonical.budgetRange,
+        commonRequirements: (signal.mustHave?.length ? signal.mustHave : canonical.commonRequirements),
+        canonicalRequirements: canonical.canonicalRequirements,
+        canonicalPreferences: canonical.canonicalPreferences,
+        keywords: canonical.keywords,
         geographicDistribution: [],
         purchaseWindow: tf.label,
         purchaseWindowDays: tf.days,
@@ -439,7 +485,6 @@ export function DemandProvider({ children }) {
         scout: extras.asHypothesis ? { handle: 'you', label: 'Originator', userId } : null,
         sourceType: signal.sourceType ?? 'direct',
         region: signal.region ?? null,
-        keywords: [],
         demo: false,
         mine: true,
       };
@@ -511,6 +556,7 @@ export function DemandProvider({ children }) {
     };
 
     const clickOffer = (clusterId, offer) => {
+      const token = attributionToken();
       const record = {
         id: uid('att'),
         clusterId,
@@ -519,10 +565,11 @@ export function DemandProvider({ children }) {
         userId,
         state: 'clicked',
         orderValueUsd: 0,
+        attributionToken: token,
         at: now(),
       };
-      track('offer_clicked', { clusterId, offerId: offer.id });
-      track('purchase_redirect', { clusterId, offerId: offer.id, brand: offer.brand });
+      track('offer_clicked', { clusterId, offerId: offer.id, attributionToken: token });
+      track('purchase_redirect', { clusterId, offerId: offer.id, brand: offer.brand, attributionToken: token });
       commit((prev) => ({ ...prev, attributions: [...prev.attributions, record] }));
       return record;
     };
@@ -530,23 +577,50 @@ export function DemandProvider({ children }) {
     // "Did you purchase this?" A self-report is weaker evidence than a
     // merchant callback, so it lands in its own state and may be upgraded
     // later — it is never written in as a confirmed sale.
+    // A yes here is a self-report. It does not create a purchase row, verified
+    // GMV, or a V3 consumer.
     const confirmPurchase = (attributionId, { purchased, orderValueUsd }) => {
       track(purchased ? 'purchase_self_reported' : 'purchase_declined', { attributionId });
-      commit((prev) => ({
-        ...prev,
-        attributions: prev.attributions.map((a) => (
-          a.id === attributionId
-            ? { ...a, state: purchased ? 'self_reported' : 'unknown', orderValueUsd: orderValueUsd ?? a.orderValueUsd, confirmedAt: now() }
-            : a
-        )),
-        participations: prev.participations.map((p) => {
-          const att = prev.attributions.find((a) => a.id === attributionId);
-          return att && p.clusterId === att.clusterId && p.userId === userId
-            ? { ...p, purchaseStatus: purchased ? 'self_reported' : 'none', verificationLevel: purchased ? 'V3' : p.verificationLevel }
-            : p;
-        }),
-      }));
-      if (purchased) session.markPurchaseVerified();
+      commit((prev) => {
+        const current = prev.attributions.find((a) => a.id === attributionId);
+        const applied = applySelfReport(current, { purchased, orderValueUsd, at: now() });
+        if (applied.error) return prev;
+        return {
+          ...prev,
+          attributions: prev.attributions.map((a) => (a.id === attributionId ? applied.attribution : a)),
+          participations: prev.participations.map((p) => (
+            current && p.clusterId === current.clusterId && p.userId === userId
+              ? { ...p, purchaseStatus: purchased ? 'self_reported' : p.purchaseStatus }
+              : p
+          )),
+        };
+      });
+    };
+
+    // Independent confirmation. Admin or a merchant order id. This is the
+    // only path that writes a purchase and may raise the buyer to V3.
+    const verifyPurchase = ({ attributionId, merchantOrderId, amount, verifiedBy = 'admin' }) => {
+      let result = null;
+      commit((prev) => {
+        const current = prev.attributions.find((a) => a.id === attributionId);
+        const applied = applyVerifiedPurchase(current, { merchantOrderId, amount, verifiedBy, at: now() });
+        result = applied;
+        if (applied.error) return prev;
+        return {
+          ...prev,
+          attributions: prev.attributions.map((a) => (a.id === attributionId ? applied.attribution : a)),
+          purchases: [...(prev.purchases ?? []), applied.purchase],
+          participations: prev.participations.map((p) => (
+            p.clusterId === current.clusterId && p.userId === current.userId
+              ? { ...p, purchaseStatus: 'verified', verificationLevel: 'V3' }
+              : p
+          )),
+        };
+      });
+      if (result?.error) return result;
+      if (result?.purchase?.userId === userId) session.markPurchaseVerified();
+      track('purchase_verified', { attributionId, merchantOrderId });
+      return { purchase: result.purchase };
     };
 
     // The loop that makes the Demand Graph worth anything: not "did you buy",
@@ -634,24 +708,28 @@ export function DemandProvider({ children }) {
       if (Number(draft.inventory) <= 0) {
         return { error: 'no_inventory', message: 'Enter the units you can supply.' };
       }
+      const product = draft.productId ? productById[draft.productId] : null;
+      if (!product) {
+        return { error: 'no_product', message: 'Choose a product from your catalog. Match is calculated from its attributes, not from a claim.' };
+      }
 
       const offer = {
         id: uid('off'),
         clusterId: draft.clusterId,
         orgId: draft.orgId,
-        productId: draft.productId ?? null,
+        productId: product.id,
         // Submitted, not live. A human looks before a consumer does.
         status: 'submitted',
         brand: org.name,
-        product: draft.product,
+        product: product.name,
         priceUsd: Number(draft.priceUsd),
-        retailPriceUsd: Number(draft.retailPriceUsd) || Number(draft.priceUsd),
+        retailPriceUsd: Number(draft.retailPriceUsd) || product.priceUsd || Number(draft.priceUsd),
         why: draft.why ?? '',
-        matched: draft.matched ?? [],
+        matched: [],
         delivery: draft.shippingTime ?? null,
         bundle: draft.bundle ?? null,
         matchScore: null,
-        checkoutUrl: draft.checkoutUrl,
+        checkoutUrl: draft.checkoutUrl || product.checkoutUrl,
         inventory: Number(draft.inventory),
         shippingTime: draft.shippingTime ?? null,
         validUntil: draft.validUntil ?? null,
@@ -707,7 +785,8 @@ export function DemandProvider({ children }) {
         status: c.status,
         statusLabel: c.statusLabel,
         // Aggregates only.
-        qualifiedBuyers: b.qualified,
+        activeDemand: b.joined,
+        qualifiedBuyers: b.joined,
         readyToBuy: b.readyToBuy,
         purchaseVerified: b.purchaseVerified,
         estimatedDemandUsd: Math.round(gmv),
@@ -745,12 +824,27 @@ export function DemandProvider({ children }) {
     const merchantPerformance = (orgId) => {
       const mineOffers = allOffers.filter((o) => o.orgId === orgId);
       const records = clusters.flatMap((c) => attributionsFor(c.id)).filter((a) => a.orgId === orgId);
+      const sales = (state.purchases ?? []).filter((p) => p.organizationId === orgId || p.orgId === orgId);
+      const stats = outcomeStats(records, sales);
+      const org = orgById[orgId];
       return {
         offers: mineOffers,
         live: mineOffers.filter((o) => o.status === 'live').length,
         pending: mineOffers.filter((o) => o.status === 'submitted').length,
-        ...outcomeStats(records),
+        ...stats,
+        fee: feeFor(org?.commercial, stats),
       };
+    };
+
+    const merchantOpportunities = (org = myOrg) => {
+      return demandsForMerchant(clusters, org)
+        .map((c) => ({
+          cluster: publicCluster(c),
+          view: merchantView(c.id),
+          match: org ? catalogMatch(org.id, c.id) : null,
+        }))
+        .sort((a, b) => (b.match?.pct ?? 0) - (a.match?.pct ?? 0)
+          || (b.view?.estimatedDemandUsd ?? 0) - (a.view?.estimatedDemandUsd ?? 0));
     };
 
     // ─── admin ────────────────────────────────────────────────────────────
@@ -839,8 +933,21 @@ export function DemandProvider({ children }) {
         const joined = clusters.reduce((n, c) => n + c.counts.joined, 0);
         const qualified = clusters.reduce((n, c) => n + c.counts.qualified, 0);
         const withOffers = clusters.filter((c) => c.liveOfferCount > 0).length;
-        const o = outcomeStats(all);
-        return { signals: state.signals.length, joined, qualified, clustersWithOffers: withOffers, clicks: o.clicks, purchases: o.purchases, revenue: o.revenue };
+        const o = outcomeStats(all, state.purchases ?? []);
+        const openedIds = new Set(state.opened.map((c) => c.id));
+        const joinedExisting = state.signals.filter((s) => s.clusterId && !openedIds.has(s.clusterId)).length;
+        return {
+          signals: state.signals.length,
+          joined,
+          qualified,
+          clustersWithOffers: withOffers,
+          clicks: o.clicks,
+          purchases: o.verifiedPurchases,
+          revenue: o.verifiedRevenue,
+          openedNew: state.opened.length,
+          joinedExisting,
+          clusters: clusters.length,
+        };
       })(),
     });
 
@@ -856,15 +963,16 @@ export function DemandProvider({ children }) {
         const c = byId[h.id];
         const status = !c ? h.status
           : c.status === 'collecting' ? (c.counts.joined > 1 ? 'growing' : 'testing')
-            : c.status === 'qualified' ? 'qualified'
-              : ['live', 'offers_open'].includes(c.status) ? 'market_open'
-                : ['offers_available', 'converting'].includes(c.status) ? 'converted'
-                  : c.status === 'scaled' ? 'successful_market' : h.status;
+          : c.status === 'qualified' ? 'qualified'
+            : c.status === 'sourcing' ? 'market_open'
+              : ['offers_live', 'converting'].includes(c.status) ? 'converted'
+                : c.status === 'closed' ? 'successful_market' : h.status;
         return { ...h, status, cluster: c ? publicCluster(c) : null };
       });
 
     return {
-      demo: true,
+      demo,
+      remoteError,
       clusters: clusters.map(publicCluster),
       allClusters: clusters,
       signals: state.signals.filter((s) => s.userId === userId),
@@ -894,6 +1002,7 @@ export function DemandProvider({ children }) {
       openOwn,
       clickOffer,
       confirmPurchase,
+      verifyPurchase,
       submitOutcome,
       markNotificationsRead,
 
@@ -904,6 +1013,7 @@ export function DemandProvider({ children }) {
       setOfferStatus,
       merchantView,
       merchantPerformance,
+      merchantOpportunities,
       catalogMatch,
 
       setClusterStatus,
@@ -913,7 +1023,7 @@ export function DemandProvider({ children }) {
       mergeClusters,
       adminView,
     };
-  }, [state, commit, session]);
+  }, [state, commit, session, remoteError]);
 
   return <DemandContext.Provider value={api}>{children}</DemandContext.Provider>;
 }

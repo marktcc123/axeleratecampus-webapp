@@ -15,12 +15,11 @@ import './demand.css';
 // momentum the numbers do not support.
 const STAGE = {
   collecting: { step: 1, line: 'Demand is forming. We’re still collecting requests.' },
-  qualified: { step: 2, line: 'Enough people want this for brands to take it seriously.' },
-  live: { step: 3, line: 'This demand is open to brands.' },
-  offers_open: { step: 3, line: 'Brands are preparing offers.' },
-  offers_available: { step: 4, line: 'Brands have responded. Choose what fits you.' },
+  qualified: { step: 2, line: 'This demand is real. We’re matching brands now.' },
+  sourcing: { step: 3, line: 'Brands are being matched.' },
+  offers_live: { step: 4, line: 'Brands have responded. Choose what fits you.' },
   converting: { step: 4, line: 'People are buying from these offers.' },
-  scaled: { step: 4, line: 'An established market on Axelerate.' },
+  closed: { step: 0, line: 'This demand window closed.' },
   expired: { step: 0, line: 'This demand window closed.' },
   rejected: { step: 0, line: 'This request was merged or closed.' },
 };
@@ -58,7 +57,8 @@ export default function DemandDetail() {
 
   const onBuy = (offer) => requireAccount(() => {
     if ((offer.inventory ?? 1) <= 0) { setNotice('That offer just sold out. The brand has been told.'); return; }
-    const href = trackedUrl(offer.checkoutUrl, { demandId: c.id, offerId: offer.id });
+    const record = clickOffer(c.id, offer);
+    const href = trackedUrl(offer.checkoutUrl, { demandId: c.id, offerId: offer.id, ref: record?.attributionToken });
     // A checkout that cannot be opened is a dead end; say so rather than
     // leaving a button that silently does nothing.
     const win = typeof window !== 'undefined' && offer.checkoutUrl
@@ -67,7 +67,6 @@ export default function DemandDetail() {
     if (!win && offer.checkoutUrl) {
       setNotice('We couldn’t open the brand’s checkout. It may be blocked — try again, or copy the link.');
     }
-    clickOffer(c.id, offer);
     setOpen(null);
   }, { intent: 'Create an account so we can confirm your purchase and improve your matches.' });
 
@@ -84,16 +83,13 @@ export default function DemandDetail() {
 
         <p className="dd__stage" data-testid="demand-stage">{stage.line}</p>
         <ol className="dd__steps" aria-label="Demand progress">
-          {['New', 'Growing', 'Live', 'Brands responded'].map((label, i) => (
+          {['Forming', 'Qualified', 'Matching', 'Brands responded'].map((label, i) => (
             <li key={label} className="dd__step" data-on={i < stage.step ? '' : undefined}>{label}</li>
           ))}
         </ol>
 
-        {/* Simplified for consumers on purpose. The granular split — joined vs
-            qualified vs ready vs purchase-verified — is a merchant's decision
-            input, not a shopper's. */}
         <dl className="dd__stats">
-          <div><dd>{c.counts.qualified}</dd><dt>qualified buyers</dt></div>
+          <div><dd>{c.counts.joined}</dd><dt>active demand</dt></div>
           <div><dd>{c.counts.readyToBuy}</dd><dt>ready to buy</dt></div>
           <div><dd>{formatBudget(c.budgetRange, c.averageBudget)}</dd><dt>typical budget</dt></div>
         </dl>

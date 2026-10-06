@@ -21,7 +21,7 @@ export default function DemandCard({ cluster, cta, to }) {
       <p className="dc__count">
         {early
           ? <><b>{n}</b> {n === 1 ? 'person has' : 'people have'} asked for</>
-          : <><b>{counts.qualified}</b> qualified buyers want</>}
+          : <><b>{counts.joined}</b> active demand</>}
       </p>
       <h3 className="dc__need">{cluster.normalizedNeed}</h3>
       {(cluster.commonRequirements?.length > 0) && (

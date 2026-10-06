@@ -1,7 +1,18 @@
-# Axelerate website
+# Axelerate
 
-The public website for Axelerate — paid brand missions for verified college students.
-**Shape what's next.**
+Axelerate is a demand-side marketplace. Consumers say what they want before brands sell to them. Similar purchase intent is aggregated into live demand, verified brands respond with products and offers, and Axelerate measures which demand converts into verified transactions.
+
+Campus can be one source of demand. It is not the product.
+
+## Modes
+
+- `VITE_APP_MODE=demo` (default) — labeled seed demand, synthetic participants, synthetic GMV. Safe to click through.
+- `VITE_APP_MODE=live` — Supabase only. Requires `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `supabase/migrations/20261006000000_marketplace_v1.sql` applied. Live mode does not load seed participants or seed GMV.
+- `VITE_LEGACY_MODE=1` — restores earn, shop, missions, wallet, and the old admin tabs. Off in a normal build.
+
+Live checkout is external. A self-reported purchase is not verified revenue. Verified GMV requires a merchant order id confirmed by an admin, or a later Shopify callback that does not exist yet.
+
+See `PRODUCT_LOGIC.md` and `IMPLEMENTATION_STATUS.md`.
 
 Fully responsive from 320px to 1280px+, built on
 [`axelerate-design-system`](https://github.com/cakkrie/axelerate-design-system) without

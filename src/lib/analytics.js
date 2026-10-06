@@ -5,8 +5,10 @@ const EVENTS = [
   'demand_started',
   'demand_submitted',
   'demand_joined',
+  'demand_joined_existing',
   'demand_left',
   'demand_opened',
+  'demand_opened_new',
   'demand_qualified',
   'demand_outcome',
   'offer_viewed',
@@ -15,8 +17,11 @@ const EVENTS = [
   'purchase_confirmed',
   'purchase_self_reported',
   'purchase_declined',
+  'purchase_verified',
   'merchant_registered',
   'merchant_offer_submitted',
+  'merchant_demand_viewed',
+  'offer_approved',
 ];
 
 function read() {
@@ -49,10 +54,10 @@ export function knownEvents() {
   return EVENTS;
 }
 
-export function trackedUrl(url, { demandId, offerId } = {}) {
+export function trackedUrl(url, { demandId, offerId, ref } = {}) {
   try {
     const u = new URL(url, window.location.origin);
-    u.searchParams.set('ax_ref', 'axelerate');
+    u.searchParams.set('ax_ref', ref || 'axelerate');
     if (demandId) u.searchParams.set('ax_demand', demandId);
     if (offerId) u.searchParams.set('ax_offer', offerId);
     return u.toString();

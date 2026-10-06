@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useSession } from '../session.jsx';
 import { useProfile } from '../profile.jsx';
+import { isLiveMode } from '../../lib/app-mode.js';
+import { createClient } from '../../lib/supabase.js';
 import './demand.css';
 
 // The smallest account that can carry demand.
@@ -30,16 +32,51 @@ export default function JoinAccount() {
 
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const live = isLiveMode();
   const [ageRange, setAgeRange] = useState(null);
   const [region, setRegion] = useState('');
   const [error, setError] = useState(null);
 
-  const submit = (provider) => (e) => {
+  const submit = (provider) => async (e) => {
     if (e) e.preventDefault();
     const name = firstName.trim();
     if (!name) { setError('A first name is enough — we use it to address you.'); return; }
     if (provider === 'email' && !/.+@.+\..+/.test(email.trim())) {
       setError('That email doesn’t look right.');
+      return;
+    }
+    if (live && provider === 'email' && password.length < 6) {
+      setError('Use a password of at least 6 characters.');
+      return;
+    }
+    if (live && provider === 'google') {
+      const supabase = createClient();
+      const { error: authError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: `${window.location.origin}${next}` },
+      });
+      if (authError) setError(authError.message);
+      return;
+    }
+    if (live && provider === 'email') {
+      const supabase = createClient();
+      const { data, error: authError } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+        options: { data: { first_name: name, age_range: ageRange, region: region.trim() || null } },
+      });
+      if (authError) { setError(authError.message); return; }
+      signUp({
+        id: data?.user?.id,
+        firstName: name,
+        email: email.trim(),
+        provider: 'supabase',
+        ageRange,
+        region: region.trim() || null,
+      });
+      setProfile({ name, email: email.trim() });
+      nav(next, { replace: true, state: { justJoined: true } });
       return;
     }
     const user = signUp({
@@ -76,6 +113,20 @@ export default function JoinAccount() {
             data-testid="join-firstname"
           />
         </label>
+
+        {live && (
+          <label className="jn__field">
+            <span className="jn__label">Password</span>
+            <input
+              className="jn__input"
+              type="password"
+              value={password}
+              onChange={(e) => { setPassword(e.target.value); setError(null); }}
+              autoComplete="new-password"
+              data-testid="join-password"
+            />
+          </label>
+        )}
 
         <label className="jn__field">
           <span className="jn__label">Email</span>
@@ -125,15 +176,23 @@ export default function JoinAccount() {
       </form>
 
       <div className="jn__alt">
-        <p className="jn__or">or</p>
-        <button type="button" className="ax-btn ax-btn--secondary ax-btn--full" onClick={submit('google')}>
-          Continue with Google
-        </button>
-        <button type="button" className="ax-btn ax-btn--secondary ax-btn--full" onClick={submit('apple')}>
-          Continue with Apple
-        </button>
+        {live ? (
+          <button type="button" className="ax-btn ax-btn--secondary ax-btn--full" onClick={submit('google')}>
+            Continue with Google
+          </button>
+        ) : (
+          <>
+            <p className="jn__or">or</p>
+            <button type="button" className="ax-btn ax-btn--secondary ax-btn--full" onClick={submit('google')}>
+              Continue with Google
+            </button>
+            <button type="button" className="ax-btn ax-btn--secondary ax-btn--full" onClick={submit('apple')}>
+              Continue with Apple
+            </button>
+          </>
+        )}
         <p className="jn__fine">
-          Demo sign-in. Brands never see your name, email or address — only
+          {live ? 'Email and password create a real account.' : 'Demo sign-in.'} Brands never see your name, email or address — only
           aggregated demand. <Link to="/app/me/about">How this works</Link>
         </p>
       </div>

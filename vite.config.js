@@ -8,6 +8,10 @@ export default defineConfig({
     include: ['axelerate-design-system'],
   },
   test: {
+    env: {
+      VITE_LEGACY_MODE: '1',
+      VITE_APP_MODE: 'demo',
+    },
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./tests/unit/setup.js'],

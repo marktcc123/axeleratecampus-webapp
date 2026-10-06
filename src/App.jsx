@@ -19,6 +19,8 @@ import { ContentProvider } from './app/content.jsx';
 import { DemandProvider } from './app/demand.jsx';
 import { SessionProvider } from './app/session.jsx';
 import LiveSession from './app/LiveSession.jsx';
+import { isLegacyMode } from './lib/app-mode.js';
+import Market from './app/admin/panels/Market.jsx';
 import Home from './app/screens/Home.jsx';
 import DemandDiscover from './app/screens/DemandDiscover.jsx';
 import DemandNew from './app/screens/DemandNew.jsx';
@@ -156,6 +158,18 @@ function RedirectTicket() {
   return <Navigate to={`/app/me/tickets/${date}`} replace />;
 }
 
+function Legacy({ children }) {
+  return isLegacyMode() ? children : <Navigate to="/app" replace />;
+}
+
+function LegacyAdmin({ children }) {
+  return isLegacyMode() ? children : <Navigate to="/app/me/admin/demand" replace />;
+}
+
+function AdminIndex() {
+  return <Navigate to={isLegacyMode() ? 'analytics' : 'demand'} replace />;
+}
+
 export default function App() {
   return (
     // ProfileProvider sits outside <Routes>, not in CartRoot: the gate at
@@ -182,12 +196,12 @@ export default function App() {
           had, and the href every "Join the squad" in the app points at.
           /login is the returning student's door: email only, no name, no
           photo, because those are already on file. */}
-      <Route path="/verify" element={<Verify mode="signup" />} />
-      <Route path="/login" element={<Verify mode="login" />} />
+      <Route path="/verify" element={<Legacy><Verify mode="signup" /></Legacy>} />
+      <Route path="/login" element={<Legacy><Verify mode="login" /></Legacy>} />
       {/* Where "Send email" lands: the six digits the email carried. Reached
           with the address in router state; a cold visit has none and is sent
           back to /login by the screen itself. */}
-      <Route path="/login/code" element={<Verify mode="code" />} />
+      <Route path="/login/code" element={<Legacy><Verify mode="code" /></Legacy>} />
       <Route element={<CartRoot />}>
         {/* A public profile, at /user/:handle: no account needed to read one,
             so it sits outside the app shell too — no tab bar to offer someone
@@ -212,52 +226,52 @@ export default function App() {
           <Route path="/brands" element={<Brands />} />
           <Route path="/join" element={<JoinAccount />} />
           <Route path="/app/me/demand" element={<MyDemand />} />
-          <Route path="/app/earn" element={<GigsBoard />} />
-          <Route path="/app/earn/:slug" element={<GigsDetail />} />
+          <Route path="/app/earn" element={<Legacy><GigsBoard /></Legacy>} />
+          <Route path="/app/earn/:slug" element={<Legacy><GigsDetail /></Legacy>} />
           {/* A literal segment, so React Router ranks it above the dynamic
               /app/earn/:slug above regardless of declaration order — but it is
               declared after it anyway, next to the other /app/earn routes. */}
-          <Route path="/app/earn/events/:id" element={<EventDetail />} />
-          <Route path="/app/earn/brands/:slug" element={<BrandPage />} />
+          <Route path="/app/earn/events/:id" element={<Legacy><EventDetail /></Legacy>} />
+          <Route path="/app/earn/brands/:slug" element={<Legacy><BrandPage /></Legacy>} />
           {/* Discover is where the shop lives now (2026-09-17). The old
               addresses redirect rather than 404: they are in shared links and
               in the browser history of anyone with the app open. */}
           <Route path="/app/discover" element={<DemandDiscover />} />
-          <Route path="/app/shop" element={<Perks />} />
-          <Route path="/app/shop/:id" element={<PerkDetail />} />
+          <Route path="/app/shop" element={<Legacy><Perks /></Legacy>} />
+          <Route path="/app/shop/:id" element={<Legacy><PerkDetail /></Legacy>} />
           <Route path="/app/discover/:id" element={<RedirectPerk />} />
           <Route path="/app/perks" element={<Navigate to="/app/shop" replace />} />
           <Route path="/app/perks/:id" element={<RedirectPerk />} />
           {/* The cart is its own route rather than a state of /perks: the floating
               button reaches it from every tab, so it needs an address. */}
-          <Route path="/app/cart" element={<Cart />} />
+          <Route path="/app/cart" element={<Legacy><Cart /></Legacy>} />
           {/* The tracker moved into Me → Grow & earn and this address became
               Unlock, empty for now (owner, 2026-09-17). /app/join redirects:
               it is in shared links and in open browser histories. */}
-          <Route path="/app/unlock" element={<Unlock />} />
+          <Route path="/app/unlock" element={<Legacy><Unlock /></Legacy>} />
           {/* The ladder and the published XP formula are reference, not the
               pitch (§5.1): one level below Unlock, with the old address kept. */}
-          <Route path="/app/unlock/levels" element={<Levels />} />
-          <Route path="/app/me/missions" element={<Application />} />
+          <Route path="/app/unlock/levels" element={<Legacy><Levels /></Legacy>} />
+          <Route path="/app/me/missions" element={<Legacy><Application /></Legacy>} />
           <Route path="/app/join" element={<Navigate to="/app/unlock" replace />} />
           <Route path="/app/me" element={<Me />} />
           {/* Me is a hub now. Its sub-screens are nested under it rather than
               promoted to tabs, which is how the design routes them. */}
           <Route path="/app/me/levels" element={<Navigate to="/app/unlock/levels" replace />} />
-          <Route path="/app/me/wallet" element={<Wallet />} />
-          <Route path="/app/me/orders" element={<Orders />} />
-          <Route path="/app/me/orders/:id" element={<OrderReceipt />} />
-          <Route path="/app/me/syndicate" element={<Syndicate />} />
-          <Route path="/app/me/co-creations" element={<CoCreations />} />
-          <Route path="/app/me/tickets" element={<Events />} />
+          <Route path="/app/me/wallet" element={<Legacy><Wallet /></Legacy>} />
+          <Route path="/app/me/orders" element={<Legacy><Orders /></Legacy>} />
+          <Route path="/app/me/orders/:id" element={<Legacy><OrderReceipt /></Legacy>} />
+          <Route path="/app/me/syndicate" element={<Legacy><Syndicate /></Legacy>} />
+          <Route path="/app/me/co-creations" element={<Legacy><CoCreations /></Legacy>} />
+          <Route path="/app/me/tickets" element={<Legacy><Events /></Legacy>} />
           {/* One ticket, keyed by the event's id where it has one and its date
               where it does not (rsvp.jsx passPath). */}
-          <Route path="/app/me/tickets/:date" element={<EventTicket />} />
+          <Route path="/app/me/tickets/:date" element={<Legacy><EventTicket /></Legacy>} />
           {/* The old addresses, kept as redirects (owner, 2026-09-21). */}
           <Route path="/app/me/events" element={<Navigate to="/app/me/tickets" replace />} />
           <Route path="/app/me/events/:date" element={<RedirectTicket />} />
-          <Route path="/app/me/invite" element={<Invite />} />
-          <Route path="/app/me/career" element={<Career />} />
+          <Route path="/app/me/invite" element={<Legacy><Invite /></Legacy>} />
+          <Route path="/app/me/career" element={<Legacy><Career /></Legacy>} />
           <Route path="/app/me/profilesetting" element={<Settings />} />
           <Route path="/app/me/about" element={<About />} />
           {/* The old address (owner, 2026-09-09: the page is Profile setting, so is its URL). */}
@@ -266,20 +280,24 @@ export default function App() {
               button steps through tabs. AdminShell holds the gate, so one guard
               covers all nine. */}
           <Route path="/app/me/admin" element={<AdminShell />}>
-            <Route index element={<Navigate to="analytics" replace />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="brands" element={<AdminBrands />} />
-            <Route path="missions" element={<AdminMissions />} />
-            <Route path="shop" element={<AdminShop />} />
-            <Route path="tasks" element={<AdminTasks />} />
-            <Route path="ugc" element={<AdminUgc />} />
-            <Route path="reviews" element={<AdminReviews />} />
-            <Route path="gigs" element={<AdminGigs />} />
-            <Route path="events" element={<AdminEvents />} />
-            <Route path="withdrawals" element={<AdminWithdrawals />} />
-            <Route path="campuses" element={<AdminCampuses />} />
-            <Route path="career" element={<AdminCareer />} />
-            <Route path="cashback" element={<AdminCashback />} />
+            <Route index element={<AdminIndex />} />
+            <Route path="demand" element={<Market section="demand" />} />
+            <Route path="merchants" element={<Market section="merchants" />} />
+            <Route path="offers" element={<Market section="offers" />} />
+            <Route path="attribution" element={<Market section="attribution" />} />
+            <Route path="analytics" element={<LegacyAdmin><Analytics /></LegacyAdmin>} />
+            <Route path="brands" element={<LegacyAdmin><AdminBrands /></LegacyAdmin>} />
+            <Route path="missions" element={<LegacyAdmin><AdminMissions /></LegacyAdmin>} />
+            <Route path="shop" element={<LegacyAdmin><AdminShop /></LegacyAdmin>} />
+            <Route path="tasks" element={<LegacyAdmin><AdminTasks /></LegacyAdmin>} />
+            <Route path="ugc" element={<LegacyAdmin><AdminUgc /></LegacyAdmin>} />
+            <Route path="reviews" element={<LegacyAdmin><AdminReviews /></LegacyAdmin>} />
+            <Route path="gigs" element={<LegacyAdmin><AdminGigs /></LegacyAdmin>} />
+            <Route path="events" element={<LegacyAdmin><AdminEvents /></LegacyAdmin>} />
+            <Route path="withdrawals" element={<LegacyAdmin><AdminWithdrawals /></LegacyAdmin>} />
+            <Route path="campuses" element={<LegacyAdmin><AdminCampuses /></LegacyAdmin>} />
+            <Route path="career" element={<LegacyAdmin><AdminCareer /></LegacyAdmin>} />
+            <Route path="cashback" element={<LegacyAdmin><AdminCashback /></LegacyAdmin>} />
           </Route>
           <Route path="/app/me/inbox" element={<Inbox />} />
           <Route path="/gift/:token" element={<GiftClaim />} />

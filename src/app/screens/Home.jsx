@@ -13,7 +13,7 @@ export default function Home() {
   const [text, setText] = useState('');
   // Anything a person can still join. `converting` and `qualified` replaced the
   // old `qualifying` label; filtering on the old names left this list empty.
-  const OPEN = new Set(['qualified', 'live', 'offers_open', 'offers_available', 'converting', 'scaled']);
+  const OPEN = new Set(['qualified', 'sourcing', 'offers_live', 'converting']);
   const live = clusters
     .filter((c) => OPEN.has(c.status))
     .sort((a, b) => (b.counts?.qualified ?? 0) - (a.counts?.qualified ?? 0));
